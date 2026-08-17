@@ -1,0 +1,302 @@
+\documentclass[12pt,letterpaper]{article}
+
+% ==== PAQUETES DE IDIOMA Y FUENTES PARA LUALATEX ====
+\usepackage{fontspec}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+
+% ==== CONFIGURACIÓN DE PÁGINA Y MÁRGENES ====
+\geometry{
+	left=2.5cm,
+	right=2.5cm,
+	top=2.5cm,
+	bottom=2.5cm
+}
+\setlength{\headheight}{14.5pt}
+
+% ==== DEFINICIÓN DE COLORES ====
+\definecolor{purpleUPP}{HTML}{4A154B}
+\definecolor{darkpurple}{HTML}{320D33}
+\definecolor{accentteal}{HTML}{007A5A}
+\definecolor{lightbg}{HTML}{F8FAFC}
+\definecolor{bordergray}{HTML}{E2E8F0}
+\definecolor{failred}{HTML}{B91C1C}
+\definecolor{passgreen}{HTML}{15803D}
+
+% ==== CONFIGURACIÓN DE HIPERVÍNCULOS ====
+\hypersetup{
+	colorlinks=true,
+	linkcolor=purpleUPP,
+	citecolor=accentteal,
+	urlcolor=purpleUPP,
+	pdftitle={Práctica: Regresión Lineal Simple},
+	pdfauthor={Emmanuel Islas Lozada, Ximena Nathaly Angeles Sanchez (IA: Antigravity - Gemini 3.6 Flash)}
+}
+
+% ==== TIKS Y ESTILOS DE CAJAS EN LATEX ====
+\tcbuselibrary{skins,breakable}
+
+\tcbset{
+	basebox/.style={
+		enhanced,
+		colback=lightbg,
+		colframe=purpleUPP,
+		fonttitle=\bfseries\color{white},
+		boxrule=1pt,
+		arc=4pt,
+		top=8pt,
+		bottom=8pt,
+		left=10pt,
+		right=10pt
+	}
+}
+
+\newtcolorbox{statbox}[1]{
+	basebox,
+	title=#1
+}
+
+\newtcolorbox{summarybox}[1]{
+	enhanced,
+	colback=purpleUPP!5!white,
+	colframe=purpleUPP,
+	title=#1,
+	fonttitle=\bfseries\color{white},
+	boxrule=1.2pt,
+	arc=5pt
+}
+
+% ==== ENCABEZADOS Y PIES DE PÁGINA ====
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\color{purpleUPP}\textbf{Regresión Lineal Simple}}
+\lhead{\small\color{gray}Ciencia de Datos y Estadística}
+\rfoot{\thepage}
+\lfoot{\small\color{gray}UPP - Ingeniería en Software}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% ==== PORTADA Y TABLA DE CONTENIDOS ====
+\input{cover/cover.tex}
+\newpage
+
+\tableofcontents
+\newpage
+
+% =========================================================
+% PARTE 1: HIPÓTESIS Y MODELOS
+% =========================================================
+\section{Parte 1: Hipótesis y Modelos}
+
+En esta práctica de Ciencia de Datos y Estadística, se analiza un conjunto de datos históricos de proyectos de desarrollo de software para predecir el \textbf{Tiempo Total de Desarrollo} ($TEP$) a partir del \textbf{Número de Líneas de Código} ($NLC$).
+
+\subsection{(1) Función de Regresión Matemática}
+
+Dado el modelo probabilístico de regresión lineal simple en su forma teórica general:
+\begin{equation}
+	Y_i = a + b \cdot X_i + e_i, \quad e_i \sim \mathcal{N}(0, \sigma^2)
+\end{equation}
+
+donde $Y$ es la Variable de Respuesta ($VR$), $X$ es la Variable Predictora ($VP$) y $e_i$ representa el término de error aleatorio, la función de regresión matemática ajustada para estimar el valor esperado del Tiempo de Ejecución/Desarrollo del Proyecto ($\hat{TEP}$) se define formalmente como:
+
+\begin{statbox}{Función de Regresión del Modelo Ajustado}
+	\begin{equation}
+		TEP = a + b \times NLC
+	\end{equation}
+	\textbf{Donde:}
+	\begin{itemize}
+		\item \textbf{$TEP$ (Variable de Respuesta, VR):} Tiempo Total de Desarrollo del Proyecto.
+		\item \textbf{$NLC$ (Variable Predictora, VP):} Número de Líneas de Código del Proyecto.
+		\item \textbf{$a$ (Intersección u Ordenada al Origen):} Tiempo base fijo necesario de desarrollo cuando $NLC = 0$. Matemáticamente calculado como:
+		\begin{equation}
+			a = \bar{TEP} - b \bar{NLC}
+		\end{equation}
+		\item \textbf{$b$ (Pendiente o Coeficiente Marginal):} Cuantifica la tasa de variación esperada en el tiempo de desarrollo por cada línea de código adicional. Calculado mediante Mínimos Cuadrados Ordinarios (OLS):
+		\begin{equation}
+			b = \frac{\sum_{i=1}^{n} (NLC_i - \bar{NLC})(TEP_i - \bar{TEP})}{\sum_{i=1}^{n} (NLC_i - \bar{NLC})^2}
+		\end{equation}
+	\end{itemize}
+\end{statbox}
+
+\newpage
+\subsection{(2) Hipótesis Estadísticas}
+
+Para evaluar rigurosamente si el número de líneas de código influye de manera estadísticamente significativa en el tiempo total de desarrollo, se contrasta la prueba de hipótesis bilateral sobre la pendiente del modelo ($b$):
+
+\begin{table}[H]
+	\centering
+	\caption{Planteamiento de Hipótesis Estadísticas (Nula y Alternativa)}
+	\label{tab:hipotesis}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4cm} X}
+		\toprule
+		Hipótesis & Formulación Matemática & Enunciado y Significado Contextual \\
+		\midrule
+		Hipótesis Nula ($H_0$) & $H_0: b = 0$ & El número de líneas de código \textbf{no influye} significativamente en el tiempo total de desarrollo (no existe relación lineal entre $NLC$ y $TEP$). \\
+		\addlinespace[0.5em]
+		Hipótesis Alternativa ($H_1$) & $H_1: b \neq 0$ & El número de líneas de código \textbf{influye} significativamente en el tiempo total de desarrollo (existe relación lineal estadísticamente significativa entre $NLC$ y $TEP$). \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\newpage
+
+% =========================================================
+% PARTE 2: REGRESIÓN EN RSUE (ANÁLISIS Y SUPUESTOS)
+% =========================================================
+\section{Parte 2: Regresión en RSUE}
+
+A continuación se detalla el procesamiento estadístico llevado a cabo mediante Python (\texttt{pandas}, \texttt{statsmodels}, \texttt{scipy}) para una muestra histórica de $N = 50$ proyectos.
+
+\subsection{Verificación de los 3 Supuestos del Modelo}
+
+Para validar los resultados inferenciales del modelo OLS, se analizaron los residuos $e_i = TEP_i - \hat{TEP}_i$:
+
+\subsubsection{1. Normalidad de Residuos (Prueba de Shapiro-Wilk)}
+Se verifica que los residuos provengan de una población con distribución normal $\mathcal{N}(0, \sigma^2)$. El estadístico de Shapiro-Wilk se define como:
+\begin{equation}
+	W = \frac{\left( \sum_{i=1}^n a_i e_{(i)} \right)^2}{\sum_{i=1}^n (e_i - \bar{e})^2}
+\end{equation}
+\begin{itemize}
+	\item \textbf{Estadístico Calculado:} $W = 0.960189$
+	\item \textbf{Valor-p ($p$-value):} $p = 0.090533$
+	\item \textbf{Decisión ($\alpha = 0.05$):} Como $p = 0.090533 > 0.05$, no se rechaza $H_0$ de normalidad.
+	\item \textbf{Conclusión:} \textcolor{passgreen}{\textbf{SE CUMPLE EL SUPUESTO DE NORMALIDAD.}}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.88\textwidth]{img/fig2_shapiro_wilk.png}
+	\caption{Prueba de Normalidad de Shapiro-Wilk (Histograma de Residuos y Gráfico Q-Q Normal).}
+	\label{fig:shapiro}
+\end{figure}
+
+\newpage
+
+\subsubsection{2. Homocedasticidad (Prueba de Breusch-Pagan)}
+Se evalúa si la varianza de los errores es constante ($\text{Var}(e_i) = \sigma^2$). El estadístico Multiplicador de Lagrange ($LM$) se calcula como $LM = n \cdot R^2_e$, donde $R^2_e$ proviene de la regresión de los residuos al cuadrado $e_i^2$ sobre el predictor $NLC$:
+\begin{itemize}
+	\item \textbf{Estadístico Multiplicador de Lagrange ($LM$):} $LM = 12.939438$
+	\item \textbf{Valor-p ($p$-value):} $p = 0.000322$ ($3.22 \times 10^{-4}$)
+	\item \textbf{Decisión ($\alpha = 0.05$):} Como $p = 0.000322 < 0.05$, se rechaza $H_0$ de homocedasticidad.
+	\item \textbf{Conclusión:} \textcolor{failred}{\textbf{NO SE CUMPLE EL SUPUESTO (Existe Heterocedasticidad).}}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{img/fig3_homocedasticidad.png}
+	\caption{Prueba de Homocedasticidad de Breusch-Pagan (Gráfico de Residuos vs Valores Ajustados).}
+	\label{fig:homocedasticidad}
+\end{figure}
+
+\newpage
+
+\subsubsection{3. Independencia de Errores (Estadístico de Durbin-Watson)}
+Se contrasta la ausencia de autocorrelación de primer orden entre errores contiguos. El estadístico $DW$ se expresa como:
+\begin{equation}
+	DW = \frac{\sum_{t=2}^{n} (e_t - e_{t-1})^2}{\sum_{t=1}^{n} e_t^2}
+\end{equation}
+\begin{itemize}
+	\item \textbf{Estadístico Durbin-Watson ($DW$):} $DW = 1.939279$
+	\item \textbf{Criterio:} El valor obtenido se encuentra dentro del intervalo de independencia $[1.5, 2.5]$, sumamente próximo a $2.0$.
+	\item \textbf{Conclusión:} \textcolor{passgreen}{\textbf{SE CUMPLE EL SUPUESTO DE INDEPENDENCIA.}}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{img/fig4_independencia_dw.png}
+	\caption{Prueba de Independencia de Errores por Orden de Observación (Durbin-Watson $DW = 1.9393$).}
+	\label{fig:durbin_watson}
+\end{figure}
+
+\newpage
+
+\subsection{Parámetros y Datos Numéricos del Modelo}
+
+Los coeficientes de la ecuación de regresión y las métricas de bondad de ajuste calculadas son:
+
+\begin{table}[H]
+	\centering
+	\caption{Resultados y Parámetros Numéricos del Modelo Ajustado}
+	\label{tab:modelo_datos}
+	\begin{tabularx}{\textwidth}{X c c p{4.5cm}}
+		\toprule
+		Parámetro / Métrica & Símbolo & Valor Calculado & Interpretación Estadística \\
+		\midrule
+		\textbf{Coeficiente Intersección} & $a$ & \textbf{7.462482} & Tiempo fijo base estimado ($NLC = 0$). \\
+		\textbf{Pendiente de Líneas de Código} & $b$ & \textbf{0.006272} & Incremento de tiempo por línea de código. \\
+		\textbf{Coeficiente de Determinación} & $R^2$ & \textbf{0.104425} & $10.44\%$ de variabilidad explicada por $NLC$. \\
+		\textbf{R-Cuadrado Ajustado} & $R^2_{\text{adj}}$ & \textbf{0.085767} & Bondad de ajuste por grados de libertad. \\
+		\textbf{Estadístico F de Snedecor} & $F$ & \textbf{5.596832} & Prueba global de significancia ($df = 1, 48$). \\
+		\textbf{Valor-p del Modelo} & $p$-value & \textbf{0.022079} & Modelo significativo al nivel $5\%$ ($p < 0.05$). \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.88\textwidth]{img/fig1_regresion_lineal.png}
+	\caption{Gráfico de Dispersión con la Línea de Regresión Ajustada ($TEP = 7.4625 + 0.006272 \times NLC$).}
+	\label{fig:regresion}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{img/fig5_resumen_modelo.png}
+	\caption{Resumen Sintético de Parámetros, Pruebas y Supuestos del Modelo.}
+	\label{fig:resumen}
+\end{figure}
+
+\newpage
+
+% =========================================================
+% PARTE 3: CONCLUSIONES
+% =========================================================
+\section{Parte 3: Conclusiones}
+
+\subsection{(1) Conclusión Estadística sobre \texorpdfstring{$H_0$}{H0} y \texorpdfstring{$H_1$}{H1}}
+
+\begin{summarybox}{Decisión Inferencial y Decisión de Hipótesis}
+	Tomando como referencia un nivel de significancia del $\alpha = 0.05$ (95\% de confianza), el valor-p asociado al coeficiente de pendiente del modelo es $p = 0.022079$. Dado que:
+	\begin{equation}
+		p = 0.022079 < 0.05
+	\end{equation}
+	\textbf{SE RECHAZA LA HIPÓTESIS NULA ($H_0$)} y se acepta la \textbf{HIPÓTESIS ALTERNATIVA ($H_1$)}.
+	
+	\textbf{Conclusión Contextual:} Existe evidencia estadística empírica suficiente para afirmar que el número de líneas de código ($NLC$) influye de manera estadísticamente significativa sobre el tiempo total de desarrollo ($TEP$).
+\end{summarybox}
+
+\subsection{(2) Interpretación de los Resultados y Limitaciones}
+
+\textbf{Interpretación de la Pendiente ($b$):}
+El coeficiente $b = 0.006272$ establece que \textbf{por cada línea de código adicional} que contiene el software, el tiempo estimado de desarrollo se incrementa en promedio **$0.006272$ unidades de tiempo** (lo que equivale aproximadamente a **$6.27$ horas/días por cada 1,000 líneas de código adicionales**). La constante $a = 7.4625$ representa la carga de trabajo base (gestión, diseño de arquitectura, configuración de entornos de trabajo) previa a la programación.
+
+\textbf{Limitaciones del Modelo:}
+A pesar de la significancia del coeficiente ($p < 0.05$), se identifican dos limitaciones críticas para el uso práctico del modelo:
+
+\begin{enumerate}
+	\item \textbf{Bajo Coeficiente de Determinación ($R^2 = 10.44\%$):}
+	El valor $R^2 = 0.104425$ demuestra que el volumen de código sólo explica el **$10.44\%$** de la variación en el tiempo de desarrollo. El **$89.56\%$ restante** depende de variables exógenas no incluidas en el modelo simple (complejidad algorítmica, nivel de experiencia de los desarrolladores, cambios de requerimientos, metodología de pruebas).
+	\item \textbf{Heterocedasticidad de Residuos ($p_{\text{BP}} = 0.000322 < 0.05$):}
+	La violación del supuesto de varianza constante provoca que la dispersión del tiempo de desarrollo crezca a medida que aumenta la cantidad de líneas de código. Esto genera mayor variabilidad e incertidumbre en las estimaciones de proyectos de gran magnitud.
+\end{enumerate}
+
+\end{document}

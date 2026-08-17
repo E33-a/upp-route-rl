@@ -1,0 +1,53 @@
+\begin{titlepage}
+	\thispagestyle{empty}
+	
+	% ==== LINEAS DECORATIVAS + LOGOS ====
+	\begin{tikzpicture}[remember picture,overlay]
+		% Línea horizontal superior
+		\draw[line width=3.5pt, purpleUPP] 
+		([xshift=3cm,yshift=-5.5cm]current page.north west) -- 
+		([xshift=-10cm,yshift=-5.5cm]current page.north east);
+		
+		% Línea horizontal inferior
+		\draw[line width=3.5pt, purpleUPP] 
+		([xshift=10cm,yshift=3.5cm]current page.south west) -- 
+		([xshift=-3cm,yshift=3.5cm]current page.south east);
+		
+		% Línea vertical izquierda
+		\draw[line width=3.5pt, purpleUPP] 
+		([xshift=3cm,yshift=-13cm]current page.north west) -- 
+		([xshift=3cm,yshift=4cm]current page.south west);
+		
+		% Línea vertical derecha
+		\draw[line width=3.5pt, purpleUPP] 
+		([xshift=-3cm,yshift=-6cm]current page.north east) -- 
+		([xshift=-3cm,yshift=11cm]current page.south east);
+		
+		% Logo izquierda
+		\node[anchor=north west, xshift=1cm, yshift=-1cm] at (current page.north west) 
+		{\includegraphics[width=2cm]{logos/UPP_logo.png}};
+		
+		% Logo derecha
+		\node[anchor=north east, xshift=-1cm, yshift=-1cm] at (current page.north east) 
+		{\includegraphics[width=2cm]{logos/SOFT_logo.png}};
+	\end{tikzpicture}
+	
+	% ==== CONTENIDO DE LA PORTADA ==== 
+	\centering
+	\vspace{6em}
+	
+	\textcolor{purpleUPP}{{\LARGE\textbf{UNIVERSIDAD POLITÉCNICA \\ [1em] DE PACHUCA}}}\\[3em]
+	{\Large\textbf{INGENIERÍA EN SOFTWARE}}\\[1.5em]
+	{\Large\textbf{Inteligencia Artificial}}\\[1.5em]
+	{\Large\textbf{Práctica: Regresión Lineal Simple \\[1em] Predicción del Tiempo de Desarrollo de Software}}\\[2.5em]
+	
+	\large\textbf{ALUMNOS:}\\[1em]
+	{\large \textbf{Angeles Sanchez Ximena Nathaly}}\\[0.2em]
+	{\large \textbf{Islas Lozada Emmanuel}}\\[1.5em]
+	\large\textbf{CATEDRÁTICA:}\\[1em]
+	{\large\textbf{Dra. Anabel Martínez Vargas}} \\[1.5em]
+	\large\textbf{IA UTILIZADA:}\\[0.5em]
+	{\large\textbf{Antigravity (Gemini 3.6 Flash - Google DeepMind)}} \\ [2.5em]
+	
+	\large\textbf{Pachuca de Soto, Hidalgo, \uppercase{\today}}
+\end{titlepage}
