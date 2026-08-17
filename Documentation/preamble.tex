@@ -1,0 +1,99 @@
+% =========================================================
+% PREÁMBULO DEL DOCUMENTO LATEX (CONFIGURACIÓN Y PAQUETES)
+% =========================================================
+
+% ==== PAQUETES DE IDIOMA Y FUENTES PARA LUALATEX ====
+\usepackage{fontspec}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{pdflscape}
+\usepackage{xltabular}
+
+% ==== CONFIGURACIÓN DE PÁGINA Y MÁRGENES ====
+\geometry{
+	left=2.5cm,
+	right=2.5cm,
+	top=2.8cm,
+	bottom=2.5cm,
+	headheight=24pt
+}
+
+% ==== DEFINICIÓN DE COLORES OFICIALES ====
+\definecolor{purpleUPP}{HTML}{4A154B}
+\definecolor{darkpurple}{HTML}{320D33}
+\definecolor{accentteal}{HTML}{007A5A}
+\definecolor{lightbg}{HTML}{F8FAFC}
+\definecolor{bordergray}{HTML}{E2E8F0}
+\definecolor{failred}{HTML}{B91C1C}
+\definecolor{passgreen}{HTML}{15803D}
+
+% ==== CONFIGURACIÓN DE HIPERVÍNCULOS ====
+\hypersetup{
+	colorlinks=true,
+	linkcolor=purpleUPP,
+	citecolor=accentteal,
+	urlcolor=purpleUPP,
+	pdftitle={Proyecto Final: Optimización de Salidas de Combis UPP},
+	pdfauthor={Emmanuel Islas Lozada, Ximena Nathaly Angeles Sanchez}
+}
+
+% ==== TIKZ Y ESTILOS DE CAJAS TCOLORBOX ====
+\tcbuselibrary{skins,breakable}
+
+\tcbset{
+	basebox/.style={
+		enhanced,
+		colback=lightbg,
+		colframe=purpleUPP,
+		fonttitle=\bfseries\color{white},
+		boxrule=1pt,
+		arc=4pt,
+		top=8pt,
+		bottom=8pt,
+		left=10pt,
+		right=10pt
+	}
+}
+
+\newtcolorbox{statbox}[1]{
+	basebox,
+	title={#1}
+}
+
+\newtcolorbox{summarybox}[1]{
+	enhanced,
+	colback=purpleUPP!5!white,
+	colframe=purpleUPP,
+	title={#1},
+	fonttitle=\bfseries\color{white},
+	boxrule=1.2pt,
+	arc=5pt
+}
+
+% ==== ENCABEZADOS Y PIES DE PÁGINA (CON LOGOS Y SIN LÍNEA) ====
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[height=0.65cm]{logos/UPP_logo.png}}
+\rhead{\includegraphics[height=0.65cm]{logos/SOFT_logo.png}}
+\chead{\small\color{purpleUPP}\textbf{Optimización de Rutas UPP via UCB}}
+\rfoot{\thepage}
+\lfoot{\small\color{gray}UPP - Ingeniería en Software}
+\renewcommand{\headrulewidth}{0pt}  % Sin línea en el encabezado
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}

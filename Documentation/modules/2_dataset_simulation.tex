@@ -1,0 +1,57 @@
+% =========================================================
+% PARTE 2: SIMULACIÓN Y GENERACIÓN DEL DATASET
+% =========================================================
+\section{Parte 2: Simulación y Generación del Dataset}
+
+Para simular de manera estocástica y reproducible las 3 semanas de fin de cuatrimestre (21 días de operación continua), se dividió la jornada laboral (06:00 a 20:00 horas) en intervalos discretos de 15 minutos.
+
+\subsection{Proceso Estocástico de Llegada de Alumnos (Poisson)}
+
+La llegada de alumnos por intervalo de 15 minutos ($X_t$) en cada ruta se modela como una variable aleatoria Poisson:
+
+\begin{equation}
+	X_t \sim \text{Poisson}(\lambda_{\text{efectivo}})
+\end{equation}
+
+donde la tasa de llegada efectiva ($\lambda_{\text{efectivo}}$) se expresa según la tasa base ($\lambda_{\text{base}}$), la duración del intervalo ($\Delta t = 15$ min) y un multiplicador de hora pico ($M_{\text{pico}}$):
+
+\begin{equation}
+	\lambda_{\text{efectivo}} = \lambda_{\text{base}} \times \Delta t \times M_{\text{pico}}
+\end{equation}
+
+\begin{statbox}{Parámetros de Entrada por Ruta}
+	\begin{itemize}
+		\item \textbf{Puente de Tuzos:} $\lambda_{\text{base}} = \frac{1}{7}$ alumnos/min ($\approx 2.14$ pax/15 min). $M_{\text{pico}} = 1.6$. Tiempo medio de viaje: 20 min.
+		\item \textbf{Central de Autobuses / Las Vías:} $\lambda_{\text{base}} = \frac{1}{3}$ alumnos/min ($\approx 5.0$ pax/15 min). $M_{\text{pico}} = 3.5$ ($< 1$ min por alumno). Tiempo medio de viaje: 27.5 min.
+	\end{itemize}
+\end{statbox}
+
+\subsection{Estructura del Dataset Resultante}
+
+El dataset simulado se exporta como archivo CSV (\texttt{data/demand\_dataset.csv}) con la siguiente especificación de columnas:
+
+\begin{table}[H]
+	\centering
+	\caption{Estructura del Dataset Simulado de Demanda y Despachos}
+	\label{tab:dataset_schema}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4cm} X}
+		\toprule
+		Categoría & Columna & Descripción Técnica \\
+		\midrule
+		Demanda & \texttt{fecha}, \texttt{hora} & Estampa de tiempo del intervalo (String / Timestamp). \\
+		& \texttt{ruta} & Identificador de ruta (\textit{Puente Tuzos} vs \textit{Las Vías}). \\
+		& \texttt{alumnos\_esperando} & Conteo acumulado de alumnos en la parada. \\
+		& \texttt{llegadas\_intervalo} & Alumnos llegados en los 15 min actuales (Poisson). \\
+		\addlinespace[0.4em]
+		Despacho & \texttt{hora\_salida} & Estampa de tiempo efectiva de partida de la unidad. \\
+		& \texttt{pasajeros\_al\_salir} & Total de pasajeros a bordo ($1 \le N \le 18$). \\
+		& \texttt{tipo\_salida} & Categórica: \textit{Llena} (18 pax) o \textit{Parcial} ($<18$). \\
+		& \texttt{tiempo\_espera\_acum} & Tiempo de espera acumulado del primer pasajero (min). \\
+		\addlinespace[0.4em]
+		Ruta & \texttt{tiempo\_recorrido} & Duración del viaje a la UPP en minutos. \\
+		& \texttt{hora\_llegada\_upp} & Estampa de tiempo de arribo a la universidad. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\newpage

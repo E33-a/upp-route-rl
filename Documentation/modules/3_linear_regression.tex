@@ -1,0 +1,73 @@
+% =========================================================
+% PARTE 3: REGRESIÓN LINEAL SIMPLE Y PRUEBAS DE SUPUESTOS
+% =========================================================
+\section{Parte 3: Modelo de Regresión Lineal Simple}
+
+\subsection{Ecuación del Modelo Teórico y Estimadores OLS}
+
+El modelo probabilístico de regresión lineal simple responde a la formulación:
+\begin{equation}
+	Y_i = a + b \cdot X_i + e_i, \quad e_i \sim \mathcal{N}(0, \sigma^2)
+\end{equation}
+
+Los estimadores de Mínimos Cuadrados Ordinarios (OLS) para la intersección ($a$) y la pendiente ($b$) se calculan mediante:
+
+\begin{statbox}{Formulación de Estimadores OLS}
+	\begin{equation}
+		b = \frac{\sum_{i=1}^{n} (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^{n} (X_i - \bar{X})^2}, \quad a = \bar{Y} - b \bar{X}
+	\end{equation}
+\end{statbox}
+
+Se evalúa específicamente el \textbf{Modelo 2 (Tiempo para Llenar Combi vs Alumnos Esperando)}:
+\begin{equation}
+	\text{minutos\_para\_llenar} = a + b \times \text{alumnos\_esperando}
+\end{equation}
+
+\subsection{Contraste de Hipótesis Estadísticas}
+
+Para evaluar la significancia del coeficiente de la pendiente ($b$), se plantea el siguiente contraste de hipótesis bilateral:
+
+\begin{table}[H]
+	\centering
+	\caption{Planteamiento de Hipótesis Estadísticas sobre la Pendiente}
+	\label{tab:hipotesis_modelo}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4cm} X}
+		\toprule
+		Hipótesis & Formulación & Interpretación Contextual \\
+		\midrule
+		Hipótesis Nula ($H_0$) & $H_0: b = 0$ & El número de alumnos en espera \textbf{no influye} en el tiempo restante para llenar la unidad. \\
+		\addlinespace[0.5em]
+		Hipótesis Alternativa ($H_1$) & $H_1: b \neq 0$ & El número de alumnos en espera \textbf{reduce significativamente} el tiempo necesario para llenar la unidad. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\subsection{Verificación de Supuestos del Modelo OLS}
+
+Para validar la inferencia del modelo, se analizan los residuos $e_i = Y_i - \hat{Y}_i$:
+
+\begin{enumerate}
+	\item \textbf{Normalidad de Residuos (Prueba de Shapiro-Wilk):}
+	Evalúa si los errores provienen de una distribución normal. Se acepta el supuesto si $p_{\text{Shapiro}} > 0.05$.
+	\item \textbf{Homocedasticidad (Prueba de Breusch-Pagan):}
+	Evalúa si la varianza de los residuos es constante ($\text{Var}(e_i) = \sigma^2$). Se acepta el supuesto si $p_{\text{BP}} > 0.05$.
+	\item \textbf{Independencia de Errores (Estadístico de Durbin-Watson):}
+	Evalúa la ausencia de autocorrelación. Se exige que el estadístico $DW$ se sitúe en el intervalo $[1.5, 2.5]$.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\IfFileExists{img/fig1_regresion_lineal.png}{%
+		\includegraphics[width=0.85\textwidth]{img/fig1_regresion_lineal.png}%
+	}{%
+		\vspace{2em}
+		\begin{tcolorbox}[colback=purpleUPP!5!white,colframe=purpleUPP,title={Gráfico en Espera}]
+			\centering \textit{La gráfica ajustada ($Y = a + b X$) se generará e incluirá automáticamente al ejecutar el script \texttt{02\_train\_regression.py}.}
+		\end{tcolorbox}
+		\vspace{2em}
+	}%
+	\caption{Gráfico de Dispersión y Recta de Regresión Ajustada ($Y = a + b X$).}
+	\label{fig:regresion_fit}
+\end{figure}
+
+\newpage
