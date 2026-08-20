@@ -33,16 +33,7 @@ alumnos esperando)}:
 
 \subsection{Preparación de los Datos}
 
-El script \texttt{02\_train\_regression.py} lee directamente
-\texttt{data/demand\_dataset.csv}. Para conservar los eventos relevantes al proceso de
-llenado, se seleccionan los despachos cuya \texttt{tipo\_salida} es \textit{Llena} o que
-registran \texttt{alumnos\_esperando} $>0$. Este criterio produjo una muestra de
-$n=1{,}466$ observaciones. La variable explicativa es la cola inicial al llegar la combi,
-$X=\texttt{alumnos\_esperando}$, mientras que
-$Y=\texttt{tiempo\_espera\_acum}$ se usa como medida operativa de
-\texttt{minutos\_para\_llenar}: contabiliza los minutos transcurridos desde el inicio de
-la espera hasta el despacho. No se inventa una columna nueva; se renombra conceptualmente
-una medición ya presente en el dataset.
+El script \texttt{02\_train\_regression.py} lee directamente \texttt{data/demand\_dataset.csv}. Para conservar los eventos relevantes al proceso de llenado, se filtran aquellos despachos cuya variable de salida (\texttt{tipo\_salida}) es \textit{Llena} o que registran la condición \texttt{alumnos\_esperando} $>0$. Este criterio produjo una muestra de $n=1{,}466$ observaciones. La variable explicativa corresponde a la cola inicial al arribo de la unidad, $X=\texttt{alumnos\_esperando}$, mientras que $Y=\texttt{tiempo\_espera\_acum}$ se emplea como la métrica operativa de \texttt{minutos\_para\_llenar}: mide los minutos transcurridos desde la llegada de la unidad hasta su despacho final.
 
 \subsection{Contraste de Hipótesis Estadísticas}
 

@@ -13,6 +13,10 @@ El sistema selecciona en cada decisión entre 5 brazos o políticas candidatas (
 	\centering
 	\caption{Catálogo de Políticas de Salida (Brazos UCB)}
 	\label{tab:brazos_catalog}
+	\vspace{0.2em}
+	\fontsize{8.5pt}{10pt}\selectfont
+	\setlength{\tabcolsep}{4pt}
+	\renewcommand{\arraystretch}{0.9}
 	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}c l X}
 		\toprule
 		\rowcolor{purpleUPP!10!white}
@@ -27,6 +31,7 @@ El sistema selecciona en cada decisión entre 5 brazos o políticas candidatas (
 	\end{tabularx}
 \end{table}
 
+\vspace{-0.5em}
 \subsection{Función de Recompensa Normalizada}
 
 En cada turno $t$, la penalización total del sistema se calcula ponderando tres métricas clave:
@@ -39,6 +44,7 @@ La recompensa inmediata $R_t \in [0, 1]$ se obtiene mediante min-max scaling inv
 	R_t = 1 - \frac{P_t - P_{\text{min}}}{P_{\text{max}} - P_{\text{min}}}
 \end{equation}
 
+\vspace{-0.5em}
 \subsection{Resultados y Comparativa de Desempeño}
 
 La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró que el brazo preferido por el agente es \textbf{$a_1$ (Flex $\ge 14$ pax tras 15 min)}, obteniendo el promedio de recompensa más elevado ($\bar{Q} = 0.692$).
@@ -48,7 +54,7 @@ La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró 
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
-			\includegraphics[width=\textwidth]{../outputs/plots/fig2_ucb_recompensa.png}
+			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig2_ucb_recompensa.png}
 		}{
 			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
 		}
@@ -59,7 +65,7 @@ La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró 
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\IfFileExists{../outputs/plots/fig3_comparativa.png}{
-			\includegraphics[width=\textwidth]{../outputs/plots/fig3_comparativa.png}
+			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig3_comparativa.png}
 		}{
 			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
 		}
@@ -69,5 +75,3 @@ La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró 
 	\caption{Resultados Experimentales del Agente Multi-Armed Bandit UCB1.}
 	\label{fig:ucb_resultados_conjuntos}
 \end{figure}
-
-\clearpage
