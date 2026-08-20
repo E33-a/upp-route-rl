@@ -34,25 +34,26 @@ El dataset simulado se exporta como archivo CSV (\texttt{data/demand\_dataset.cs
 	\centering
 	\caption{Estructura del Dataset Simulado de Demanda y Despachos (13 Campos Rúbrica)}
 	\label{tab:dataset_schema}
-	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4.8cm} X}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l >{\small\ttfamily}p{4.2cm} X}
 		\toprule
-		Categoría Rúbrica & Columna & Descripción Técnica \\
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Categoría Rúbrica} & \textbf{Columna} & \textbf{Descripción Técnica} \\
 		\midrule
-		Demanda & \texttt{fecha}, \texttt{hora} & Estampa de tiempo del primer alumno en fila (YYYY-MM-DD, HH:MM). \\
-		& \texttt{ruta} & Identificador de ruta (\textit{Puente Tuzos} vs \textit{Las Vías}). \\
-		& \texttt{alumnos\_esperando} & Conteo acumulado de alumnos en la fila de abordaje. \\
-		& \texttt{llegadas\_intervalo} & Alumnos que arribaron durante el tiempo de espera (Poisson). \\
+		Demanda & fecha, hora & Estampa de tiempo del primer alumno en fila (YYYY-MM-DD, HH:MM). \\
+		& ruta & Identificador de ruta (\textit{Puente Tuzos} vs \textit{Las Vías}). \\
+		& alumnos\_esperando & Conteo de alumnos en fila al llegar la combi (cola inicial, $N \ge 0$). \\
+		& llegadas\_intervalo & Alumnos que arribaron durante el tiempo de espera (Proceso Poisson). \\
 		\addlinespace[0.4em]
-		Despacho & \texttt{hora\_salida} & Estampa de tiempo efectiva de partida de la combi (HH:MM). \\
-		& \texttt{pasajeros\_al\_salir} & Total de pasajeros a bordo al salir de la base ($1 \le N \le 18$). \\
-		& \texttt{tipo\_salida} & Categórica: \textit{Llena} (18 pax en base) o \textit{Parcial} ($<18$ pax). \\
-		& \texttt{tiempo\_espera\_acum} & Tiempo de espera acumulado del primer pasajero (minutos). \\
+		Despacho & hora\_salida & Estampa de tiempo efectiva de partida de la combi (HH:MM). \\
+		& pasajeros\_al\_salir & Total de pasajeros a bordo al salir de la base ($1 \le N \le 18$). \\
+		& tipo\_salida & Categórica: \textit{Llena} (18 pax en base) o \textit{Parcial} ($<18$ pax). \\
+		& tiempo\_espera\_acum & Tiempo de espera acumulado del primer pasajero (minutos). \\
 		\addlinespace[0.4em]
-		Ruta & \texttt{tiempo\_recorrido} & Duración del trayecto a la UPP (minutos, $+10$s por parada). \\
-		& \texttt{paradas\_intermedias} & Conteo dinámico de paradas realizadas en el trayecto ($0 \le k \le 4$). \\
-		& \texttt{alumnos\_recogidos\_intermedias} & Pasajeros abordados en ruta (hasta 8 en combis llenas / 10 en parciales). \\
-		& \texttt{total\_pasajeros\_final} & Total de alumnos que arriban a la UPP (\texttt{pasajeros\_al\_salir} + recogidos). \\
-		& \texttt{hora\_llegada\_upp} & Estampa de tiempo de arribo a la universidad (HH:MM). \\
+		Ruta & tiempo\_recorrido & Duración del trayecto a la UPP (minutos, $+10$s por parada). \\
+		& paradas\_intermedias & Conteo dinámico de paradas realizadas en el trayecto ($0 \le k \le 4$). \\
+		& alumnos\_recogidos\_\newline intermedias & Pasajeros abordados en ruta (hasta 8 en llenas / 10 en parciales). \\
+		& total\_pasajeros\_\newline final & Total de alumnos que arriban a la UPP (\texttt{pasajeros\_al\_salir} + recogidos). \\
+		& hora\_llegada\_upp & Estampa de tiempo de arribo a la universidad (HH:MM). \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
