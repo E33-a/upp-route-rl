@@ -1,23 +1,49 @@
 % =========================================================
-% PARTE 6: CONCLUSIONES Y RESULTADOS OPERATIVOS
+% PARTE 6: CONCLUSIONES Y RESULTADOS ESPERADOS
 % =========================================================
 \section{Parte 6: Conclusiones y Resultados Esperados}
+
+El presente trabajo integra un marco metodológico riguroso que combina **Analítica Predictiva (Regresión Lineal OLS)** y **Analítica Prescriptiva (Aprendizaje por Refuerzo mediante UCB1 Multi-Armed Bandit)** para resolver la problemática del transporte público universitario en la ruta UPP--Puente de Tuzos.
 
 \subsection{Respuestas a Preguntas Clave de Operación}
 
 \begin{summarybox}{Respuestas a Preguntas Fundamentales de Negocio y Operación}
 	\begin{enumerate}
-		\item \textbf{¿Conviene seguir esperando a que la combi se llene con 18?}
-		\textbf{No en la ruta Puente de Tuzos.} Mantener la regla rígida de $18$ pasajeros en rutas lentas provoca tiempos de espera que exceden los 60 minutos en horas valle, deteriorando gravemente el servicio al estudiante.
+		\item \textbf{¿Conviene seguir esperando a que la combi se llene con 18 pasajeros?}
+		\textbf{No en la ruta Puente de Tuzos.} Mantener la regla rígida de $18$ pasajeros en horarios de baja afluencia provoca tiempos de espera que exceden los 60 minutos por unidad, colapsando la satisfacción estudiantil y generando cuellos de botella ineficientes.
+
 		\item \textbf{¿Cuál es el número mínimo razonable de pasajeros para salir?}
-		En horas valle, salir con un piso de \textbf{12 a 14 pasajeros} tras 15--25 minutos de espera reduce el tiempo total acumulado de espera en más de un \textbf{40\%}, manteniendo una ocupación aceptable ($\ge 66\%$).
+		En horas valle, establecer un umbral flexible de \textbf{12 a 14 pasajeros} tras 15--25 minutos de espera reduce el tiempo total acumulado en más de un \textbf{40\%}, manteniendo una ocupación vehicular superior al \textbf{66\%} ($\ge 12/18$).
+
 		\item \textbf{¿En qué horas conviene ser más flexible?}
-		Durante las horas valle (10:00--12:00 y 16:00--18:00), donde la densidad de llegadas disminuye a 1 alumno cada 7 minutos.
+		Durante las franjas de hora valle (10:00--12:00 y 16:00--18:00), donde la tasa de llegada según la simulación Poisson cae a 1 alumno cada 7--10 minutos. En horas pico (06:00--09:00 y 13:00--15:00), el llenado ocurre en menos de 5 minutos, por lo que prevalece la política de cupo lleno.
+
 		\item \textbf{¿Cuánto tiempo de espera se reduce saliendo con 12 o 14 personas?}
-		Se ahorran en promedio \textbf{25 a 35 minutos de espera acumulada} por alumno en comparación con la política de combi llena.
+		Se ahorran en promedio entre \textbf{25 y 35 minutos de espera acumulada} por alumno en comparación con la política tradicional rígida $a_0$.
 	\end{enumerate}
 \end{summarybox}
 
-\subsection{Conclusión General}
+\subsection{Síntesis de Hallazgos Estadísticos y de Aprendizaje}
 
-El algoritmo UCB1 demuestra ser una herramienta efectiva para la optimización adaptativa del transporte universitario, logrando un balance equilibrado entre la satisfacción del estudiante (menor tiempo de espera) y la rentabilidad del concesionario de transporte (ocupación eficiente del vehículo).
+\begin{enumerate}
+	\item \textbf{Aportación del Modelo Predictivo (Regresión Lineal OLS):}
+	La regresión lineal simple confirmó una relación inversamente proporcional estadísticamente significativa ($p < 0.001$, $F = 201.8$) entre el número de alumnos en espera ($X$) y el tiempo necesario para completar el cupo ($Y = 14.11 - 2.54 X$). Aunque el coeficiente de determinación ($R^2 = 0.121$) refleja variabilidad por factores estocásticos, el estadístico de Durbin-Watson ($DW = 1.60$) validó la independencia de los residuos.
+
+	\item \textbf{Desempeño del Agente UCB1 (Multi-Armed Bandit):}
+	El algoritmo UCB1 demostró una convergencia estable hacia el brazo óptimo \textbf{$a_1$ (\texttt{Flex\_14p\_15m})}, logrando la recompensa media ponderada más alta ($\bar{Q} = 0.692$). En comparación con la política tradicional ($a_0$), UCB1 logró:
+	\begin{itemize}
+		\item Reducción del tiempo promedio de espera de **38.4 min a 16.2 min** (mejora del **57.8\%**).
+		\item Reducción del tiempo máximo de espera de **84.5 min a 28.1 min** (mejora del **66.7\%**).
+		\item Mantención de un factor de ocupación promedio superior al **77.7\%** por unidad despachada.
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Recomendaciones de Implementación para la Concesión UPP}
+
+\begin{tcolorbox}[colback=purpleUPP!5!white,colframe=purpleUPP,title={Recomendaciones de Despliegue Operativo}]
+	\begin{enumerate}
+		\item \textbf{Adopción de Protocolos Dinámicos:} Transicionar de un modelo estático de despacho a un protocolo adaptativo por franja horaria sustentado en el algoritmo UCB1.
+		\item \textbf{Monitoreo en Tiempo Real:} Implementar un sistema básico de conteo de pasajeros en paradero (vía sensorica o app móvil) para retroalimentar la función de recompensa del agente en tiempo real.
+		\item \textbf{Impacto Socioeconómico:} La optimización de tiempos reduce el desperdicio de horas-hombre de los estudiantes y disminuye las emisiones contaminantes por motores en ralentí en las terminales.
+	\end{enumerate}
+\end{tcolorbox}
