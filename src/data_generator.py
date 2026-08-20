@@ -25,14 +25,16 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP operational rules:
-    1. Base vs Transit Operations:
-       - Las Vías: Makes base until 13:00 hrs (strictly waiting for 18 pax). After 13:00 hrs, vans pass in transit
-         picking up passengers until the last van departs at ~18:30 hrs.
+    1. Intermediate Stop Pickups:
+       - Full combis ('Llena') pick up up to 8 standing passengers along intermediate stops (0-8 pax).
+       - Partial combis in transit ('Parcial') can pick up up to 9-10 passengers (0-10 pax).
+    2. New Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
+    3. Base vs Transit Operations:
+       - Las Vías: Makes base until 13:00 hrs. After 13:00 hrs, vans pass in transit until ~18:30 hrs.
        - Puente Tuzos: Makes base until 12:00 hrs. After 12:00 hrs, vans pass in transit until ~14:00 hrs.
-    2. Strict Time Sorting: All dispatches across both routes are ordered strictly by departure date and time.
-    3. Dynamic Intermediate Stops: 0 to 4 stops per trip (+10s delay per stop made).
-    4. Sequential Combi Queueing: Single active loading combi per route with leftover queue carryover.
-    5. 100% complete fields: hora_salida and hora_llegada_upp are fully populated in all rows.
+    4. Strict Time Sorting: All dispatches ordered strictly by departure date and time across routes.
+    5. Dynamic Intermediate Stops: 0 to 4 stops per trip (+10s delay per stop made).
+    6. Sequential Combi Queueing: Single active loading combi per route with leftover queue carryover.
     """
     rng = np.random.default_rng(seed)
     records = []
@@ -82,8 +84,8 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     current_hour_decimal = current_time.hour + (current_time.minute / 60.0)
                     
                     # Dispatch Logic:
-                    # During Base Hours (< base_end_hour): Strictly wait for full 18 pax
-                    # During Transit Hours (>= base_end_hour): Depart when full (18 pax) OR max 15 min wait
+                    # Base Hours (< base_end_hour): Strictly wait for full 18 pax
+                    # Transit Hours (>= base_end_hour): Depart when full (18 pax) OR max 15 min wait
                     if current_hour_decimal < route.base_end_hour:
                         if students_waiting >= BUS_CAPACITY:
                             dispatch_occurred = True
@@ -107,8 +109,16 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     # Dynamic intermediate stops (0 to 4 stops made per trip)
                     stops_made = int(rng.integers(0, 5))
                     intermediate_boardings = 0
+                    
                     if stops_made > 0:
-                        intermediate_boardings = int(rng.integers(0, min(4, stops_made + 1)))
+                        if dispatch_type == "Llena":
+                            # Full combi: pick up up to 8 standing passengers along route
+                            intermediate_boardings = int(rng.integers(0, 9))
+                        else:
+                            # Partial combi in transit: can pick up up to 9-10 passengers along route
+                            intermediate_boardings = int(rng.integers(0, 11))
+                    
+                    total_pasajeros_final = passengers_boarded + intermediate_boardings
                     
                     stop_delay_min = (stops_made * STOP_DELAY_SECONDS) / 60.0
                     base_trip_duration = rng.normal(route.trip_duration_mean_min, 2.5)
@@ -129,6 +139,7 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                         "tiempo_recorrido": trip_duration,
                         "paradas_intermedias": stops_made,
                         "alumnos_recogidos_intermedias": intermediate_boardings,
+                        "total_pasajeros_final": total_pasajeros_final,
                         "hora_llegada_upp": arrival_upp_time.strftime("%H:%M")
                     })
                     
