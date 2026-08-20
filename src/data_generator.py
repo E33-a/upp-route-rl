@@ -25,10 +25,10 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP operational rules:
-    1. Intermediate Stop Pickups:
-       - Full combis ('Llena') pick up up to 8 standing passengers along intermediate stops (0-8 pax).
-       - Partial combis in transit ('Parcial') can pick up up to 9-10 passengers (0-10 pax).
-    2. New Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
+    1. Realistic Intermediate Boardings:
+       - Peak hours (06:00-08:00, 11:00-13:00): Most common pickup is 3 to 4 passengers (max 6 to 7 pax standing).
+       - Off-peak hours: 0 to 3 passengers.
+    2. Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
     3. Base vs Transit Operations:
        - Las Vías: Makes base until 13:00 hrs. After 13:00 hrs, vans pass in transit until ~18:30 hrs.
        - Puente Tuzos: Makes base until 12:00 hrs. After 12:00 hrs, vans pass in transit until ~14:00 hrs.
@@ -111,12 +111,12 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     intermediate_boardings = 0
                     
                     if stops_made > 0:
-                        if dispatch_type == "Llena":
-                            # Full combi: pick up up to 8 standing passengers along route
-                            intermediate_boardings = int(rng.integers(0, 9))
+                        if is_peak_hour(dispatch_time):
+                            # Peak hours: Most common is 3 to 4 pax, max 6-7 pax
+                            intermediate_boardings = int(np.clip(np.round(rng.normal(loc=3.5, scale=1.1)), 0, 7))
                         else:
-                            # Partial combi in transit: can pick up up to 9-10 passengers along route
-                            intermediate_boardings = int(rng.integers(0, 11))
+                            # Off-peak hours: 0 to 3 pax
+                            intermediate_boardings = int(rng.integers(0, 4))
                     
                     total_pasajeros_final = passengers_boarded + intermediate_boardings
                     
