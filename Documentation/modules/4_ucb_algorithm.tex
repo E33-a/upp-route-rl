@@ -15,7 +15,8 @@ El sistema selecciona en cada decisión entre 5 brazos o políticas candidatas (
 	\label{tab:brazos_catalog}
 	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}c l X}
 		\toprule
-		Brazo & Identificador & Regla de Despacho \\
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Brazo} & \textbf{Identificador} & \textbf{Regla de Despacho} \\
 		\midrule
 		$a_0$ & \texttt{FullOnly} & Salir únicamente al alcanzar $18$ pasajeros (Política Tradicional). \\
 		$a_1$ & \texttt{Flex\_14p\_15m} & Salir con $\ge 14$ personas O tras 15 minutos de espera. \\
@@ -44,22 +45,29 @@ La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró 
 
 \begin{figure}[H]
 	\centering
-	\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
-		\includegraphics[width=0.85\textwidth]{../outputs/plots/fig2_ucb_recompensa.png}
-	}{
-		\fbox{\rule{0pt}{2in} \rule{0.8\textwidth}{0pt} Gráfica de Recompensa UCB Pendiente}
-	}
-	\caption{Evolución de la Recompensa Acumulada y Selección de Acciones por el Agente UCB1}
-	\label{fig:ucb_recompensa}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
+			\includegraphics[width=\textwidth]{../outputs/plots/fig2_ucb_recompensa.png}
+		}{
+			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
+		}
+		\caption{Evolución Recompensa UCB1}
+		\label{fig:ucb_recompensa}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\IfFileExists{../outputs/plots/fig3_comparativa.png}{
+			\includegraphics[width=\textwidth]{../outputs/plots/fig3_comparativa.png}
+		}{
+			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
+		}
+		\caption{Comparativa ($a_0$ vs UCB1)}
+		\label{fig:ucb_comparativa}
+	\end{subfigure}
+	\caption{Resultados Experimentales del Agente Multi-Armed Bandit UCB1.}
+	\label{fig:ucb_resultados_conjuntos}
 \end{figure}
 
-\begin{figure}[H]
-	\centering
-	\IfFileExists{../outputs/plots/fig3_comparativa.png}{
-		\includegraphics[width=0.85\textwidth]{../outputs/plots/fig3_comparativa.png}
-	}{
-		\fbox{\rule{0pt}{2in} \rule{0.8\textwidth}{0pt} Gráfica Comparativa Pendiente}
-	}
-	\caption{Comparación Cuantitativa entre la Política Tradicional ($a_0$) y el Algoritmo UCB1}
-	\label{fig:ucb_comparativa}
-\end{figure}
+\clearpage

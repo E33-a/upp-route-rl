@@ -58,16 +58,12 @@ Para validar la inferencia del modelo, se analizan los residuos $e_i = Y_i - \ha
 \begin{figure}[H]
 	\centering
 	\IfFileExists{img/fig1_regresion_lineal.png}{%
-		\includegraphics[width=0.85\textwidth]{img/fig1_regresion_lineal.png}%
+		\includegraphics[width=0.7\textwidth]{img/fig1_regresion_lineal.png}%
 	}{%
-		\vspace{2em}
 		\begin{tcolorbox}[colback=purpleUPP!5!white,colframe=purpleUPP,title={Gráfico en Espera}]
-			\centering \textit{La gráfica ajustada ($Y = a + b X$) se generará e incluirá automáticamente al ejecutar el script \texttt{02\_train\_regression.py}.}
-		\end{tcolorbox}
-		\vspace{2em}
+			\centering \textit{La gráfica ajustada ($Y = a + b X$) se generará al ejecutar el script \texttt{02\_train\_regression.py}.}
+		\end{tcolorbox}%
 	}%
 	\caption{Gráfico de Dispersión y Recta de Regresión Ajustada ($Y = a + b X$).}
 	\label{fig:regresion_fit}
 \end{figure}
-
-\newpage

@@ -3,34 +3,35 @@
 % =========================================================
 \begin{landscape}
 \section{Parte 5: Bitácora de Uso de IA Generativa}
+\vspace{-0.5em}
 \begin{center}
 	\captionof{table}{Bitácora Oficial de Uso de IA Generativa (Evidencia de Aprendizaje Crítico)}
 	\label{tab:bitacora_completa}
-	\vspace{0.5em}
-	\scriptsize
-	\renewcommand{\arraystretch}{0.9}
-	\begin{tabularx}{\linewidth}{p{1.4cm} p{1.8cm} p{1.8cm} X X X X X}
+	\vspace{0.3em}
+	\fontsize{7.5pt}{9pt}\selectfont
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{0.8}
+	\begin{tabularx}{\linewidth}{p{1.3cm} p{1.6cm} p{1.6cm} X X X X X}
 		\toprule
 		\rowcolor{purpleUPP!10!white}
 		\textbf{Fecha} & \textbf{Herramienta} & \textbf{Tema} & \textbf{¿Qué le pregunté?} & \textbf{¿Qué me respondió?} & \textbf{¿Qué verifiqué?} & \textbf{¿Qué corregí?} & \textbf{¿Qué aprendí?} \\
 		\midrule
-		14/08/2026 & Antigravity (Gemini) & Dataset Simulado & ¿Cómo simular llegadas de alumnos en intervalos de 15 min en Python? & Usar \texttt{np.random.poisson} con $\lambda = 15/7$ para Puente de Tuzos. & Revisé en la literatura de teoría de colas que Poisson modela llegadas independientes. & Ajusté $\lambda$ por franja horaria pico (multiplicador $1.6$). & Aprendí a usar \texttt{default\_rng} para reproducibilidad en simulación. \\
+		14/08/2026 & Antigravity (Gemini) & Dataset Simulado & ¿Cómo simular llegadas de alumnos en intervalos de 15 min en Python? & Usar \texttt{np.random.poisson} con $\lambda = 15/7$ para Puente de Tuzos. & Revisé en literatura de teoría de colas que Poisson modela llegadas independientes. & Ajusté $\lambda$ por franja horaria pico (multiplicador $1.6$). & Aprendí a usar \texttt{default\_rng} para reproducibilidad. \\
 		\midrule
-		14/08/2026 & Antigravity (Gemini) & Clean Code & ¿Cómo estructurar el código de manera modular y profesional en inglés? & Crear paquete \texttt{src/} con \texttt{config.py}, \texttt{data\_generator.py} y scripts. & Verifiqué la estructura estándar PEP8 para proyectos de Data Science. & Moví constantes globales fuera del script principal hacia \texttt{config.py}. & Aprendí el patrón de diseño Single Responsibility Principle en Python. \\
+		14/08/2026 & Antigravity (Gemini) & Clean Code & ¿Cómo estructurar el código de manera modular y profesional? & Crear paquete \texttt{src/} con \texttt{config.py}, \texttt{data\_generator.py} y scripts. & Verifiqué la estructura estándar PEP8 para proyectos de Data Science. & Moví constantes globales fuera del script principal hacia \texttt{config.py}. & Aprendí el patrón de diseño Single Responsibility Principle. \\
 		\midrule
-		15/08/2026 & Antigravity (Gemini) & Regresión Lineal & ¿Cómo implementar la regresión lineal simple y extraer coeficientes en scikit-learn? & Usar \texttt{LinearRegression()}\\ \texttt{.fit(X, y)} e imprimir \texttt{intercept\_} y \texttt{coef\_}. & Confirmé en la documentación que \texttt{X} requiere matriz 2D. & Convertí la columna de pandas \texttt{df['alumnos']} a DataFrame \texttt{df[['alumnos']]}. & Aprendí que scikit-learn exige arrays 2D para las características independientes. \\
+		15/08/2026 & Antigravity (Gemini) & Regresión Lineal & ¿Cómo implementar regresión lineal y extraer coeficientes en scikit-learn? & Usar \texttt{LinearRegression().fit(X, y)} e imprimir \texttt{intercept\_} y \texttt{coef\_}. & Confirmé en documentación que \texttt{X} requiere matriz 2D. & Convertí la columna de pandas \texttt{df['alumnos']} a DataFrame \texttt{df[['alumnos']]}. & Aprendí que scikit-learn exige arrays 2D para $X$. \\
 		\midrule
-		15/08/2026 & Antigravity (Gemini) & Pruebas Supuestos OLS & ¿Cómo verificar normalidad e independencia en Python? & Usar \texttt{scipy.stats.shapiro} y \texttt{statsmodels.stats.}\\ \texttt{stattools.}\\ \texttt{durbin\_watson}. & Ejecuté los scripts en los residuos calculados del modelo 2. & Agregué gráficos Q-Q y de residuos vs ajustados en Matplotlib. & Aprendí la relevancia inferencial del $p$-value en Shapiro-Wilk y Durbin-Watson. \\
+		15/08/2026 & Antigravity (Gemini) & Supuestos OLS & ¿Cómo verificar normalidad e independencia en Python? & Usar \texttt{scipy.stats.shapiro} y \texttt{durbin\_watson}. & Ejecuté los scripts en los residuos calculados del modelo 2. & Agregué gráficos Q-Q y de residuos vs ajustados. & Aprendí la relevancia inferencial del $p$-value en Shapiro-Wilk. \\
 		\midrule
-		16/08/2026 & Antigravity (Gemini) & Algoritmo UCB & ¿Cómo formular las salidas flexibles como un problema Multi-Armed Bandit? & Definir 5 brazos con reglas de cupo y tiempo límite, calculando recompensa $R_t$. & Verifiqué que la fórmula de UCB1 equilibre exploración ($\sqrt{\ln t / N_a}$) y explotación. & Cambié el rango de recompensa para asegurar normalización exacta entre $[0, 1]$. & Aprendí a implementar el equilibrio entre exploración y explotación en toma de decisiones. \\
+		16/08/2026 & Antigravity (Gemini) & Algoritmo UCB & ¿Cómo formular salidas flexibles como Multi-Armed Bandit? & Definir 5 brazos con reglas de cupo/tiempo y recompensa $R_t$. & Verifiqué que UCB1 equilibre exploración ($\sqrt{\ln t / N_a}$) y explotación. & Cambié rango de recompensa para normalización exact entre $[0, 1]$. & Aprendí a implementar el balance exploración/explotación. \\
 		\midrule
-		16/08/2026 & Antigravity (Gemini) & Métrica de Evaluación & ¿Cómo medir la reducción de tiempo de espera entre UCB y política tradicional? & Comparar el tiempo promedio de espera acumulado por alumno entre $a_0$ y $a_{\text{UCB}}$. & Calculé el promedio acumulado de las 3 semanas simuladas. & Corregí la penalización por asientos vacíos. & Aprendí a evaluar compensaciones entre eficiencia operativa y satisfacción de usuario. \\
+		16/08/2026 & Antigravity (Gemini) & Evaluación & ¿Cómo medir reducción de tiempo de espera entre UCB y tradicional? & Comparar tiempo promedio de espera acumulado por alumno entre $a_0$ y $a_{\text{UCB}}$. & Calculé el promedio acumulado de 3 semanas simuladas. & Corregí la penalización por asientos vacíos. & Aprendí a evaluar trade-offs entre eficiencia y satisfacción. \\
 		\midrule
-		16/08/2026 & Antigravity (Gemini) & Documentación LaTeX & ¿Cómo adaptar la plantilla académica a LuaLaTeX con cuadros de resultados? & Usar el paquete \texttt{tcolorbox} con estilos personalizados y tablas \texttt{tabularx}. & Compilé el documento con \texttt{lualatex} verificando la ausencia de errores. & Corregí comandos obsoletos de formato de tablas en LaTeX. & Aprendí la estructura formal de reportes de investigación en ingeniería de software. \\
+		16/08/2026 & Antigravity (Gemini) & Documentación & ¿Cómo adaptar plantilla académica a LuaLaTeX con cuadros de resultados? & Usar \texttt{tcolorbox} con estilos personalizados y tablas \texttt{tabularx}. & Compilé con \texttt{lualatex} verificando ausencia de errores. & Corregí comandos obsoletos de formato de tablas. & Aprendí la estructura formal de reportes de investigación. \\
 		\midrule
-		16/08/2026 & Antigravity (Gemini) & Control de Versiones & ¿Cuál es la convención para ignorar entornos virtuales en Git? & Agregar \texttt{venv/}, \texttt{.venv/} y \texttt{\_\_pycache\_\_/} al archivo \texttt{.gitignore}. & Verifiqué el estado del repositorio con \texttt{git status}. & Removí el rastreo del entorno virtual y publiqué la rama \texttt{develop}. & Aprendí las buenas prácticas de versionado en Git y seguridad en repositorios. \\
+		16/08/2026 & Antigravity (Gemini) & Control Versiones & ¿Cuál es la convención para ignorar entornos virtuales en Git? & Agregar \texttt{venv/}, \texttt{.venv/} y \texttt{\_\_pycache\_\_/} a \texttt{.gitignore}. & Verifiqué el estado del repositorio con \texttt{git status}. & Removí rastreo del entorno virtual y publiqué rama \texttt{develop}. & Aprendí buenas prácticas de versionado en Git. \\
 		\bottomrule
 	\end{tabularx}
 \end{center}
-
 \end{landscape}
