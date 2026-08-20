@@ -57,4 +57,44 @@ El dataset simulado se exporta como archivo CSV (\texttt{data/demand\_dataset.cs
 	\end{tabularx}
 \end{table}
 
+\subsection{Mecánica Operativa de \texttt{llegadas\_intervalo} y Dinámica de Cola}
+
+El campo \texttt{llegadas\_intervalo} cuantifica el número total de nuevos estudiantes que arriban a la base de combis durante la ventana de tiempo en la que la unidad se encuentra estacionada esperando la acumulación de pasaje.
+
+\subsubsection{Modelo de Arribos de Poisson Minuto a Minuto}
+Durante el tiempo de espera de la unidad $t \in [t_{\text{llegada\_inicial}}, t_{\text{despacho}}]$, la llegada de nuevos estudiantes se evalúa minuto a minuto mediante un proceso estocástico de Poisson:
+\begin{equation}
+    N_t \sim \text{Poisson}(\lambda_{\text{efectiva}}(t))
+\end{equation}
+donde la tasa de arribo efectiva $\lambda_{\text{efectiva}}(t) = \lambda_{\text{base}} \times \mu_{\text{hora}}(t)$ se ajusta dinámicamente mediante el multiplicador intra-horario:
+\begin{equation}
+    \mu_{\text{hora}}(t) = 
+    \begin{cases}
+        \mu_{\text{pico}} & \text{si } t \text{ está en hora pico (06:00-09:00, 11:00-13:00) y minuto } < 30 \\
+        0.35 \times \mu_{\text{pico}} & \text{si } t \text{ está en hora pico y minuto } \ge 30 \\
+        0.18 \times \mu_{\text{pico}} & \text{si } t \text{ es hora valle (fuera de hora pico)}
+    \end{cases}
+\end{equation}
+
+El valor acumulado en el dataset corresponde a la suma de todas las entradas minuto a minuto durante la espera de la unidad:
+\begin{equation}
+    \texttt{llegadas\_intervalo} = \sum_{m=1}^{t_{\text{espera}}} N_m
+\end{equation}
+
+\subsubsection{Relación Matemática con el Abordaje de Pasajeros}
+En cada evento de despacho, la disponibilidad total de estudiantes en la estación está dada por la suma de la cola inicial a la llegada de la unidad (\texttt{alumnos\_esperando}) y el flujo acumulado durante la espera (\texttt{llegadas\_intervalo}):
+\begin{equation}
+    \text{Estudiantes Disponibles} = \texttt{alumnos\_esperando} + \texttt{llegadas\_intervalo}
+\end{equation}
+
+Dado que la capacidad máxima de la combi es $C = 18$ pasajeros, la cantidad efectiva de alumnos a bordo al momento del despacho se determina como:
+\begin{equation}
+    \texttt{pasajeros\_al\_salir} = \min\left(18, \texttt{alumnos\_esperando} + \texttt{llegadas\_intervalo}\right)
+\end{equation}
+
+Si el total de estudiantes disponibles excede la capacidad del vehículo ($> 18$), los pasajeros sobrantes permanecen en la fila bajo disciplina FIFO (First-In, First-Out) y constituyen la cola inicial (\texttt{alumnos\_esperando}) de la siguiente combi en la secuencia de despacho:
+\begin{equation}
+    \texttt{alumnos\_esperando}_{\text{siguiente}} = \max\left(0, \left(\texttt{alumnos\_esperando} + \texttt{llegadas\_intervalo}\right) - 18\right)
+\end{equation}
+
 \newpage
