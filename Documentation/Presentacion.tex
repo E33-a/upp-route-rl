@@ -571,14 +571,14 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Reducción de Tiempos de Espera Estudiantil}]
         \centering
-        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
-        \begin{tabularx}{\textwidth}{>{\color{textWhite}}X >{\color{textWhite}}c >{\bfseries\color{yellowAccent}}c >{\bfseries}c}
+        \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
-            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Política Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
             \midrule
-            Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\[5pt]
+            Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\[6pt]
             Tiempo Máximo de Espera & $84.5$ min & \textbf{$28.1$ min} & \color{emeraldAccent}{\textbf{-66.7\% Ahorro}} \\
             \bottomrule
         \end{tabularx}
@@ -593,12 +593,12 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular, Alumnos Varados y Recompensa $\bar{Q}$}]
         \centering
-        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
-        \begin{tabularx}{\textwidth}{>{\color{textWhite}}X >{\color{textWhite}}c >{\bfseries\color{yellowAccent}}c >{\bfseries}c}
+        \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
-            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Política Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
             \midrule
             Factor de Ocupación & $100.0\%$ ($18/18$) & \textbf{$77.7\%$} ($14/18$) & \color{cyanAccent}{Equilibrio Eficiente} \\[4pt]
             Alumnos Varados & $142$ alumnos & \textbf{$12$ alumnos} & \color{emeraldAccent}{\textbf{-91.5\% Varados}} \\[4pt]
@@ -650,15 +650,15 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}]
         \centering
-        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
+        \fontsize{9.5pt}{13.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
-        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}X}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{cyanAccent}}l >{\raggedright\arraybackslash\color{textWhite}}X >{\raggedright\arraybackslash\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
             \midrule
-            ChatGPT & Simulación Poisson & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\[4pt]
-            Copilot & Regresión scikit-learn & Código de ajuste OLS. & Corregí formato 2D exigido por scikit-learn. \\
+            ChatGPT & Simulación & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\[4pt]
+            Copilot & Regresión & Código de ajuste OLS. & Corregí formato 2D exigido por scikit-learn. \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -672,9 +672,9 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}]
         \centering
-        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
+        \fontsize{9.5pt}{13.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
-        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}X}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{cyanAccent}}l >{\raggedright\arraybackslash\color{textWhite}}X >{\raggedright\arraybackslash\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
