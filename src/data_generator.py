@@ -12,12 +12,32 @@ from src.config import (
 )
 
 def is_peak_hour(current_time: datetime) -> bool:
-    """Determines whether current_time falls within UPP peak hours (06:00-08:00 or 11:00-13:00)."""
+    """Determines whether current_time falls within UPP peak hours (06:00-09:00 or 11:00-13:00)."""
     hour = current_time.hour
     for start_peak, end_peak in PEAK_HOURS:
         if start_peak <= hour < end_peak:
             return True
     return False
+
+def get_intra_hour_multiplier(current_time: datetime, base_peak_multiplier: float) -> float:
+    """
+    Calculates dynamic intra-hour demand multiplier based on real UPP user behavior:
+    1. Peak Hours (06:00-09:00, 11:00-13:00):
+       - First half-hour (:00 to :29): Massive student surge -> fills combi in 3-5 min (full peak multiplier).
+       - Second half-hour (:30 to :59): Flow eases -> fills combi in 10-15 min (~0.35x peak multiplier).
+    2. Off-Peak Hours:
+       - Fills combi in 20-30 min (~0.18x multiplier).
+    """
+    if is_peak_hour(current_time):
+        if current_time.minute < 30:
+            # First half of peak hour: 3-5 min fill time
+            return base_peak_multiplier
+        else:
+            # Second half of peak hour: 10-15 min fill time
+            return base_peak_multiplier * 0.35
+    else:
+        # Off-peak hours: 20-30 min fill time
+        return base_peak_multiplier * 0.18
 
 def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     """
@@ -25,16 +45,18 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP operational rules:
-    1. Realistic Intermediate Boardings:
-       - Peak hours (06:00-08:00, 11:00-13:00): Most common pickup is 3 to 4 passengers (max 6 to 7 pax standing).
-       - Off-peak hours: 0 to 3 passengers.
-    2. Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
-    3. Base vs Transit Operations:
-       - Las Vías: Makes base until 13:00 hrs. After 13:00 hrs, vans pass in transit until ~18:30 hrs.
-       - Puente Tuzos: Makes base until 12:00 hrs. After 12:00 hrs, vans pass in transit until ~14:00 hrs.
-    4. Strict Time Sorting: All dispatches ordered strictly by departure date and time across routes.
-    5. Dynamic Intermediate Stops: 0 to 4 stops per trip (+10s delay per stop made).
-    6. Sequential Combi Queueing: Single active loading combi per route with leftover queue carryover.
+    1. Intra-Hour Cycle Multiplier:
+       - Peak :00 to :29 -> Fills in 3-5 min.
+       - Peak :30 to :59 -> Fills in 10-15 min.
+       - Off-peak        -> Fills in 20-30 min.
+    2. Realistic Intermediate Boardings:
+       - Peak hours: Mean pickup 3-4 pax (max 6-7 standing).
+       - Off-peak hours: 0-3 pax.
+    3. Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
+    4. Base vs Transit Operations:
+       - Las Vías: Base until 13:00 hrs, then transit until ~18:30 hrs.
+       - Puente Tuzos: Base until 12:00 hrs, then transit until ~14:00 hrs.
+    5. Strict Time Sorting: Ordered chronologically by departure date and time across all routes.
     """
     rng = np.random.default_rng(seed)
     records = []
@@ -66,10 +88,9 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                 
                 dispatch_occurred = False
                 
-                # Simulate minute-by-minute arrivals
+                # Simulate minute-by-minute arrivals with intra-hour multiplier
                 while current_time < day_end and not dispatch_occurred:
-                    is_peak = is_peak_hour(current_time)
-                    multiplier = route.peak_multiplier if is_peak else 1.0
+                    multiplier = get_intra_hour_multiplier(current_time, route.peak_multiplier)
                     lambda_effective = route.arrival_rate_per_min * multiplier
                     
                     minute_arrivals = int(rng.poisson(lambda_effective))
