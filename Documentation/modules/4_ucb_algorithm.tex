@@ -1,0 +1,77 @@
+% =========================================================
+% PARTE 4: ALGORITMO UCB (MULTI-ARMED BANDIT)
+% =========================================================
+\section{Parte 4: Algoritmo UCB1 (Multi-Armed Bandit)}
+
+Para superar la rigidez de la política tradicional de combi llena ($18$ pasajeros), se formula el problema de decisión de despacho como un entorno de \textbf{Aprendizaje por Refuerzo} utilizando el algoritmo \textbf{Upper Confidence Bound (UCB1)}.
+
+\subsection{Definición de Brazos (Políticas de Despacho)}
+
+El sistema selecciona en cada decisión entre 5 brazos o políticas candidatas ($a_0, \dots, a_4$):
+
+\begin{table}[H]
+	\centering
+	\caption{Catálogo de Políticas de Salida (Brazos UCB)}
+	\label{tab:brazos_catalog}
+	\vspace{0.2em}
+	\fontsize{8.5pt}{10pt}\selectfont
+	\setlength{\tabcolsep}{4pt}
+	\renewcommand{\arraystretch}{0.9}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}c l X}
+		\toprule
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Brazo} & \textbf{Identificador} & \textbf{Regla de Despacho} \\
+		\midrule
+		$a_0$ & \texttt{FullOnly} & Salir únicamente al alcanzar $18$ pasajeros (Política Tradicional). \\
+		$a_1$ & \texttt{Flex\_14p\_15m} & Salir con $\ge 14$ personas O tras 15 minutos de espera. \\
+		$a_2$ & \texttt{Flex\_12p\_25m} & Salir con $\ge 12$ personas O tras 25 minutos de espera. \\
+		$a_3$ & \texttt{Flex\_10p\_35m} & Salir con $\ge 10$ personas O tras 35 minutos de espera. \\
+		$a_4$ & \texttt{Flex\_8p\_45m} & Salir con $\ge 8$ personas O tras 45 minutos de espera. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\vspace{-0.5em}
+\subsection{Función de Recompensa Normalizada}
+
+En cada turno $t$, la penalización total del sistema se calcula ponderando tres métricas clave:
+\begin{equation}
+	P_t = w_1 \cdot \text{espera\_total} + w_2 \cdot \text{alumnos\_dejados} + w_3 \cdot \text{asientos\_vacíos}
+\end{equation}
+
+La recompensa inmediata $R_t \in [0, 1]$ se obtiene mediante min-max scaling invertido:
+\begin{equation}
+	R_t = 1 - \frac{P_t - P_{\text{min}}}{P_{\text{max}} - P_{\text{min}}}
+\end{equation}
+
+\newpage
+\subsection{Resultados y Comparativa de Desempeño}
+
+La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró que el brazo preferido por el agente es \textbf{$a_1$ (Flex $\ge 14$ pax tras 15 min)}, obteniendo el promedio de recompensa más elevado ($\bar{Q} = 0.692$).
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
+			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig2_ucb_recompensa.png}
+		}{
+			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
+		}
+		\caption{Evolución Recompensa UCB1}
+		\label{fig:ucb_recompensa}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\IfFileExists{../outputs/plots/fig3_comparativa.png}{
+			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig3_comparativa.png}
+		}{
+			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
+		}
+		\caption{Comparativa ($a_0$ vs UCB1)}
+		\label{fig:ucb_comparativa}
+	\end{subfigure}
+	\caption{Resultados Experimentales del Agente Multi-Armed Bandit UCB1.}
+	\label{fig:ucb_resultados_conjuntos}
+\end{figure}

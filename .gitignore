@@ -1,5 +1,23 @@
+# Python & Virtual Environments
 venv/
 .venv/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# LaTeX Auxiliary Build Files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.lof
+*.lot
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+texput.log

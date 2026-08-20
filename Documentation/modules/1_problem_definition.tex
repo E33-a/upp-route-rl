@@ -1,0 +1,31 @@
+% =========================================================
+% PARTE 1: PLANTEAMIENTO DEL PROBLEMA Y OBJETIVOS DEL SISTEMA
+% =========================================================
+\section{Parte 1: Planteamiento del Problema y Objetivos}
+
+En el sistema de transporte colectivo universitario que conecta a la comunidad académica con el campus de la Universidad Politécnica de Pachuca (UPP), operan dos rutas principales con comportamientos operacionales contrastantes:
+
+\begin{enumerate}
+	\item \textbf{Ruta Central de Autobuses / Las Vías:} Conecta nodos urbanos de alto tráfico. Registra una afluencia constante e intensa de estudiantes con intervalos de llegada menores a 1 minuto por alumno durante horarios pico.
+	\item \textbf{Ruta Puente de Tuzos (Mineral de la Reforma):} Presenta una menor densidad poblacional estudiantil y un flujo más lento, con una llegada promedio de \textbf{1 alumno cada 7 minutos} ($\lambda \approx 0.143$ alumnos/minuto) durante franjas horarias normales.
+\end{enumerate}
+
+\subsection{Problemática Operativa}
+
+Actualmente, las unidades operan bajo una regla empírica rígida: \textit{no salir hasta llenar los 18 asientos de la combi}. 
+
+Durante las semanas de fin de cuatrimestre, este criterio provoca salidas muy tardías en la ruta Puente de Tuzos. Los estudiantes que abordan primero sufren tiempos de espera acumulados superiores a 60 u 80 minutos en la parada, causando retrasos críticos en sus clases y exámenes finales.
+
+\subsection{Objetivo General del Proyecto}
+
+Diseñar e implementar un sistema inteligente basado en Ciencia de Datos y Aprendizaje por Refuerzo que recomiende la ventana óptima de despacho para cada unidad, minimizando el tiempo de espera de los alumnos y garantizando un nivel razonable de ocupación operacional.
+
+\begin{summarybox}{Componentes Fundamentales de la Solución}
+	\begin{itemize}
+		\item \textbf{Generación de Dataset Simulado:} Modelación estocástica por procesos de Poisson ajustados a 21 días de demanda.
+		\item \textbf{Regresión Lineal Simple:} Modelos Mínimos Cuadrados Ordinarios (OLS) para estimación de tiempos de llenado y recorrido.
+		\item \textbf{Algoritmo UCB1 (Multi-Armed Bandit):} Aprendizaje por exploración/explotación para seleccionar políticas dinámicas de despacho.
+	\end{itemize}
+\end{summarybox}
+
+\newpage

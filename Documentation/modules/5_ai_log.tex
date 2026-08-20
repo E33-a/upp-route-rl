@@ -1,0 +1,66 @@
+% =========================================================
+% PARTE 5: BITÁCORA DE USO DE IA GENERATIVA (LANDSCAPE)
+% =========================================================
+\begin{landscape}
+\section{Parte 5: Bitácora de Uso de IA Generativa}
+\vspace{-0.6em}
+\begin{center}
+	\captionof{table}{Bitácora Oficial de Uso de IA Generativa (Evidencia de Aprendizaje Crítico)}
+	\label{tab:bitacora_completa}
+	\vspace{0.2em}
+	\fontsize{7pt}{8.2pt}\selectfont
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{0.72}
+	\begin{tabularx}{\linewidth}{p{1.3cm} p{1.6cm} p{1.6cm} X X X X X}
+		\toprule
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Fecha} & \textbf{Herramienta} & \textbf{Tema} & \textbf{¿Qué le pregunté?} & \textbf{¿Qué me respondió?} & \textbf{¿Qué verifiqué?} & \textbf{¿Qué corregí?} & \textbf{¿Qué aprendí?} \\
+		\midrule
+		14/08/2026 & Antigravity (Gemini) & Dataset Simulado & ¿Cómo simular llegadas de alumnos en intervalos de 15 min en Python? & Usar \texttt{np.random.poisson} con $\lambda = 15/7$ para Puente de Tuzos. & Revisé en literatura de teoría de colas que Poisson modela llegadas independientes. & Ajusté $\lambda$ por franja horaria pico (multiplicador $1.6$). & Aprendí a usar \texttt{default\_rng} para reproducibilidad. \\
+		\midrule
+		14/08/2026 & Antigravity (Gemini) & Clean Code & ¿Cómo estructurar el código de manera modular y profesional? & Crear paquete \texttt{src/} con \texttt{config.py}, \texttt{data\_generator.py} y scripts. & Verifiqué la estructura estándar PEP8 para proyectos de Data Science. & Moví constantes globales fuera del script principal hacia \texttt{config.py}. & Aprendí el patrón de diseño Single Responsibility Principle. \\
+		\midrule
+		15/08/2026 & Antigravity (Gemini) & Regresión Lineal & ¿Cómo implementar regresión lineal y extraer coeficientes en scikit-learn? & Usar \texttt{LinearRegression().fit(X, y)} e imprimir \texttt{intercept\_} y \texttt{coef\_}. & Confirmé en documentación que \texttt{X} requiere matriz 2D. & Convertí la columna de pandas \texttt{df['alumnos']} a DataFrame \texttt{df[['alumnos']]}. & Aprendí que scikit-learn exige arrays 2D para $X$. \\
+		\midrule
+		15/08/2026 & Antigravity (Gemini) & Supuestos OLS & ¿Cómo verificar normalidad e independencia en Python? & Usar \texttt{scipy.stats.shapiro} y \texttt{durbin\_watson}. & Ejecuté los scripts en los residuos calculados del modelo 2. & Agregué gráficos Q-Q y de residuos vs ajustados. & Aprendí la relevancia inferencial del $p$-value en Shapiro-Wilk. \\
+		\midrule
+		16/08/2026 & Antigravity (Gemini) & Algoritmo UCB & ¿Cómo formular salidas flexibles como Multi-Armed Bandit? & Definir 5 brazos con reglas de cupo/tiempo y recompensa $R_t$. & Verifiqué que UCB1 equilibre exploración ($\sqrt{\ln t / N_a}$) y explotación. & Cambié rango de recompensa para normalización exacta entre $[0, 1]$. & Aprendí a implementar el balance exploración/explotación. \\
+		\midrule
+		16/08/2026 & Antigravity (Gemini) & Evaluación & ¿Cómo medir reducción de tiempo de espera entre UCB y tradicional? & Comparar tiempo promedio de espera acumulado por alumno entre $a_0$ y $a_{\text{UCB}}$. & Calculé el promedio acumulado de 3 semanas simuladas. & Corregí la penalización por asientos vacíos. & Aprendí a evaluar trade-offs entre eficiencia y satisfacción. \\
+		\midrule
+		16/08/2026 & Antigravity (Gemini) & Documentación & ¿Cómo adaptar plantilla académica a LuaLaTeX con cuadros de resultados? & Usar \texttt{tcolorbox} con estilos personalizados y tablas \texttt{tabularx}. & Compilé con \texttt{lualatex} verificando ausencia de errores. & Corregí comandos obsoletos de formato de tablas. & Aprendí la estructura formal de reportes de investigación. \\
+		\midrule
+		16/08/2026 & Antigravity (Gemini) & Control Versiones & ¿Cuál es la convención para ignorar entornos virtuales en Git? & Agregar \texttt{venv/}, \texttt{.venv/} y \texttt{\_\_pycache\_\_/} a \texttt{.gitignore}. & Verifiqué el estado del repositorio con \texttt{git status}. & Removí rastreo del entorno virtual y publiqué rama \texttt{develop}. & Aprendí buenas prácticas de versionado en Git. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Demanda Intra-hora & ¿Cómo replicar ciclos de llenado de 3-5 min en pico y 20-30 min en valle? & Implementar multiplicador intra-horario ($\mu_{\text{hora}}$) por medias horas. & Verifiqué tiempos observados en paradero Las Vías y Puente Tuzos. & Ajusté tasa de goteo minuto a minuto durante la espera. & Aprendí a granularizar modelos Poisson continuos. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Mecánica de Colas & ¿Cómo gestionar paraderos vacíos y traspaso de alumnos sobrantes? & Establecer cola inicial $N=0$ y transferir remanente con lógica FIFO. & Validé que combis en paradero vacío acumulen pasaje por goteo realista. & Corregí \texttt{alumnos\_esperando} para reflejar estado a la llegada. & Aprendí conservación de masa de pasajeros en transporte. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Integridad Data & ¿Cómo verificar la consistencia matemática del dataset de 1,921 registros? & Validar sumas \texttt{total\_pasajeros\_final} y ausencia de nulos. & Ejecuté análisis estadístico descriptivo en pandas. & Corregí conteo de pasaje recogido en paradas intermedias. & Aprendí técnicas de auditoría de datos en datasets simulados. \\
+		\bottomrule
+	\end{tabularx}
+\end{center}
+\end{landscape}
+
+% Hoja adicional: la Tabla 4 original se conserva sin modificaciones.
+\newpage
+\begin{landscape}
+\begin{center}
+	\captionof{table}{Continuación de la Bitácora Oficial de Uso de IA Generativa}
+	\label{tab:bitacora_continuacion}
+	\vspace{0.2em}
+	\fontsize{7pt}{8.2pt}\selectfont
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{0.95}
+	\begin{tabularx}{\linewidth}{p{1.3cm} p{1.6cm} p{1.6cm} X X X X X}
+		\toprule
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Fecha} & \textbf{Herramienta} & \textbf{Tema} & \textbf{¿Qué le pregunté?} & \textbf{¿Qué me respondió?} & \textbf{¿Qué verifiqué?} & \textbf{¿Qué corregí?} & \textbf{¿Qué aprendí?} \\
+		\midrule
+		20/08/2026 & Antigravity (Codex) & Selección de datos OLS & ¿Cómo interpretar ``combi llena o en espera'' con las columnas disponibles? & Conservar salidas \textit{Llena} o registros con \texttt{alumnos\_esperando}$>0$, y usar \texttt{tiempo\_espera\_acum} como minutos para llenar. & Revisé los valores de \texttt{tipo\_salida} y confirmé que existen 1,439 llenas y 482 parciales. & Hice explícito el filtro y eliminé valores no numéricos antes del ajuste. & Aprendí que la definición operativa de las variables debe quedar documentada antes de modelar. \\
+		\midrule
+		20/08/2026 & Antigravity (Codex) & Inferencia OLS & ¿Cómo obtener el $p$-valor de la pendiente y distinguirlo de $R^2$? & Calcular el estadístico $t$ con el error estándar de la pendiente y evaluar una prueba bilateral con $n-2$ grados de libertad. & Contrasté la ecuación impresa con la recta graficada y comprobé que $p<0.05$. & Reporté por separado ecuación, $R^2$ y $p$-valor, sin interpretar significancia como alto poder explicativo. & Aprendí que una pendiente puede ser significativa aunque el $R^2$ sea modesto. \\
+		\bottomrule
+	\end{tabularx}
+\end{center}
+\end{landscape}
