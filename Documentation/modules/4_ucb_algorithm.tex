@@ -38,13 +38,30 @@ La recompensa inmediata $R_t \in [0, 1]$ se obtiene mediante min-max scaling inv
 	R_t = 1 - \frac{P_t - P_{\text{min}}}{P_{\text{max}} - P_{\text{min}}}
 \end{equation}
 
-\subsection{Regla de Selección UCB1}
+\subsection{Resultados y Comparativa de Desempeño}
 
-En el paso $t$, la IA selecciona la acción $a^*$ que maximiza el valor esperado más la cota de incertidumbre:
-\begin{equation}
-	a^* = \arg\max_{a \in \{a_0, \dots, a_4\}} \left[ \bar{Q}(a) + c \cdot \sqrt{\frac{\ln t}{N_a(t)}} \right]
-\end{equation}
+La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró que el brazo preferido por el agente es \textbf{$a_1$ (Flex $\ge 14$ pax tras 15 min)}, obteniendo el promedio de recompensa más elevado ($\bar{Q} = 0.692$).
 
-donde $\bar{Q}(a)$ es la recompensa promedio acumulada por el brazo $a$, $N_a(t)$ es la cantidad de veces que ha sido elegido, y $c = \sqrt{2}$ es el coeficiente de exploración.
+\begin{figure}[H]
+	\centering
+	\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
+		\includegraphics[width=0.85\textwidth]{../outputs/plots/fig2_ucb_recompensa.png}
+	}{
+		\fbox{\rule{0pt}{2in} \rule{0.8\textwidth}{0pt} Gráfica de Recompensa UCB Pendiente}
+	}
+	\caption{Evolución de la Recompensa Acumulada y Selección de Acciones por el Agente UCB1}
+	\label{fig:ucb_recompensa}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\IfFileExists{../outputs/plots/fig3_comparativa.png}{
+		\includegraphics[width=0.85\textwidth]{../outputs/plots/fig3_comparativa.png}
+	}{
+		\fbox{\rule{0pt}{2in} \rule{0.8\textwidth}{0pt} Gráfica Comparativa Pendiente}
+	}
+	\caption{Comparación Cuantitativa entre la Política Tradicional ($a_0$) y el Algoritmo UCB1}
+	\label{fig:ucb_comparativa}
+\end{figure}
 
 \newpage
