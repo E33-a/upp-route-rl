@@ -3,14 +3,14 @@
 % =========================================================
 \begin{landscape}
 \section{Parte 5: Bitácora de Uso de IA Generativa}
-\vspace{-0.5em}
+\vspace{-0.6em}
 \begin{center}
 	\captionof{table}{Bitácora Oficial de Uso de IA Generativa (Evidencia de Aprendizaje Crítico)}
 	\label{tab:bitacora_completa}
-	\vspace{0.3em}
-	\fontsize{7.5pt}{9pt}\selectfont
+	\vspace{0.2em}
+	\fontsize{7pt}{8.2pt}\selectfont
 	\setlength{\tabcolsep}{3pt}
-	\renewcommand{\arraystretch}{0.8}
+	\renewcommand{\arraystretch}{0.72}
 	\begin{tabularx}{\linewidth}{p{1.3cm} p{1.6cm} p{1.6cm} X X X X X}
 		\toprule
 		\rowcolor{purpleUPP!10!white}
@@ -24,13 +24,19 @@
 		\midrule
 		15/08/2026 & Antigravity (Gemini) & Supuestos OLS & ¿Cómo verificar normalidad e independencia en Python? & Usar \texttt{scipy.stats.shapiro} y \texttt{durbin\_watson}. & Ejecuté los scripts en los residuos calculados del modelo 2. & Agregué gráficos Q-Q y de residuos vs ajustados. & Aprendí la relevancia inferencial del $p$-value en Shapiro-Wilk. \\
 		\midrule
-		16/08/2026 & Antigravity (Gemini) & Algoritmo UCB & ¿Cómo formular salidas flexibles como Multi-Armed Bandit? & Definir 5 brazos con reglas de cupo/tiempo y recompensa $R_t$. & Verifiqué que UCB1 equilibre exploración ($\sqrt{\ln t / N_a}$) y explotación. & Cambié rango de recompensa para normalización exact entre $[0, 1]$. & Aprendí a implementar el balance exploración/explotación. \\
+		16/08/2026 & Antigravity (Gemini) & Algoritmo UCB & ¿Cómo formular salidas flexibles como Multi-Armed Bandit? & Definir 5 brazos con reglas de cupo/tiempo y recompensa $R_t$. & Verifiqué que UCB1 equilibre exploración ($\sqrt{\ln t / N_a}$) y explotación. & Cambié rango de recompensa para normalización exacta entre $[0, 1]$. & Aprendí a implementar el balance exploración/explotación. \\
 		\midrule
 		16/08/2026 & Antigravity (Gemini) & Evaluación & ¿Cómo medir reducción de tiempo de espera entre UCB y tradicional? & Comparar tiempo promedio de espera acumulado por alumno entre $a_0$ y $a_{\text{UCB}}$. & Calculé el promedio acumulado de 3 semanas simuladas. & Corregí la penalización por asientos vacíos. & Aprendí a evaluar trade-offs entre eficiencia y satisfacción. \\
 		\midrule
 		16/08/2026 & Antigravity (Gemini) & Documentación & ¿Cómo adaptar plantilla académica a LuaLaTeX con cuadros de resultados? & Usar \texttt{tcolorbox} con estilos personalizados y tablas \texttt{tabularx}. & Compilé con \texttt{lualatex} verificando ausencia de errores. & Corregí comandos obsoletos de formato de tablas. & Aprendí la estructura formal de reportes de investigación. \\
 		\midrule
 		16/08/2026 & Antigravity (Gemini) & Control Versiones & ¿Cuál es la convención para ignorar entornos virtuales en Git? & Agregar \texttt{venv/}, \texttt{.venv/} y \texttt{\_\_pycache\_\_/} a \texttt{.gitignore}. & Verifiqué el estado del repositorio con \texttt{git status}. & Removí rastreo del entorno virtual y publiqué rama \texttt{develop}. & Aprendí buenas prácticas de versionado en Git. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Demanda Intra-hora & ¿Cómo replicar ciclos de llenado de 3-5 min en pico y 20-30 min en valle? & Implementar multiplicador intra-horario ($\mu_{\text{hora}}$) por medias horas. & Verifiqué tiempos observados en paradero Las Vías y Puente Tuzos. & Ajusté tasa de goteo minuto a minuto durante la espera. & Aprendí a granularizar modelos Poisson continuos. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Mecánica de Colas & ¿Cómo gestionar paraderos vacíos y traspaso de alumnos sobrantes? & Establecer cola inicial $N=0$ y transferir remanente con lógica FIFO. & Validé que combis en paradero vacío acumulen pasaje por goteo realista. & Corregí \texttt{alumnos\_esperando} para reflejar estado a la llegada. & Aprendí conservación de masa de pasajeros en transporte. \\
+		\midrule
+		20/08/2026 & Antigravity (Gemini) & Integridad Data & ¿Cómo verificar la consistencia matemática del dataset de 1,921 registros? & Validar sumas \texttt{total\_pasajeros\_final} y ausencia de nulos. & Ejecuté análisis estadístico descriptivo en pandas. & Corregí conteo de pasaje recogido en paradas intermedias. & Aprendí técnicas de auditoría de datos en datasets simulados. \\
 		\bottomrule
 	\end{tabularx}
 \end{center}
