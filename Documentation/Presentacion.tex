@@ -285,24 +285,44 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 9: ESTRUCTURA DEL DATASET
+% DIAPOSITIVA 9A: ESTRUCTURA DEL DATASET - PARTE I
 % ---------------------------------------------------------
-\begin{frame}{Estructura del Dataset (13 Variables Clave)}
+\begin{frame}{Estructura del Dataset: Variables de Entrada}
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Variables Principales de la Simulación}]
+    \begin{darkcard}[title=\color{cyanAccent}{Variables Predictoras y de Contexto Simulado}]
         \centering
-        \fontsize{8pt}{11pt}\selectfont \color{textWhite}
+        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{cyanAccent}{Variable Clave} & \color{cyanAccent}{Descripción Operativa} \\
             \midrule
-            \color{yellowAccent}{\texttt{fecha, hora\_intervalo}} & Registro temporal del despacho en la terminal. \\
-            \color{yellowAccent}{\texttt{ruta}} & Indicador de ruta (\textit{Puente de Tuzos} / \textit{San Agustín}). \\
+            \color{yellowAccent}{\texttt{fecha, hora\_intervalo}} & Registro temporal del despacho en la terminal. \\[4pt]
+            \color{yellowAccent}{\texttt{ruta}} & Indicador de ruta (\textit{Puente de Tuzos} / \textit{San Agustín}). \\[4pt]
             \color{yellowAccent}{\texttt{alumnos\_esperando}} & Cola inicial al llegar la unidad ($X$). \\
-            \color{yellowAccent}{\texttt{pasajeros\_al\_salir}} & Número de pasajeros a bordo al salir. \\
-            \color{yellowAccent}{\texttt{tiempo\_espera\_acum}} & Tiempo total transcurrido en minutos ($Y$). \\
+            \bottomrule
+        \end{tabularx}
+    \end{darkcard}
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
+% DIAPOSITIVA 9B: ESTRUCTURA DEL DATASET - PARTE II
+% ---------------------------------------------------------
+\begin{frame}{Estructura del Dataset: Variables de Respuesta}
+    \vfill
+    \begin{darkcard}[title=\color{cyanAccent}{Variables de Salida y Tiempos de Servicio}]
+        \centering
+        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{textWhite}}X}
+            \toprule
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{cyanAccent}{Variable Clave} & \color{cyanAccent}{Descripción Operativa} \\
+            \midrule
+            \color{yellowAccent}{\texttt{pasajeros\_al\_salir}} & Número de pasajeros a bordo al salir. \\[4pt]
+            \color{yellowAccent}{\texttt{tiempo\_espera\_acum}} & Tiempo total transcurrido en minutos ($Y$). \\[4pt]
             \color{yellowAccent}{\texttt{tipo\_salida}} & Salida Llena ($18$ pax) / Salida Parcial ($<18$ pax). \\
             \bottomrule
         \end{tabularx}
@@ -434,24 +454,44 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 17: CATÁLOGO DE BRAZOS UCB
+% DIAPOSITIVA 17A: CATÁLOGO DE BRAZOS UCB - PARTE I
 % ---------------------------------------------------------
-\begin{frame}{Catálogo de Políticas de Despacho (Brazos UCB)}
+\begin{frame}{Catálogo de Políticas: Brazos Dinámicos ($a_0, a_1, a_2$)}
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Brazos Evaluados por el Agente ($a_0 \dots a_4$)}]
+    \begin{darkcard}[title=\color{cyanAccent}{Políticas Tradicionales y Dinámicas de Despacho}]
         \centering
-        \fontsize{9.5pt}{13pt}\selectfont \color{textWhite}
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}c}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Brazo} & \color{yellowAccent}{Identificador} & \color{cyanAccent}{Regla de Despacho} & \color{cyanAccent}{Tipo de Regla} \\
             \midrule
-            $a_0$ & \color{cyanAccent}{\texttt{FullOnly}} & Salir únicamente con $18$ pasajeros. & Rígida / Tradicional \\
-            $a_1$ & \color{cyanAccent}{\texttt{Flex\_14p\_15m}} & Salir con $\ge 14$ pax O tras 15 min de espera. & \color{emeraldAccent}{\textbf{Dinámica Flexible}} \\
-            $a_2$ & \color{cyanAccent}{\texttt{Flex\_12p\_25m}} & Salir con $\ge 12$ pax O tras 25 min de espera. & Dinámica Moderada \\
-            $a_3$ & \color{cyanAccent}{\texttt{Flex\_10p\_35m}} & Salir con $\ge 10$ pax O tras 35 min de espera. & Dinámica Valle \\
-            $a_4$ & \color{cyanAccent}{\texttt{Flex\_8p\_45m}} & Salir con $\ge 8$ pax O tras 45 min de espera. & Límite Máximo \\
+            $a_0$ & \color{cyanAccent}{\texttt{FullOnly}} & Salir únicamente con $18$ pasajeros. & Rígida / Tradicional \\[4pt]
+            $a_1$ & \color{cyanAccent}{\texttt{Flex\_14p\_15m}} & Salir con $\ge 14$ pax O tras 15 min. & \color{emeraldAccent}{\textbf{Ganador UCB1}} \\[4pt]
+            $a_2$ & \color{cyanAccent}{\texttt{Flex\_12p\_25m}} & Salir con $\ge 12$ pax O tras 25 min. & Dinámica Moderada \\
+            \bottomrule
+        \end{tabularx}
+    \end{darkcard}
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
+% DIAPOSITIVA 17B: CATÁLOGO DE BRAZOS UCB - PARTE II
+% ---------------------------------------------------------
+\begin{frame}{Catálogo de Políticas: Brazos Conservadores ($a_3, a_4$)}
+    \vfill
+    \begin{darkcard}[title=\color{cyanAccent}{Políticas con Alto Umbral de Espera en Hora Valle}]
+        \centering
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}c}
+            \toprule
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{yellowAccent}{Brazo} & \color{yellowAccent}{Identificador} & \color{cyanAccent}{Regla de Despacho} & \color{cyanAccent}{Tipo de Regla} \\
+            \midrule
+            $a_3$ & \color{cyanAccent}{\texttt{Flex\_10p\_35m}} & Salir con $\ge 10$ pax O tras 35 min. & Dinámica Valle \\[4pt]
+            $a_4$ & \color{cyanAccent}{\texttt{Flex\_8p\_45m}} & Salir con $\ge 8$ pax O tras 45 min. & Límite Máximo \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -525,23 +565,43 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 22: MATRIZ DE RESULTADOS OPERATIVOS
+% DIAPOSITIVA 22A: MATRIZ DE RESULTADOS OPERATIVOS - PARTE I
 % ---------------------------------------------------------
-\begin{frame}{Matriz de Resultados Operativos}
+\begin{frame}{Matriz de Resultados: Tiempos de Espera}
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Cuadro Comparativo Global (3 Semanas de Simulación)}]
+    \begin{darkcard}[title=\color{cyanAccent}{Reducción de Tiempos de Espera Estudiantil}]
         \centering
-        \fontsize{9pt}{12.5pt}\selectfont \color{textWhite}
+        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\color{textWhite}}X >{\color{textWhite}}c >{\bfseries\color{yellowAccent}}c >{\bfseries}c}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Política Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
             \midrule
-            Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\
+            Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\[5pt]
             Tiempo Máximo de Espera & $84.5$ min & \textbf{$28.1$ min} & \color{emeraldAccent}{\textbf{-66.7\% Ahorro}} \\
-            Factor de Ocupación Vehicular & $100.0\%$ ($18/18$) & \textbf{$77.7\%$} ($14/18$) & \color{cyanAccent}{Equilibrio Eficiente} \\
-            Alumnos Varados en Terminal & $142$ alumnos & \textbf{$12$ alumnos} & \color{emeraldAccent}{\textbf{-91.5\% Varados}} \\
+            \bottomrule
+        \end{tabularx}
+    \end{darkcard}
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
+% DIAPOSITIVA 22B: MATRIZ DE RESULTADOS OPERATIVOS - PARTE II
+% ---------------------------------------------------------
+\begin{frame}{Matriz de Resultados: Ocupación y Eficiencia Global}
+    \vfill
+    \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular, Alumnos Varados y Recompensa $\bar{Q}$}]
+        \centering
+        \fontsize{10.5pt}{15pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\color{textWhite}}X >{\color{textWhite}}c >{\bfseries\color{yellowAccent}}c >{\bfseries}c}
+            \toprule
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Política Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
+            \midrule
+            Factor de Ocupación & $100.0\%$ ($18/18$) & \textbf{$77.7\%$} ($14/18$) & \color{cyanAccent}{Equilibrio Eficiente} \\[4pt]
+            Alumnos Varados & $142$ alumnos & \textbf{$12$ alumnos} & \color{emeraldAccent}{\textbf{-91.5\% Varados}} \\[4pt]
             Recompensa Promedio ($\bar{Q}$) & $0.415$ & \textbf{$0.692$} & \color{yellowAccent}{\textbf{+66.7\% Eficiencia}} \\
             \bottomrule
         \end{tabularx}
@@ -584,22 +644,42 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 25: BITÁCORA DE IA GENERATIVA
+% DIAPOSITIVA 25A: BITÁCORA DE IA GENERATIVA - PARTE I
 % ---------------------------------------------------------
-\begin{frame}{Evidencia de Bitácora de IA Generativa}
+\begin{frame}{Evidencia de Bitácora IA: ChatGPT y GitHub Copilot}
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Uso Responsable y Evaluación Crítica (Codex \& Gemini)}]
+    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}]
         \centering
-        \fontsize{8.5pt}{11.5pt}\selectfont \color{textWhite}
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
             \midrule
-            ChatGPT & Simulación Poisson & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\
+            ChatGPT & Simulación Poisson & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\[4pt]
             Copilot & Regresión scikit-learn & Código de ajuste OLS. & Corregí formato 2D exigido por scikit-learn. \\
-            Gemini & Supuestos MCO & Pruebas Breusch-Pagan y DW. & Validé que la heterocedasticidad no sesga los coeficientes. \\
+            \bottomrule
+        \end{tabularx}
+    \end{darkcard}
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
+% DIAPOSITIVA 25B: BITÁCORA DE IA GENERATIVA - PARTE II
+% ---------------------------------------------------------
+\begin{frame}{Evidencia de Bitácora IA: Google Gemini y OpenAI Codex}
+    \vfill
+    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}]
+        \centering
+        \fontsize{10pt}{14pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}X}
+            \toprule
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
+            \midrule
+            Gemini & Supuestos MCO & Pruebas Breusch-Pagan y DW. & Validé que la heterocedasticidad no sesga coeficientes. \\[4pt]
             Codex & Algoritmo UCB1 & Recompensa multiobjetivo. & Implementé min-max scaling invertido $[0, 1]$. \\
             \bottomrule
         \end{tabularx}
