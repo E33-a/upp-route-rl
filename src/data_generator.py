@@ -11,11 +11,12 @@ from src.config import (
     RANDOM_SEED,
     PEAK_HOURS,
     STOP_DELAY_SECONDS,
-    AFTERNOON_MAX_WAIT_MINUTES
+    MAX_WAIT_LAS_VIAS_MINUTES,
+    MAX_WAIT_TUZOS_MINUTES
 )
 
 def is_peak_hour(current_time: datetime) -> bool:
-    """Determina si la hora pertenece a las franjas pico de la UPP (06:00-08:00 o 11:00-13:00)."""
+    """Determines whether current_time falls within UPP peak hours (06:00-08:00 or 11:00-13:00)."""
     hour = current_time.hour
     for start_peak, end_peak in PEAK_HOURS:
         if start_peak <= hour < end_peak:
@@ -24,18 +25,25 @@ def is_peak_hour(current_time: datetime) -> bool:
 
 def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     """
-    Genera el dataset simulado integrando las reglas del mundo real de la UPP:
-    1. Horas pico: 06:00-08:00 y 11:00-13:00 hrs.
-    2. Retraso por paradas: 10 segundos extra por parada intermedia realizada.
-    3. Despacho en la tarde (después de las 12:00 PM): No esperan a llenarse (18 pax);
-       salen si superan 10-15 min de espera (Salida Parcial).
-    4. Cumplimiento del 100% de los 13 campos exigidos por la rúbrica.
+    Generates stochastic operational dataset for 21 days (3 weeks) incorporating 13 rubric fields:
+    
+    1. Demand fields: fecha, hora, ruta, alumnos_esperando, llegadas_intervalo
+    2. Dispatch fields: hora_salida, pasajeros_al_salir, tipo_salida, tiempo_espera_acum
+    3. Route fields: tiempo_recorrido, paradas_intermedias, alumnos_recogidos_intermedias, hora_llegada_upp
+    
+    Note on 'N/A' values:
+    - Interval rows where no combi departs record demand accumulation (alumnos_esperando, llegadas_intervalo)
+      with hora_salida = 'N/A' and hora_llegada_upp = 'N/A' (passengers_al_salir = 0).
+    - Interval rows where a combi fills up or hits the max wait limit (30-35 min for Las Vías, 45 min for Tuzos)
+      record exact dispatch time, arrival time at UPP, and type of exit ('Llena' vs 'Parcial').
     """
     rng = np.random.default_rng(seed)
     records = []
     start_date = datetime(2026, 8, 1)
     
     for route in ROUTES:
+        max_wait_limit = MAX_WAIT_LAS_VIAS_MINUTES if route.name == "Las vías" else MAX_WAIT_TUZOS_MINUTES
+        
         for day in range(SIMULATION_DAYS):
             current_date = start_date + timedelta(days=day)
             
@@ -59,18 +67,15 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                 
                 students_waiting += arrivals
                 
-                # Calcular tiempo de espera actual del primer pasajero
                 current_wait_min = 0.0
                 if first_student_arrival_time:
                     current_wait_min = (current_interval - first_student_arrival_time).total_seconds() / 60.0
                 
-                # Regla de despacho:
-                # Mañana (<12:00 PM): Sale si se llena a 18 pax.
-                # Tarde (>=12:00 PM): Sale si se llena a 18 pax O si la espera supera los 15 min.
+                # Dispatch rule: depart if full (18 pax) OR if wait time hits route limit (30-35 min for Las Vías, 45 min for Tuzos)
                 dispatch_occurred = False
                 if students_waiting >= BUS_CAPACITY:
                     dispatch_occurred = True
-                elif current_interval.hour >= 12 and students_waiting > 0 and current_wait_min >= AFTERNOON_MAX_WAIT_MINUTES:
+                elif students_waiting > 0 and current_wait_min >= max_wait_limit:
                     dispatch_occurred = True
                 
                 dispatch_time = None
@@ -89,11 +94,10 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     
                     wait_time_accum = float(np.round(current_wait_min, 1))
                     
-                    # Alumnos en paradas intermedias
                     if route.intermediate_stops > 0:
                         intermediate_boardings = int(rng.integers(0, min(4, route.intermediate_stops + 1)))
                     
-                    # 10 segundos extra por cada parada realizada (~0.167 min)
+                    # Add 10s extra delay per intermediate stop to total trip duration
                     stop_delay_min = (route.intermediate_stops * STOP_DELAY_SECONDS) / 60.0
                     base_trip_duration = rng.normal(route.trip_duration_mean_min, 2.5)
                     trip_duration = float(np.round(base_trip_duration + stop_delay_min, 1))
