@@ -45,14 +45,14 @@
 \setbeamertemplate{navigation symbols}{}
 
 % =========================================================
-% ENCABEZADO DE DIAPOSITIVA (GRANDE, SIN LÍNEAS NI TEXTOS SUELTOS)
+% ENCABEZADO DE DIAPOSITIVA (GRANDE, CON ESPACIO DINÁMICO Y RESPIRACIÓN)
 % =========================================================
 \setbeamertemplate{frametitle}{
     \nointerlineskip
-    \begin{beamercolorbox}[wd=\paperwidth, ht=1.4cm, dp=0.3cm, leftskip=1.0cm, rightskip=1.0cm]{frametitle}
-        \vfill
-        \fontsize{18pt}{22pt}\selectfont \textbf{\color{cyanAccent}{\insertframetitle}}
-        \vfill
+    \begin{beamercolorbox}[wd=\paperwidth, leftskip=0.8cm, rightskip=0.8cm]{frametitle}
+        \vskip0.25cm
+        \fontsize{17pt}{22pt}\selectfont \textbf{\color{cyanAccent}{\insertframetitle}}
+        \vskip0.2cm
     \end{beamercolorbox}
 }
 
@@ -291,18 +291,19 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Variables Principales de la Simulación}]
         \centering
-        \fontsize{10.5pt}{14pt}\selectfont
-        \begin{tabularx}{\textwidth}{>{\bfseries\color{cyanAccent}}l X}
+        \fontsize{8pt}{11pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{textWhite}}X}
             \toprule
-            \rowcolor{cardNavy!80!black}
-            Variable & Descripción Operativa \\
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{cyanAccent}{Variable Clave} & \color{cyanAccent}{Descripción Operativa} \\
             \midrule
-            \texttt{fecha, hora\_intervalo} & Registro temporal del despacho en la terminal. \\
-            \texttt{ruta} & Indicador de ruta (Puente de Tuzos / San Agustín). \\
-            \texttt{alumnos\_esperando} & Cola inicial al llegar la unidad ($X$). \\
-            \texttt{pasajeros\_al\_salir} & Número de pasajeros a bordo al salir. \\
-            \texttt{tiempo\_espera\_acum} & Tiempo total transcurrido en minutos ($Y$). \\
-            \texttt{tipo\_salida} & Salida Llena ($18$) / Salida Parcial ($<18$). \\
+            \color{yellowAccent}{\texttt{fecha, hora\_intervalo}} & Registro temporal del despacho en la terminal. \\
+            \color{yellowAccent}{\texttt{ruta}} & Indicador de ruta (\textit{Puente de Tuzos} / \textit{San Agustín}). \\
+            \color{yellowAccent}{\texttt{alumnos\_esperando}} & Cola inicial al llegar la unidad ($X$). \\
+            \color{yellowAccent}{\texttt{pasajeros\_al\_salir}} & Número de pasajeros a bordo al salir. \\
+            \color{yellowAccent}{\texttt{tiempo\_espera\_acum}} & Tiempo total transcurrido en minutos ($Y$). \\
+            \color{yellowAccent}{\texttt{tipo\_salida}} & Salida Llena ($18$ pax) / Salida Parcial ($<18$ pax). \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -439,17 +440,18 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Brazos Evaluados por el Agente ($a_0 \dots a_4$)}]
         \centering
-        \fontsize{9.5pt}{13pt}\selectfont
-        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c l X c}
+        \fontsize{9.5pt}{13pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}c}
             \toprule
-            \rowcolor{cardNavy!80!black}
-            Brazo & Identificador & Regla de Despacho & Tipo de Regla \\
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{yellowAccent}{Brazo} & \color{yellowAccent}{Identificador} & \color{cyanAccent}{Regla de Despacho} & \color{cyanAccent}{Tipo de Regla} \\
             \midrule
-            $a_0$ & \texttt{FullOnly} & Salir únicamente con $18$ pasajeros. & Rígida / Tradicional \\
-            $a_1$ & \texttt{Flex\_14p\_15m} & Salir con $\ge 14$ pax O tras 15 min de espera. & Dinámica Flexible \\
-            $a_2$ & \texttt{Flex\_12p\_25m} & Salir con $\ge 12$ pax O tras 25 min de espera. & Dinámica Moderada \\
-            $a_3$ & \texttt{Flex\_10p\_35m} & Salir con $\ge 10$ pax O tras 35 min de espera. & Dinámica Valle \\
-            $a_4$ & \texttt{Flex\_8p\_45m} & Salir con $\ge 8$ pax O tras 45 min de espera. & Límite Máximo \\
+            $a_0$ & \color{cyanAccent}{\texttt{FullOnly}} & Salir únicamente con $18$ pasajeros. & Rígida / Tradicional \\
+            $a_1$ & \color{cyanAccent}{\texttt{Flex\_14p\_15m}} & Salir con $\ge 14$ pax O tras 15 min de espera. & \color{emeraldAccent}{\textbf{Dinámica Flexible}} \\
+            $a_2$ & \color{cyanAccent}{\texttt{Flex\_12p\_25m}} & Salir con $\ge 12$ pax O tras 25 min de espera. & Dinámica Moderada \\
+            $a_3$ & \color{cyanAccent}{\texttt{Flex\_10p\_35m}} & Salir con $\ge 10$ pax O tras 35 min de espera. & Dinámica Valle \\
+            $a_4$ & \color{cyanAccent}{\texttt{Flex\_8p\_45m}} & Salir con $\ge 8$ pax O tras 45 min de espera. & Límite Máximo \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -529,11 +531,12 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Cuadro Comparativo Global (3 Semanas de Simulación)}]
         \centering
-        \fontsize{9pt}{12.5pt}\selectfont
-        \begin{tabularx}{\textwidth}{X c c c}
+        \fontsize{9pt}{12.5pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\color{textWhite}}X >{\color{textWhite}}c >{\bfseries\color{yellowAccent}}c >{\bfseries}c}
             \toprule
-            \rowcolor{cardNavy!80!black}
-            Métrica de Evaluación & Política Tradicional $a_0$ & Agente UCB1 ($a_1$) & Mejora Alcanzada \\
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Política Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
             \midrule
             Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\
             Tiempo Máximo de Espera & $84.5$ min & \textbf{$28.1$ min} & \color{emeraldAccent}{\textbf{-66.7\% Ahorro}} \\
@@ -587,11 +590,12 @@
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Uso Responsable y Evaluación Crítica (Codex \& Gemini)}]
         \centering
-        \fontsize{8.5pt}{11.5pt}\selectfont
-        \begin{tabularx}{\textwidth}{c l X X}
+        \fontsize{8.5pt}{11.5pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}c >{\color{cyanAccent}}l >{\color{textWhite}}X >{\color{textWhite}}X}
             \toprule
-            \rowcolor{cardNavy!80!black}
-            Herramienta & Tema Evaluado & Solicitud / Pregunta & Verificación y Aprendizaje \\
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
             \midrule
             ChatGPT & Simulación Poisson & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\
             Copilot & Regresión scikit-learn & Código de ajuste OLS. & Corregí formato 2D exigido por scikit-learn. \\
