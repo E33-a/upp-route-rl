@@ -8,22 +8,27 @@ The system evaluates trade-offs between vehicle capacity utilization and passeng
 
 ## Problem Statement
 
-Transport routes operating from departure points such as Puente de Tuzos experience low passenger arrival rates (~1 student per 7 minutes during off-peak hours). Strict adherence to full-vehicle dispatch policies (18 passengers) results in excessive cumulative waiting times for early-arriving passengers.
+Transport routes operating from departure points such as *Puente de Tuzos* and *Las Vías* experience variable passenger arrival rates. Strict adherence to full-vehicle dispatch policies (18 passengers) results in excessive cumulative waiting times for early-arriving passengers during off-peak hours.
 
-This project simulates 21 days of operational demand, fits simple linear regression models to predict filling times and travel durations, and optimizes departure decision policies using reinforcement learning primitives.
+This project simulates 21 days of operational demand (incorporating 13 rubric-required fields and UPP domain rules), fits simple linear regression models to predict filling times, and optimizes departure decision policies using reinforcement learning (UCB1 Multi-Armed Bandit).
 
 ## Project Structure
 
 ```text
 upp-route-rl/
 ├── src/
-│   ├── config.py                 # System parameters and route configurations
-│   ├── data_generator.py         # Stochastic Poisson demand generation engine
+│   ├── config.py                 # System parameters, route configs, and UPP domain rules
+│   ├── data_generator.py         # Stochastic Poisson demand generation engine (13 fields)
 │   ├── regression_model.py       # Ordinary Least Squares regression pipeline
 │   └── ucb_bandit.py             # UCB multi-armed bandit optimization engine
-├── data/                         # Synthetic operational datasets
+├── data/                         # Synthetic operational datasets (demand_dataset.csv)
 ├── outputs/                      # Generated analytical plots and figures
-├── Documentation/                # Academic report sources (LaTeX)
+├── Documentation/                # Academic LaTeX report and Beamer presentation sources
+│   ├── Proyecto.tex              # Technical academic report (PDF)
+│   ├── Presentacion.tex          # Beamer presentation slide deck (PDF)
+│   ├── modules/                  # Modular LaTeX sections
+│   ├── Proyecto final IA.pdf     # Official project specifications
+│   └── Rubrica_Presentacion_Proyecto_Final_IA.pdf # Official presentation rubric
 ├── 01_generate_dataset.py        # Dataset simulation entry point
 ├── 02_train_regression.py        # Regression model training entry point
 ├── 03_run_ucb.py                 # UCB simulation entry point
