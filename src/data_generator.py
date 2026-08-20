@@ -4,15 +4,13 @@ from datetime import datetime, timedelta
 from src.config import (
     ROUTES,
     SIMULATION_DAYS,
-    INTERVAL_MINUTES,
     START_HOUR,
     END_HOUR,
     BUS_CAPACITY,
     RANDOM_SEED,
     PEAK_HOURS,
     STOP_DELAY_SECONDS,
-    MAX_WAIT_LAS_VIAS_MINUTES,
-    MAX_WAIT_TUZOS_MINUTES
+    AFTERNOON_MAX_WAIT_MINUTES
 )
 
 def is_peak_hour(current_time: datetime) -> bool:
@@ -25,110 +23,118 @@ def is_peak_hour(current_time: datetime) -> bool:
 
 def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     """
-    Generates stochastic operational dataset for 21 days (3 weeks) incorporating 13 rubric fields:
+    Generates event-driven van dispatch operational dataset for 21 days (3 weeks).
+    Each row represents an actual van dispatch event (NO 'N/A' values).
     
-    1. Demand fields: fecha, hora, ruta, alumnos_esperando, llegadas_intervalo
-    2. Dispatch fields: hora_salida, pasajeros_al_salir, tipo_salida, tiempo_espera_acum
-    3. Route fields: tiempo_recorrido, paradas_intermedias, alumnos_recogidos_intermedias, hora_llegada_upp
-    
-    Note on 'N/A' values:
-    - Interval rows where no combi departs record demand accumulation (alumnos_esperando, llegadas_intervalo)
-      with hora_salida = 'N/A' and hora_llegada_upp = 'N/A' (passengers_al_salir = 0).
-    - Interval rows where a combi fills up or hits the max wait limit (30-35 min for Las Vías, 45 min for Tuzos)
-      record exact dispatch time, arrival time at UPP, and type of exit ('Llena' vs 'Parcial').
+    Real-world UPP business rules:
+    1. Before 12:00 PM (Morning): Vans STRICTLY wait until full (18 passengers). 'tipo_salida' is always 'Llena'.
+    2. After 12:00 PM (Afternoon): Vans depart when full (18 pax) OR when max wait time (15 min) is reached.
+       'tipo_salida' can be 'Llena' or 'Parcial'.
+    3. Peak hours (06:00-08:00 and 11:00-13:00) feature higher arrival rates.
+    4. Trip duration includes +10 seconds delay per intermediate stop.
+    5. 100% complete fields: hora_salida and hora_llegada_upp are fully populated in all rows.
     """
     rng = np.random.default_rng(seed)
     records = []
     start_date = datetime(2026, 8, 1)
     
     for route in ROUTES:
-        max_wait_limit = MAX_WAIT_LAS_VIAS_MINUTES if route.name == "Las vías" else MAX_WAIT_TUZOS_MINUTES
-        
         for day in range(SIMULATION_DAYS):
             current_date = start_date + timedelta(days=day)
             
-            students_waiting = 0
-            first_student_arrival_time = None
+            day_start = datetime(current_date.year, current_date.month, current_date.day, START_HOUR, 0)
+            day_end = datetime(current_date.year, current_date.month, current_date.day, END_HOUR, 0)
             
-            start_time = datetime(current_date.year, current_date.month, current_date.day, START_HOUR, 0)
-            end_time = datetime(current_date.year, current_date.month, current_date.day, END_HOUR, 0)
+            sim_time = day_start
             
-            current_interval = start_time
-            
-            while current_interval < end_time:
-                is_peak = is_peak_hour(current_interval)
-                multiplier = route.peak_multiplier if is_peak else 1.0
-                lambda_effective = route.arrival_rate_per_min * INTERVAL_MINUTES * multiplier
+            while sim_time < day_end:
+                # Combi queuing and boarding process
+                students_waiting = 0
+                first_arrival_time = sim_time
+                current_time = sim_time
+                total_arrivals_during_wait = 0
                 
-                arrivals = int(rng.poisson(lambda_effective))
-                
-                if students_waiting == 0 and arrivals > 0:
-                    first_student_arrival_time = current_interval
-                
-                students_waiting += arrivals
-                
-                current_wait_min = 0.0
-                if first_student_arrival_time:
-                    current_wait_min = (current_interval - first_student_arrival_time).total_seconds() / 60.0
-                
-                # Dispatch rule: depart if full (18 pax) OR if wait time hits route limit (30-35 min for Las Vías, 45 min for Tuzos)
                 dispatch_occurred = False
-                if students_waiting >= BUS_CAPACITY:
-                    dispatch_occurred = True
-                elif students_waiting > 0 and current_wait_min >= max_wait_limit:
-                    dispatch_occurred = True
                 
-                dispatch_time = None
-                passengers_boarded = 0
-                dispatch_type = "Ninguna"
-                wait_time_accum = 0.0
-                trip_duration = 0.0
-                intermediate_boardings = 0
-                arrival_upp_time = None
+                # Simulate minute-by-minute student arrivals until dispatch trigger
+                while current_time < day_end and not dispatch_occurred:
+                    is_peak = is_peak_hour(current_time)
+                    multiplier = route.peak_multiplier if is_peak else 1.0
+                    lambda_effective = route.arrival_rate_per_min * multiplier
+                    
+                    # Arrivals per minute (Poisson)
+                    minute_arrivals = int(rng.poisson(lambda_effective))
+                    
+                    if students_waiting == 0 and minute_arrivals > 0:
+                        first_arrival_time = current_time
+                    
+                    students_waiting += minute_arrivals
+                    total_arrivals_during_wait += minute_arrivals
+                    
+                    wait_minutes = (current_time - first_arrival_time).total_seconds() / 60.0 if students_waiting > 0 else 0.0
+                    
+                    # Dispatch Rules:
+                    # Morning (< 12:00 PM): STRICTLY wait until full (18 pax)
+                    # Afternoon (>= 12:00 PM): Wait until full (18 pax) OR max 15 minutes wait
+                    if current_time.hour < 12:
+                        if students_waiting >= BUS_CAPACITY:
+                            dispatch_occurred = True
+                    else:
+                        if students_waiting >= BUS_CAPACITY:
+                            dispatch_occurred = True
+                        elif students_waiting > 0 and wait_minutes >= AFTERNOON_MAX_WAIT_MINUTES:
+                            dispatch_occurred = True
+                    
+                    if not dispatch_occurred:
+                        current_time += timedelta(minutes=1)
                 
                 if dispatch_occurred:
                     passengers_boarded = min(students_waiting, BUS_CAPACITY)
-                    students_waiting -= passengers_boarded
+                    leftover_students = students_waiting - passengers_boarded
                     dispatch_type = "Llena" if passengers_boarded == BUS_CAPACITY else "Parcial"
-                    dispatch_time = current_interval
                     
-                    wait_time_accum = float(np.round(current_wait_min, 1))
+                    dispatch_time = current_time
+                    wait_time_accum = float(np.round((dispatch_time - first_arrival_time).total_seconds() / 60.0, 1))
                     
+                    # Intermediate stop boardings and delay
+                    intermediate_boardings = 0
                     if route.intermediate_stops > 0:
                         intermediate_boardings = int(rng.integers(0, min(4, route.intermediate_stops + 1)))
                     
-                    # Add 10s extra delay per intermediate stop to total trip duration
                     stop_delay_min = (route.intermediate_stops * STOP_DELAY_SECONDS) / 60.0
                     base_trip_duration = rng.normal(route.trip_duration_mean_min, 2.5)
-                    trip_duration = float(np.round(base_trip_duration + stop_delay_min, 1))
+                    trip_duration = float(np.round(max(10.0, base_trip_duration + stop_delay_min), 1))
                     
                     arrival_upp_time = dispatch_time + timedelta(minutes=trip_duration)
                     
-                    first_student_arrival_time = current_interval if students_waiting > 0 else None
-                
-                records.append({
-                    "raw_interval_datetime": current_interval,
-                    "fecha": current_interval.strftime("%Y-%m-%d"),
-                    "hora": current_interval.strftime("%H:%M"),
-                    "ruta": route.name,
-                    "alumnos_esperando": students_waiting,
-                    "llegadas_intervalo": arrivals,
-                    "hora_salida": dispatch_time.strftime("%H:%M") if dispatch_time else "N/A",
-                    "pasajeros_al_salir": passengers_boarded,
-                    "tipo_salida": dispatch_type,
-                    "tiempo_espera_acum": wait_time_accum if dispatch_occurred else 0.0,
-                    "tiempo_recorrido": trip_duration if dispatch_occurred else 0.0,
-                    "paradas_intermedias": route.intermediate_stops,
-                    "alumnos_recogidos_intermedias": intermediate_boardings if dispatch_occurred else 0,
-                    "hora_llegada_upp": arrival_upp_time.strftime("%H:%M") if arrival_upp_time else "N/A"
-                })
-                
-                current_interval += timedelta(minutes=INTERVAL_MINUTES)
+                    records.append({
+                        "fecha": dispatch_time.strftime("%Y-%m-%d"),
+                        "hora": first_arrival_time.strftime("%H:%M"),
+                        "ruta": route.name,
+                        "alumnos_esperando": passengers_boarded + leftover_students,
+                        "llegadas_intervalo": total_arrivals_during_wait,
+                        "hora_salida": dispatch_time.strftime("%H:%M"),
+                        "pasajeros_al_salir": passengers_boarded,
+                        "tipo_salida": dispatch_type,
+                        "tiempo_espera_acum": wait_time_accum,
+                        "tiempo_recorrido": trip_duration,
+                        "paradas_intermedias": route.intermediate_stops,
+                        "alumnos_recogidos_intermedias": intermediate_boardings,
+                        "hora_llegada_upp": arrival_upp_time.strftime("%H:%M")
+                    })
+                    
+                    # Advance simulation time to dispatch time for next combi
+                    sim_time = dispatch_time + timedelta(minutes=1)
+                else:
+                    # End of operational day reached
+                    break
 
     df = pd.DataFrame(records)
     
-    df.sort_values(by=["raw_interval_datetime", "ruta"], inplace=True)
-    df.drop(columns=["raw_interval_datetime"], inplace=True)
+    # Sort chronologically by date and departure time
+    df['dt_sort'] = pd.to_datetime(df['fecha'] + ' ' + df['hora_salida'])
+    df.sort_values(by=['dt_sort', 'ruta'], inplace=True)
+    df.drop(columns=['dt_sort'], inplace=True)
     df.reset_index(drop=True, inplace=True)
     
     return df

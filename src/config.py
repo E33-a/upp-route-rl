@@ -43,5 +43,4 @@ BUS_CAPACITY = 18
 RANDOM_SEED = 42
 PEAK_HOURS = [(6, 8), (11, 13)]
 STOP_DELAY_SECONDS = 10.0  # 10 segundos extra por parada intermedia
-MAX_WAIT_LAS_VIAS_MINUTES = 35.0  # En Las Vías lo máximo que espera una combi es 30-35 min
-MAX_WAIT_TUZOS_MINUTES = 45.0     # En Puente Tuzos el límite máximo es 45 min
+AFTERNOON_MAX_WAIT_MINUTES = 15.0  # Después de las 12:00 PM, tiempo máximo de espera de 15 min
