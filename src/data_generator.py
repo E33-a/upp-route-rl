@@ -23,20 +23,17 @@ def get_intra_hour_multiplier(current_time: datetime, base_peak_multiplier: floa
     """
     Calculates dynamic intra-hour demand multiplier based on real UPP user behavior:
     1. Peak Hours (06:00-09:00, 11:00-13:00):
-       - First half-hour (:00 to :29): Massive student surge -> fills combi in 3-5 min (full peak multiplier).
+       - First half-hour (:00 to :29): Massive student surge -> fills combi in 3-5 min.
        - Second half-hour (:30 to :59): Flow eases -> fills combi in 10-15 min (~0.35x peak multiplier).
     2. Off-Peak Hours:
        - Fills combi in 20-30 min (~0.18x multiplier).
     """
     if is_peak_hour(current_time):
         if current_time.minute < 30:
-            # First half of peak hour: 3-5 min fill time
             return base_peak_multiplier
         else:
-            # Second half of peak hour: 10-15 min fill time
             return base_peak_multiplier * 0.35
     else:
-        # Off-peak hours: 20-30 min fill time
         return base_peak_multiplier * 0.18
 
 def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
@@ -45,18 +42,20 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP operational rules:
-    1. Intra-Hour Cycle Multiplier:
+    1. Initial Queue ('alumnos_esperando'):
+       - Represents the queue length at the moment the combi arrives to start loading.
+       - Can frequently be 0 in off-peak hours or when previous combi cleared the queue.
+    2. Arrivals during wait ('llegadas_intervalo'):
+       - Number of passengers arriving while the combi is loading.
+       - pasajeros_al_salir = min(18, alumnos_esperando + llegadas_intervalo).
+    3. Intra-Hour Cycle Multiplier:
        - Peak :00 to :29 -> Fills in 3-5 min.
        - Peak :30 to :59 -> Fills in 10-15 min.
        - Off-peak        -> Fills in 20-30 min.
-    2. Realistic Intermediate Boardings:
+    4. Realistic Intermediate Boardings:
        - Peak hours: Mean pickup 3-4 pax (max 6-7 standing).
        - Off-peak hours: 0-3 pax.
-    3. Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
-    4. Base vs Transit Operations:
-       - Las Vías: Base until 13:00 hrs, then transit until ~18:30 hrs.
-       - Puente Tuzos: Base until 12:00 hrs, then transit until ~14:00 hrs.
-    5. Strict Time Sorting: Ordered chronologically by departure date and time across all routes.
+    5. Field: 'total_pasajeros_final' = pasajeros_al_salir + alumnos_recogidos_intermedias.
     """
     rng = np.random.default_rng(seed)
     records = []
@@ -79,9 +78,10 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
             leftover_queue = 0
             
             while sim_time < day_end:
-                students_waiting = leftover_queue
+                initial_queue = leftover_queue
                 leftover_queue = 0
                 
+                students_waiting = initial_queue
                 first_arrival_time = sim_time
                 current_time = sim_time
                 total_arrivals_during_wait = 0
@@ -151,7 +151,7 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                         "fecha": dispatch_time.strftime("%Y-%m-%d"),
                         "hora": first_arrival_time.strftime("%H:%M"),
                         "ruta": route.name,
-                        "alumnos_esperando": passengers_boarded + leftover_queue,
+                        "alumnos_esperando": initial_queue,  # Queue length at combi arrival (can be 0!)
                         "llegadas_intervalo": total_arrivals_during_wait,
                         "hora_salida": dispatch_time.strftime("%H:%M"),
                         "pasajeros_al_salir": passengers_boarded,

@@ -34,7 +34,7 @@ def run_ucb_simulation():
     
     # Iterate through each 15-minute simulation interval (2,352 records)
     for idx, row in df.iterrows():
-        students_waiting = int(row['alumnos_esperando'])
+        students_waiting = int(row['pasajeros_al_salir'])
         wait_time_accum = float(row['tiempo_espera_acum'])
         
         # 1. Agent selects policy arm (a0 ... a4)
