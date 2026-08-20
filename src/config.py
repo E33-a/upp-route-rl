@@ -41,5 +41,6 @@ START_HOUR = 6
 END_HOUR = 20
 BUS_CAPACITY = 18
 RANDOM_SEED = 42
-
-PEAK_HOURS = [(7,9), (13,15)]
+PEAK_HOURS = [(6, 8), (11, 13)]
+STOP_DELAY_SECONDS = 10.0  # 10 segundos extra por parada intermedia
+AFTERNOON_MAX_WAIT_MINUTES = 15  # Después de las 12:00 PM, tiempo máximo de espera de 10-15 min
