@@ -27,12 +27,14 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP business rules:
-    1. Before 12:00 PM (Morning): Vans STRICTLY wait until full (18 passengers). 'tipo_salida' is always 'Llena'.
-    2. After 12:00 PM (Afternoon): Vans depart when full (18 pax) OR when max wait time (15 min) is reached.
+    1. Sequential Combi Queueing: ONLY ONE combi loads at a time per route. A new combi
+       cannot start loading until the previous combi departs. Leftover queue passengers carry over.
+    2. Before 12:00 PM (Morning): Vans STRICTLY wait until full (18 passengers). 'tipo_salida' is always 'Llena'.
+    3. After 12:00 PM (Afternoon): Vans depart when full (18 pax) OR when max wait time (15 min) is reached.
        'tipo_salida' can be 'Llena' or 'Parcial'.
-    3. Peak hours (06:00-08:00 and 11:00-13:00) feature higher arrival rates.
-    4. Trip duration includes +10 seconds delay per intermediate stop.
-    5. 100% complete fields: hora_salida and hora_llegada_upp are fully populated in all rows.
+    4. Peak hours (06:00-08:00 and 11:00-13:00) feature higher arrival rates.
+    5. Trip duration includes +10 seconds delay per intermediate stop.
+    6. 100% complete fields: hora_salida and hora_llegada_upp are fully populated in all rows.
     """
     rng = np.random.default_rng(seed)
     records = []
@@ -46,10 +48,13 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
             day_end = datetime(current_date.year, current_date.month, current_date.day, END_HOUR, 0)
             
             sim_time = day_start
+            leftover_queue = 0
             
             while sim_time < day_end:
-                # Combi queuing and boarding process
-                students_waiting = 0
+                # Combi queueing: Start with leftover passengers from previous combi
+                students_waiting = leftover_queue
+                leftover_queue = 0
+                
                 first_arrival_time = sim_time
                 current_time = sim_time
                 total_arrivals_during_wait = 0
@@ -90,7 +95,7 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                 
                 if dispatch_occurred:
                     passengers_boarded = min(students_waiting, BUS_CAPACITY)
-                    leftover_students = students_waiting - passengers_boarded
+                    leftover_queue = students_waiting - passengers_boarded
                     dispatch_type = "Llena" if passengers_boarded == BUS_CAPACITY else "Parcial"
                     
                     dispatch_time = current_time
@@ -111,7 +116,7 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                         "fecha": dispatch_time.strftime("%Y-%m-%d"),
                         "hora": first_arrival_time.strftime("%H:%M"),
                         "ruta": route.name,
-                        "alumnos_esperando": passengers_boarded + leftover_students,
+                        "alumnos_esperando": passengers_boarded + leftover_queue,
                         "llegadas_intervalo": total_arrivals_during_wait,
                         "hora_salida": dispatch_time.strftime("%H:%M"),
                         "pasajeros_al_salir": passengers_boarded,
@@ -123,7 +128,7 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                         "hora_llegada_upp": arrival_upp_time.strftime("%H:%M")
                     })
                     
-                    # Advance simulation time to dispatch time for next combi
+                    # Advance simulation time to dispatch time for next combi (sequential single loading)
                     sim_time = dispatch_time + timedelta(minutes=1)
                 else:
                     # End of operational day reached
