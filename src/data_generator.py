@@ -27,13 +27,11 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     Each row represents an actual van dispatch event (NO 'N/A' values).
     
     Real-world UPP business rules:
-    1. Sequential Combi Queueing: ONLY ONE combi loads at a time per route. A new combi
-       cannot start loading until the previous combi departs. Leftover queue passengers carry over.
+    1. Sequential Combi Queueing: ONLY ONE combi loads at a time per route. Leftover queue passengers carry over.
     2. Before 12:00 PM (Morning): Vans STRICTLY wait until full (18 passengers). 'tipo_salida' is always 'Llena'.
     3. After 12:00 PM (Afternoon): Vans depart when full (18 pax) OR when max wait time (15 min) is reached.
-       'tipo_salida' can be 'Llena' or 'Parcial'.
-    4. Peak hours (06:00-08:00 and 11:00-13:00) feature higher arrival rates.
-    5. Trip duration includes +10 seconds delay per intermediate stop.
+    4. Dynamic Intermediate Stops: 0 to 4 stops per trip depending on passenger demand (+10s delay per stop made).
+    5. Peak hours (06:00-08:00 and 11:00-13:00) feature higher arrival rates.
     6. 100% complete fields: hora_salida and hora_llegada_upp are fully populated in all rows.
     """
     rng = np.random.default_rng(seed)
@@ -101,12 +99,14 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     dispatch_time = current_time
                     wait_time_accum = float(np.round((dispatch_time - first_arrival_time).total_seconds() / 60.0, 1))
                     
-                    # Intermediate stop boardings and delay
+                    # Dynamic intermediate stops (0 to 4 stops made per trip)
+                    stops_made = int(rng.integers(0, 5))
                     intermediate_boardings = 0
-                    if route.intermediate_stops > 0:
-                        intermediate_boardings = int(rng.integers(0, min(4, route.intermediate_stops + 1)))
+                    if stops_made > 0:
+                        intermediate_boardings = int(rng.integers(0, min(4, stops_made + 1)))
                     
-                    stop_delay_min = (route.intermediate_stops * STOP_DELAY_SECONDS) / 60.0
+                    # Add +10 seconds delay per intermediate stop made
+                    stop_delay_min = (stops_made * STOP_DELAY_SECONDS) / 60.0
                     base_trip_duration = rng.normal(route.trip_duration_mean_min, 2.5)
                     trip_duration = float(np.round(max(10.0, base_trip_duration + stop_delay_min), 1))
                     
@@ -123,12 +123,12 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                         "tipo_salida": dispatch_type,
                         "tiempo_espera_acum": wait_time_accum,
                         "tiempo_recorrido": trip_duration,
-                        "paradas_intermedias": route.intermediate_stops,
+                        "paradas_intermedias": stops_made,
                         "alumnos_recogidos_intermedias": intermediate_boardings,
                         "hora_llegada_upp": arrival_upp_time.strftime("%H:%M")
                     })
                     
-                    # Advance simulation time to dispatch time for next combi (sequential single loading)
+                    # Advance simulation time to dispatch time for next combi
                     sim_time = dispatch_time + timedelta(minutes=1)
                 else:
                     # End of operational day reached
