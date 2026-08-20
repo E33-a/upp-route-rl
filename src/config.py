@@ -15,19 +15,22 @@ class RouteConfig:
     arrival_rate_per_min: float
     peak_multiplier: float
     trip_duration_mean_min: float
+    intermediate_stops: int
 
 ROUTE_PUENTE_TUZOS = RouteConfig(
     name = 'Puente Tuzos',
     arrival_rate_per_min = 1.0 / 7.0,
     peak_multiplier = 1.6,
-    trip_duration_mean_min = 20.0
+    trip_duration_mean_min = 20.0,
+    intermediate_stops = 2
 )
 
 ROUTE_CEMTRAL = RouteConfig(
     name = 'Las vías',
     arrival_rate_per_min = 1.0 / 3.0,
     peak_multiplier = 3.5,
-    trip_duration_mean_min = 27.5
+    trip_duration_mean_min = 27.5,
+    intermediate_stops = 3
 )
 
 ROUTES = [ROUTE_PUENTE_TUZOS, ROUTE_CEMTRAL]

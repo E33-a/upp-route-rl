@@ -32,24 +32,26 @@ El dataset simulado se exporta como archivo CSV (\texttt{data/demand\_dataset.cs
 
 \begin{table}[H]
 	\centering
-	\caption{Estructura del Dataset Simulado Basado en Eventos de Despacho}
+	\caption{Estructura del Dataset Simulado de Demanda y Despachos (13 Campos Rúbrica)}
 	\label{tab:dataset_schema}
-	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4.5cm} X}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l p{4.8cm} X}
 		\toprule
-		Categoría & Columna & Descripción Técnica \\
+		Categoría Rúbrica & Columna & Descripción Técnica \\
 		\midrule
-		Identificación & \texttt{id\_viaje} & Folio único correlativo de la corrida ($1, 2, 3 \dots$). \\
-		& \texttt{fecha}, \texttt{ruta} & Fecha de operación y ruta (\textit{Puente Tuzos} vs \textit{Las Vías}). \\
+		Demanda & \texttt{fecha}, \texttt{hora} & Estampa de tiempo del intervalo (String / Timestamp). \\
+		& \texttt{ruta} & Identificador de ruta (\textit{Puente Tuzos} vs \textit{Las Vías}). \\
+		& \texttt{alumnos\_esperando} & Conteo acumulado de alumnos en la parada principal. \\
+		& \texttt{llegadas\_intervalo} & Alumnos que arribaron en los 15 min actuales (Poisson). \\
 		\addlinespace[0.4em]
-		Despacho & \texttt{hora\_inicio\_espera} & Hora en que arribó el primer alumno a la unidad vacía. \\
-		& \texttt{hora\_salida} & Estampa de tiempo efectiva de partida de la unidad. \\
-		& \texttt{pasajeros} & Ocupación a bordo ($N = 18$ pax en política tradicional). \\
-		& \texttt{es\_hora\_pico} & Indicador binario ($1 = \text{Hora Pico}$, $0 = \text{Hora Valle}$). \\
+		Despacho & \texttt{hora\_salida} & Estampa de tiempo efectiva de partida (o \texttt{N/A} si no salió). \\
+		& \texttt{pasajeros\_al\_salir} & Total de pasajeros a bordo ($0 \le N \le 18$). \\
+		& \texttt{tipo\_salida} & Categórica: \textit{Llena} (18 pax), \textit{Parcial} ($<18$) o \textit{Ninguna}. \\
+		& \texttt{tiempo\_espera\_acum} & Tiempo de espera acumulado del primer pasajero (minutos). \\
 		\addlinespace[0.4em]
-		Tiempos & \texttt{tiempo\_espera\_max\_min} & Minutos transcurridos para el primer pasajero (acumulado máximo). \\
-		& \texttt{tiempo\_espera\_prom\_min} & Promedio de minutos esperados por los pasajeros del viaje. \\
-		& \texttt{tiempo\_recorrido\_min} & Duración del trayecto a la UPP en minutos. \\
-		& \texttt{hora\_llegada\_upp} & Estampa de tiempo de arribo a la universidad. \\
+		Ruta & \texttt{tiempo\_recorrido} & Duración del trayecto a la UPP en minutos. \\
+		& \texttt{paradas\_intermedias} & Número de estaciones intermedias configuradas. \\
+		& \texttt{alumnos\_recogidos\_intermedias} & Pasajeros abordados durante las paradas del trayecto. \\
+		& \texttt{hora\_llegada\_upp} & Estampa de tiempo de arribo a la universidad (o \texttt{N/A}). \\
 		\bottomrule
 	\end{tabularx}
 \end{table}

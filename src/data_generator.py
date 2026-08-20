@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from src.config import (
     ROUTES,
     SIMULATION_DAYS,
+    INTERVAL_MINUTES,
     START_HOUR,
     END_HOUR,
     BUS_CAPACITY,
@@ -19,16 +20,16 @@ def is_peak_hour(current_time: datetime) -> bool:
             return True
     return False
 
-def get_current_arrival_rate(current_time: datetime, route) -> float:
-    """Retorna la tasa de llegada (alumnos/minuto) según el horario."""
-    multiplier = route.peak_multiplier if is_peak_hour(current_time) else 1.0
-    return route.arrival_rate_per_min * multiplier
-
 def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     """
-    Genera un dataset estocástico basado en EVENTOS DE DESPACHO (viajes reales).
-    Cada fila representa una combi que se llenó y partió hacia la UPP.
-    Los registros se devuelven ordenados cronológicamente por fecha y hora de salida.
+    Genera el dataset estocástico oficial cumpliendo al 100% con los 13 campos requeridos:
+    
+    1. Datos de Demanda:
+       - fecha, hora, ruta, alumnos_esperando, llegadas_intervalo
+    2. Datos de Despacho:
+       - hora_salida, pasajeros_al_salir, tipo_salida, tiempo_espera_acum
+    3. Datos de Ruta:
+       - tiempo_recorrido, paradas_intermedias, alumnos_recogidos_intermedias, hora_llegada_upp
     """
     rng = np.random.default_rng(seed)
     records = []
@@ -37,63 +38,85 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
     for route in ROUTES:
         for day in range(SIMULATION_DAYS):
             current_date = start_date + timedelta(days=day)
-            day_start = datetime(current_date.year, current_date.month, current_date.day, START_HOUR, 0)
-            day_end = datetime(current_date.year, current_date.month, current_date.day, END_HOUR, 0)
             
-            sim_time = day_start
+            # Estado acumulado del paradero para el día
+            students_waiting = 0
+            first_student_arrival_time = None
             
-            while sim_time < day_end:
-                arrival_times = []
-                current_time = sim_time
+            start_time = datetime(current_date.year, current_date.month, current_date.day, START_HOUR, 0)
+            end_time = datetime(current_date.year, current_date.month, current_date.day, END_HOUR, 0)
+            
+            current_interval = start_time
+            
+            while current_interval < end_time:
+                # 1. Tasa de llegada y proceso de Poisson
+                is_peak = is_peak_hour(current_interval)
+                multiplier = route.peak_multiplier if is_peak else 1.0
+                lambda_effective = route.arrival_rate_per_min * INTERVAL_MINUTES * multiplier
                 
-                # Simular la llegada consecutiva de 18 alumnos mediante distribución Exponencial
-                for _ in range(BUS_CAPACITY):
-                    rate = get_current_arrival_rate(current_time, route)
-                    inter_arrival = rng.exponential(scale=1.0 / rate)
-                    current_time += timedelta(minutes=inter_arrival)
-                    arrival_times.append(current_time)
+                arrivals = int(rng.poisson(lambda_effective))
                 
-                dispatch_time = arrival_times[-1]
+                # Registrar tiempo de arribo del primer estudiante si la parada estaba vacía
+                if students_waiting == 0 and arrivals > 0:
+                    first_student_arrival_time = current_interval
                 
-                if dispatch_time >= day_end:
-                    break
+                students_waiting += arrivals
                 
-                first_arrival = arrival_times[0]
+                # 2. Evaluación de despacho (Política tradicional: Combi Llena = 18 pax)
+                dispatch_occurred = False
+                dispatch_time = None
+                passengers_boarded = 0
+                dispatch_type = "Ninguna"
+                wait_time_accum = 0.0
+                trip_duration = 0.0
+                intermediate_boardings = 0
+                arrival_upp_time = None
                 
-                # Tiempos de espera
-                wait_max_min = (dispatch_time - first_arrival).total_seconds() / 60.0
-                wait_times = [(dispatch_time - arr).total_seconds() / 60.0 for arr in arrival_times]
-                wait_avg_min = float(np.mean(wait_times))
-                
-                # Recorrido a la UPP (Normal)
-                trip_duration = float(np.round(rng.normal(route.trip_duration_mean_min, 2.5), 1))
-                arrival_upp_time = dispatch_time + timedelta(minutes=trip_duration)
-                
-                peak_flag = 1 if is_peak_hour(dispatch_time) else 0
+                if students_waiting >= BUS_CAPACITY:
+                    dispatch_occurred = True
+                    passengers_boarded = BUS_CAPACITY
+                    students_waiting -= BUS_CAPACITY
+                    dispatch_type = "Llena"
+                    dispatch_time = current_interval
+                    
+                    if first_student_arrival_time:
+                        wait_time_accum = float(np.round((dispatch_time - first_student_arrival_time).total_seconds() / 60.0, 1))
+                    
+                    # Alumnos recogidos en paradas intermedias (0 a 3 alumnos si hay espacio/paradas)
+                    if route.intermediate_stops > 0:
+                        intermediate_boardings = int(rng.integers(0, min(4, route.intermediate_stops + 1)))
+                    
+                    # Tiempo de recorrido a la UPP (Normal)
+                    trip_duration = float(np.round(rng.normal(route.trip_duration_mean_min, 2.5), 1))
+                    arrival_upp_time = dispatch_time + timedelta(minutes=trip_duration)
+                    
+                    # Reset de tiempo para el siguiente grupo si aún quedan alumnos
+                    first_student_arrival_time = current_interval if students_waiting > 0 else None
                 
                 records.append({
-                    "raw_dispatch_datetime": dispatch_time,
-                    "fecha": dispatch_time.strftime("%Y-%m-%d"),
+                    "raw_interval_datetime": current_interval,
+                    "fecha": current_interval.strftime("%Y-%m-%d"),
+                    "hora": current_interval.strftime("%H:%M"),
                     "ruta": route.name,
-                    "hora_inicio_espera": first_arrival.strftime("%H:%M"),
-                    "hora_salida": dispatch_time.strftime("%H:%M"),
-                    "pasajeros": BUS_CAPACITY,
-                    "tiempo_espera_max_min": float(np.round(wait_max_min, 1)),
-                    "tiempo_espera_prom_min": float(np.round(wait_avg_min, 1)),
-                    "es_hora_pico": peak_flag,
-                    "tiempo_recorrido_min": trip_duration,
-                    "hora_llegada_upp": arrival_upp_time.strftime("%H:%M")
+                    "alumnos_esperando": students_waiting,
+                    "llegadas_intervalo": arrivals,
+                    "hora_salida": dispatch_time.strftime("%H:%M") if dispatch_time else "N/A",
+                    "pasajeros_al_salir": passengers_boarded,
+                    "tipo_salida": dispatch_type,
+                    "tiempo_espera_acum": wait_time_accum if dispatch_occurred else 0.0,
+                    "tiempo_recorrido": trip_duration if dispatch_occurred else 0.0,
+                    "paradas_intermedias": route.intermediate_stops,
+                    "alumnos_recogidos_intermedias": intermediate_boardings if dispatch_occurred else 0,
+                    "hora_llegada_upp": arrival_upp_time.strftime("%H:%M") if arrival_upp_time else "N/A"
                 })
                 
-                sim_time = dispatch_time
+                current_interval += timedelta(minutes=INTERVAL_MINUTES)
 
     df = pd.DataFrame(records)
     
-    # Ordenar cronológicamente por estampa de tiempo real
-    df = df.sort_values(by="raw_dispatch_datetime").reset_index(drop=True)
-    df.drop(columns=["raw_dispatch_datetime"], inplace=True)
-    
-    # Asignar id_viaje correlativo cronológico (1, 2, 3...)
-    df.insert(0, "id_viaje", range(1, len(df) + 1))
+    # Ordenar cronológicamente por tiempo real del intervalo
+    df.sort_values(by=["raw_interval_datetime", "ruta"], inplace=True)
+    df.drop(columns=["raw_interval_datetime"], inplace=True)
+    df.reset_index(drop=True, inplace=True)
     
     return df
