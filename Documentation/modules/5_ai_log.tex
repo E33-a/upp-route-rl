@@ -41,3 +41,26 @@
 	\end{tabularx}
 \end{center}
 \end{landscape}
+
+% Hoja adicional: la Tabla 4 original se conserva sin modificaciones.
+\newpage
+\begin{landscape}
+\begin{center}
+	\captionof{table}{Continuación de la Bitácora Oficial de Uso de IA Generativa}
+	\label{tab:bitacora_continuacion}
+	\vspace{0.2em}
+	\fontsize{7pt}{8.2pt}\selectfont
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{0.95}
+	\begin{tabularx}{\linewidth}{p{1.3cm} p{1.6cm} p{1.6cm} X X X X X}
+		\toprule
+		\rowcolor{purpleUPP!10!white}
+		\textbf{Fecha} & \textbf{Herramienta} & \textbf{Tema} & \textbf{¿Qué le pregunté?} & \textbf{¿Qué me respondió?} & \textbf{¿Qué verifiqué?} & \textbf{¿Qué corregí?} & \textbf{¿Qué aprendí?} \\
+		\midrule
+		20/08/2026 & Antigravity (Codex) & Selección de datos OLS & ¿Cómo interpretar ``combi llena o en espera'' con las columnas disponibles? & Conservar salidas \textit{Llena} o registros con \texttt{alumnos\_esperando}$>0$, y usar \texttt{tiempo\_espera\_acum} como minutos para llenar. & Revisé los valores de \texttt{tipo\_salida} y confirmé que existen 1,439 llenas y 482 parciales. & Hice explícito el filtro y eliminé valores no numéricos antes del ajuste. & Aprendí que la definición operativa de las variables debe quedar documentada antes de modelar. \\
+		\midrule
+		20/08/2026 & Antigravity (Codex) & Inferencia OLS & ¿Cómo obtener el $p$-valor de la pendiente y distinguirlo de $R^2$? & Calcular el estadístico $t$ con el error estándar de la pendiente y evaluar una prueba bilateral con $n-2$ grados de libertad. & Contrasté la ecuación impresa con la recta graficada y comprobé que $p<0.05$. & Reporté por separado ecuación, $R^2$ y $p$-valor, sin interpretar significancia como alto poder explicativo. & Aprendí que una pendiente puede ser significativa aunque el $R^2$ sea modesto. \\
+		\bottomrule
+	\end{tabularx}
+\end{center}
+\end{landscape}

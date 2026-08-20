@@ -5,9 +5,16 @@
 
 \subsection{Ecuación del Modelo Teórico y Estimadores OLS}
 
-El modelo probabilístico de regresión lineal simple responde a la formulación:
+La regresión lineal simple representa la relación promedio entre una variable explicativa
+$X$ y una variable de respuesta $Y$ mediante:
 \begin{equation}
-	Y_i = a + b \cdot X_i + e_i, \quad e_i \sim \mathcal{N}(0, \sigma^2)
+	Y_i = a + b \cdot X_i + e_i.
+\end{equation}
+Aquí, $a$ es el tiempo estimado cuando $X=0$, $b$ es el cambio promedio de minutos por
+cada alumno adicional y $e_i$ reúne la variación que la recta no explica. OLS elige la
+recta que minimiza la suma de los residuos al cuadrado:
+\begin{equation}
+    \min_{a,b}\sum_{i=1}^{n}\left[Y_i-(a+bX_i)\right]^2.
 \end{equation}
 
 Los estimadores de Mínimos Cuadrados Ordinarios (OLS) para la intersección ($a$) y la pendiente ($b$) se calculan mediante:
@@ -18,10 +25,24 @@ Los estimadores de Mínimos Cuadrados Ordinarios (OLS) para la intersección ($a
 	\end{equation}
 \end{statbox}
 
-Se evalúa específicamente el \textbf{Modelo 2 (Tiempo para Llenar Combi vs Alumnos Esperando)}:
+Se evalúa específicamente el \textbf{Modelo 2 (tiempo para llenar la combi frente a
+alumnos esperando)}:
 \begin{equation}
 	\text{minutos\_para\_llenar} = a + b \times \text{alumnos\_esperando}
 \end{equation}
+
+\subsection{Preparación de los Datos}
+
+El script \texttt{02\_train\_regression.py} lee directamente
+\texttt{data/demand\_dataset.csv}. Para conservar los eventos relevantes al proceso de
+llenado, se seleccionan los despachos cuya \texttt{tipo\_salida} es \textit{Llena} o que
+registran \texttt{alumnos\_esperando} $>0$. Este criterio produjo una muestra de
+$n=1{,}466$ observaciones. La variable explicativa es la cola inicial al llegar la combi,
+$X=\texttt{alumnos\_esperando}$, mientras que
+$Y=\texttt{tiempo\_espera\_acum}$ se usa como medida operativa de
+\texttt{minutos\_para\_llenar}: contabiliza los minutos transcurridos desde el inicio de
+la espera hasta el despacho. No se inventa una columna nueva; se renombra conceptualmente
+una medición ya presente en el dataset.
 
 \subsection{Contraste de Hipótesis Estadísticas}
 
@@ -37,33 +58,144 @@ Para evaluar la significancia del coeficiente de la pendiente ($b$), se plantea 
 		\midrule
 		Hipótesis Nula ($H_0$) & $H_0: b = 0$ & El número de alumnos en espera \textbf{no influye} en el tiempo restante para llenar la unidad. \\
 		\addlinespace[0.5em]
-		Hipótesis Alternativa ($H_1$) & $H_1: b \neq 0$ & El número de alumnos en espera \textbf{reduce significativamente} el tiempo necesario para llenar la unidad. \\
+		Hipótesis Alternativa ($H_1$) & $H_1: b \neq 0$ & El número de alumnos en espera se relaciona significativamente con el tiempo necesario para llenar la unidad. \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
 
-\subsection{Verificación de Supuestos del Modelo OLS}
+\subsection{Resultados del Ajuste}
 
-Para validar la inferencia del modelo, se analizan los residuos $e_i = Y_i - \hat{Y}_i$:
+Al sustituir los datos en los estimadores OLS se obtuvo:
+\begin{equation}
+    \widehat{Y} = 14.106834 - 2.539453X
+\end{equation}
 
-\begin{enumerate}
-	\item \textbf{Normalidad de Residuos (Prueba de Shapiro-Wilk):}
-	Evalúa si los errores provienen de una distribución normal. Se acepta el supuesto si $p_{\text{Shapiro}} > 0.05$.
-	\item \textbf{Homocedasticidad (Prueba de Breusch-Pagan):}
-	Evalúa si la varianza de los residuos es constante ($\text{Var}(e_i) = \sigma^2$). Se acepta el supuesto si $p_{\text{BP}} > 0.05$.
-	\item \textbf{Independencia de Errores (Estadístico de Durbin-Watson):}
-	Evalúa la ausencia de autocorrelación. Se exige que el estadístico $DW$ se sitúe en el intervalo $[1.5, 2.5]$.
-\end{enumerate}
+\begin{statbox}{Indicadores del Modelo OLS}
+    \begin{itemize}
+        \item Coeficiente de determinación: $R^2=0.121027$.
+        \item Valor $p$ bilateral de la pendiente: $p=5.830294\times10^{-43}$.
+        \item Número de observaciones utilizadas: $n=1{,}466$.
+    \end{itemize}
+\end{statbox}
+
+El intercepto $14.106834$ representa el tiempo promedio estimado cuando la combi llega
+sin alumnos en la cola inicial. La pendiente
+negativa indica que cada alumno adicional presente al llegar la unidad se asocia, en
+promedio, con una reducción de aproximadamente $2.54$ minutos. Sin embargo, el valor
+$R^2\approx0.121$ muestra que el número de alumnos esperando explica únicamente el
+$12.1\%$ de la variabilidad; la hora, la ruta y la tasa de llegada también influyen en
+el proceso y no forman parte de este modelo simple. Como el $p$-valor de la pendiente es
+menor que $0.05$, se rechaza $H_0:b=0$ y se concluye que la asociación observada es
+estadísticamente significativa.
+
+\subsection{Verificación de los Supuestos del Modelo OLS}
+
+Los supuestos se revisan sobre los residuos $e_i=Y_i-\widehat{Y}_i$, es decir, la
+diferencia entre el tiempo observado y el estimado. Se usa $\alpha=0.05$: en una prueba
+con $p<0.05$ se rechaza la hipótesis nula correspondiente.
+
+\subsubsection{Linealidad}
+
+OLS supone que el valor promedio de $Y$ cambia linealmente con $X$. En términos
+gráficos, los residuos deberían distribuirse de forma aleatoria alrededor de cero, sin
+curvas sistemáticas. Para complementar la inspección visual se estimó
+$Y=\beta_0+\beta_1X+\beta_2X^2+e$ y se contrastó $H_0:\beta_2=0$ contra
+$H_1:\beta_2\neq0$. El resultado fue $F=25.8626$ y
+$p=4.1400\times10^{-7}$. Como $p<0.05$, existe un componente curvo significativo: la
+recta captura una tendencia general, pero no toda la forma de la relación.
+
+\subsubsection{Independencia de los errores}
+
+Este supuesto requiere que el error de un despacho no determine el error del siguiente.
+Se evaluó autocorrelación consecutiva mediante
+\begin{equation}
+    DW=\frac{\sum_{i=2}^{n}(e_i-e_{i-1})^2}{\sum_{i=1}^{n}e_i^2}.
+\end{equation}
+Un valor cercano a 2 indica ausencia de autocorrelación de primer orden; valores cercanos
+a 0 sugieren autocorrelación positiva y valores cercanos a 4, negativa. Se obtuvo
+$DW=1.6002$, dentro del criterio práctico $[1.5,2.5]$. Por ello no se detecta
+autocorrelación fuerte de primer orden. Esto no demuestra independencia absoluta, pues
+los despachos pertenecen a días y rutas repetidos.
+
+\subsubsection{Normalidad de los errores: Shapiro--Wilk}
+
+La normalidad no es necesaria para calcular la recta, pero sustenta las pruebas e
+intervalos clásicos en muestras pequeñas. Se contrastó $H_0$: ``los errores siguen una
+distribución normal'' contra $H_1$: ``no siguen una distribución normal''. La prueba de
+Shapiro--Wilk compara el orden y la separación de los residuos observados con los que se
+esperarían bajo una distribución normal. Su estadístico $W$ toma valores próximos a 1
+cuando ambas distribuciones son semejantes. La decisión se realiza con el $p$-valor: si
+$p<0.05$, se rechaza la normalidad. En muestras grandes, como la de este proyecto, la
+prueba puede detectar desviaciones pequeñas; por ello su resultado debe interpretarse
+con prudencia y no impide calcular los coeficientes OLS.
+
+\subsubsection{Homocedasticidad: Breusch--Pagan}
+
+La homocedasticidad significa que la dispersión de los errores debe mantenerse
+aproximadamente constante para todos los valores estimados. Se contrastó
+$H_0:\operatorname{Var}(e_i)=\sigma^2$ contra $H_1$: ``la varianza cambia con $X$''.
+Breusch--Pagan calcula $LM=nR^2_{\mathrm{aux}}\sim\chi^2_1$, donde
+$R^2_{\mathrm{aux}}$ proviene de una regresión de $e_i^2$ sobre $X$. El resultado fue
+$LM=25.7868$ y $p=3.8129\times10^{-7}$; se rechaza $H_0$. Para la inspección gráfica se
+coloca la variable predictora $X=\texttt{alumnos\_esperando}$ en el eje horizontal y los
+residuos $e_i$ en el eje vertical. La dispersión cambia entre los valores de $X$, por lo
+que existe heterocedasticidad y los errores estándar
+OLS convencionales deben interpretarse con precaución.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{../outputs/plots/fig2_homocedasticidad.png}
+    \caption{Variable predictora frente a residuos para evaluar homocedasticidad.}
+    \label{fig:homocedasticidad_ols}
+\end{figure}
+
+\subsection{Gráfica Final del Modelo Ajustado}
+
+Después de definir el modelo y revisar sus supuestos, se presenta la recta de regresión
+junto con las observaciones. Cada punto representa un despacho del dataset filtrado. La
+línea muestra el tiempo promedio estimado por OLS para cada cantidad inicial de alumnos;
+la distancia vertical entre un punto y la línea corresponde a su residuo.
 
 \begin{figure}[H]
 	\centering
-	\IfFileExists{img/fig1_regresion_lineal.png}{%
-		\includegraphics[width=0.7\textwidth]{img/fig1_regresion_lineal.png}%
-	}{%
-		\begin{tcolorbox}[colback=purpleUPP!5!white,colframe=purpleUPP,title={Gráfico en Espera}]
-			\centering \textit{La gráfica ajustada ($Y = a + b X$) se generará al ejecutar el script \texttt{02\_train\_regression.py}.}
-		\end{tcolorbox}%
-	}%
-	\caption{Gráfico de Dispersión y Recta de Regresión Ajustada ($Y = a + b X$).}
+	\includegraphics[width=0.82\textwidth]{../outputs/plots/fig1_regresion.png}
+	\caption{Gráfica final de minutos observados y recta de regresión OLS ajustada.}
 	\label{fig:regresion_fit}
 \end{figure}
+
+\subsubsection{Interpretación de la gráfica final}
+
+El eje horizontal representa la cantidad de alumnos que ya estaban esperando cuando
+llegó la combi ($X=\texttt{alumnos\_esperando}$). El eje vertical muestra los minutos
+transcurridos desde el inicio de la espera hasta el despacho
+($Y=\texttt{minutos\_para\_llenar}$). Cada punto verde corresponde a un despacho del
+dataset, mientras que la línea morada es la estimación promedio producida por OLS:
+\begin{equation}
+    \widehat{Y}=14.1068-2.5395X.
+\end{equation}
+
+El intercepto $14.1068$ indica que, cuando la combi llega sin alumnos en la cola inicial
+($X=0$), el modelo estima aproximadamente $14.11$ minutos hasta el despacho. La
+pendiente $-2.5395$ indica que cada alumno adicional presente al llegar la unidad se
+asocia, en promedio, con una reducción de $2.54$ minutos. Por ejemplo, para dos alumnos
+esperando:
+\begin{equation}
+    \widehat{Y}=14.1068-2.5395(2)\approx9.03\text{ minutos}.
+\end{equation}
+
+Los puntos forman columnas verticales porque el número de alumnos es una variable
+discreta que solo toma valores enteros. La separación vertical dentro de una misma
+columna muestra que dos despachos con igual cantidad inicial de alumnos pueden presentar
+tiempos diferentes. Esta variación puede relacionarse con la ruta, la hora, la demanda
+del momento y la velocidad con que llegan nuevos pasajeros.
+
+El coeficiente $R^2=0.1210$ indica que la cantidad inicial de alumnos explica alrededor
+del $12.1\%$ de la variación observada en los minutos de espera. El porcentaje restante
+se relaciona con variables no incluidas y con variación aleatoria. Por ello, la gráfica
+sí respalda una tendencia negativa ---más alumnos esperando se asocian con menos tiempo
+para llenar la unidad---, pero el modelo simple no ofrece por sí solo una predicción de
+alta precisión para cada despacho individual.
+
+Los incumplimientos no invalidan el cálculo descriptivo de la recta, pero sí aconsejan
+prudencia con la inferencia clásica. En trabajos posteriores conviene incorporar hora y
+ruta, considerar una forma no lineal y emplear errores estándar robustos.
