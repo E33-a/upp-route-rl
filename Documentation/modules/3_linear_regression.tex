@@ -33,7 +33,7 @@ alumnos esperando)}:
 
 \subsection{Preparación de los Datos}
 
-El script \texttt{02\_train\_regression.py} lee directamente \texttt{data/demand\_dataset.csv}. Para conservar los eventos relevantes al proceso de llenado, se filtran aquellos despachos cuya variable de salida (\texttt{tipo\_salida}) es \textit{Llena} o que registran la condición \texttt{alumnos\_esperando} $>0$. Este criterio produjo una muestra de $n=1{,}466$ observaciones. La variable explicativa corresponde a la cola inicial al arribo de la unidad, $X=\texttt{alumnos\_esperando}$, mientras que $Y=\texttt{tiempo\_espera\_acum}$ se emplea como la métrica operativa de \texttt{minutos\_para\_llenar}: mide los minutos transcurridos desde la llegada de la unidad hasta su despacho final.
+El script \texttt{02\_train\_regression.py} lee directamente \texttt{data/demand\_dataset.csv}. Se conservan los dos estados operativos registrados en \texttt{tipo\_salida}: \textit{Llena}, cuando la unidad alcanza su capacidad, y \textit{Parcial}, cuando sale después de permanecer el tiempo máximo en espera. Este criterio incluye $n=1{,}921$ observaciones. La variable explicativa corresponde a la cola inicial al arribo de la unidad, $X=\texttt{alumnos\_esperando}$, mientras que $Y=\texttt{tiempo\_espera\_acum}$ se emplea como la métrica operativa de \texttt{minutos\_para\_llenar}: mide los minutos transcurridos desde la llegada de la unidad hasta su despacho final.
 
 \subsection{Contraste de Hipótesis Estadísticas}
 
@@ -54,27 +54,41 @@ Para evaluar la significancia del coeficiente de la pendiente ($b$), se plantea 
 	\end{tabularx}
 \end{table}
 
+La significancia de la regresión se verificó mediante la prueba ANOVA mostrada en la
+Figura~\ref{fig:anova_regresion}. Con un nivel de significancia $\alpha=0.05$, se obtuvo
+$F=325.895247$ y un $p$-valor de $2.0696\times10^{-67}$. Como $p<\alpha$, se rechaza
+$H_0:b=0$ y se acepta que la pendiente es estadísticamente distinta de cero. Por tanto,
+\textbf{el criterio de significancia de la regresión sí se cumple}: existe evidencia de
+una relación estadística entre los alumnos esperando y los minutos para llenar la combi.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{anova_regresion.png}
+	\caption{Resultado de la prueba ANOVA para la significancia de la regresión.}
+	\label{fig:anova_regresion}
+\end{figure}
+
 \subsection{Resultados del Ajuste}
 
 Al sustituir los datos en los estimadores OLS se obtuvo:
 \begin{equation}
-    \widehat{Y} = 14.106834 - 2.539453X
+    \widehat{Y} = 14.416809 - 2.630634X
 \end{equation}
 
 \begin{statbox}{Indicadores del Modelo OLS}
     \begin{itemize}
-        \item Coeficiente de determinación: $R^2=0.121027$.
-        \item Valor $p$ bilateral de la pendiente: $p=5.830294\times10^{-43}$.
-        \item Número de observaciones utilizadas: $n=1{,}466$.
+        \item Coeficiente de determinación: $R^2=0.145172$.
+        \item Valor $p$ bilateral de la pendiente: $p=2.069583\times10^{-67}$.
+        \item Número de observaciones utilizadas: $n=1{,}921$.
     \end{itemize}
 \end{statbox}
 
-El intercepto $14.106834$ representa el tiempo promedio estimado cuando la combi llega
+El intercepto $14.416809$ representa el tiempo promedio estimado cuando la combi llega
 sin alumnos en la cola inicial. La pendiente
 negativa indica que cada alumno adicional presente al llegar la unidad se asocia, en
-promedio, con una reducción de aproximadamente $2.54$ minutos. Sin embargo, el valor
-$R^2\approx0.121$ muestra que el número de alumnos esperando explica únicamente el
-$12.1\%$ de la variabilidad; la hora, la ruta y la tasa de llegada también influyen en
+promedio, con una reducción de aproximadamente $2.63$ minutos. Sin embargo, el valor
+$R^2\approx0.1452$ muestra que el número de alumnos esperando explica únicamente el
+$14.52\%$ de la variabilidad; la hora, la ruta y la tasa de llegada también influyen en
 el proceso y no forman parte de este modelo simple. Como el $p$-valor de la pendiente es
 menor que $0.05$, se rechaza $H_0:b=0$ y se concluye que la asociación observada es
 estadísticamente significativa.
@@ -91,8 +105,8 @@ OLS supone que el valor promedio de $Y$ cambia linealmente con $X$. En términos
 gráficos, los residuos deberían distribuirse de forma aleatoria alrededor de cero, sin
 curvas sistemáticas. Para complementar la inspección visual se estimó
 $Y=\beta_0+\beta_1X+\beta_2X^2+e$ y se contrastó $H_0:\beta_2=0$ contra
-$H_1:\beta_2\neq0$. El resultado fue $F=25.8626$ y
-$p=4.1400\times10^{-7}$. Como $p<0.05$, existe un componente curvo significativo: la
+$H_1:\beta_2\neq0$. El resultado fue $F=36.5298$ y
+$p=1.8019\times10^{-9}$. Como $p<0.05$, existe un componente curvo significativo: la
 recta captura una tendencia general, pero no toda la forma de la relación.
 
 \subsubsection{Independencia de los errores}
@@ -104,7 +118,7 @@ Se evaluó autocorrelación consecutiva mediante
 \end{equation}
 Un valor cercano a 2 indica ausencia de autocorrelación de primer orden; valores cercanos
 a 0 sugieren autocorrelación positiva y valores cercanos a 4, negativa. Se obtuvo
-$DW=1.6002$, dentro del criterio práctico $[1.5,2.5]$. Por ello no se detecta
+$DW=1.6160$, dentro del criterio práctico $[1.5,2.5]$. Por ello no se detecta
 autocorrelación fuerte de primer orden. Esto no demuestra independencia absoluta, pues
 los despachos pertenecen a días y rutas repetidos.
 
@@ -115,10 +129,22 @@ intervalos clásicos en muestras pequeñas. Se contrastó $H_0$: ``los errores s
 distribución normal'' contra $H_1$: ``no siguen una distribución normal''. La prueba de
 Shapiro--Wilk compara el orden y la separación de los residuos observados con los que se
 esperarían bajo una distribución normal. Su estadístico $W$ toma valores próximos a 1
-cuando ambas distribuciones son semejantes. La decisión se realiza con el $p$-valor: si
-$p<0.05$, se rechaza la normalidad. En muestras grandes, como la de este proyecto, la
-prueba puede detectar desviaciones pequeñas; por ello su resultado debe interpretarse
-con prudencia y no impide calcular los coeficientes OLS.
+cuando ambas distribuciones son semejantes.
+
+La prueba aplicada a los residuos produjo $W=0.68031108$ y un $p$-valor reportado como
+0, con $\alpha=0.05$. El cero mostrado corresponde al redondeo de un valor extremadamente
+pequeño, no a una probabilidad exactamente igual a cero. Como $p<\alpha$, se rechaza
+$H_0$ y se concluye que los residuos \textbf{no siguen una distribución normal}; por
+tanto, este supuesto no se cumple. En muestras grandes la prueba puede detectar
+desviaciones pequeñas, así que el resultado aconseja prudencia en la inferencia, pero no
+impide calcular los coeficientes OLS.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.42\textwidth]{shapiro_wilk_residuos.png}
+    \caption{Resultado de la prueba Shapiro--Wilk aplicada a los residuos.}
+    \label{fig:shapiro_wilk}
+\end{figure}
 
 \subsubsection{Homocedasticidad: Breusch--Pagan}
 
@@ -127,23 +153,25 @@ aproximadamente constante para todos los valores estimados. Se contrastó
 $H_0:\operatorname{Var}(e_i)=\sigma^2$ contra $H_1$: ``la varianza cambia con $X$''.
 Breusch--Pagan calcula $LM=nR^2_{\mathrm{aux}}\sim\chi^2_1$, donde
 $R^2_{\mathrm{aux}}$ proviene de una regresión de $e_i^2$ sobre $X$. El resultado fue
-$LM=25.7868$ y $p=3.8129\times10^{-7}$; se rechaza $H_0$. Para la inspección gráfica se
-coloca la variable predictora $X=\texttt{alumnos\_esperando}$ en el eje horizontal y los
-residuos $e_i$ en el eje vertical. La dispersión cambia entre los valores de $X$, por lo
-que existe heterocedasticidad y los errores estándar
+$LM=12.5269$ y $p=4.0114\times10^{-4}$; se rechaza $H_0$. Para la inspección gráfica se
+colocan los valores predichos $\widehat{Y}$ en el eje horizontal y los residuos
+$e_i=Y_i-\widehat{Y}_i$ en el eje vertical. Si la varianza fuera constante, los puntos
+mantendrían una amplitud vertical semejante a lo largo del eje horizontal. En cambio, la
+dispersión aumenta en algunos valores predichos, por lo que existe heterocedasticidad y
+los errores estándar
 OLS convencionales deben interpretarse con precaución.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.65\textwidth]{../outputs/plots/fig2_homocedasticidad.png}
-    \caption{Variable predictora frente a residuos para evaluar homocedasticidad.}
+    \caption{Valores predichos frente a residuos para evaluar homocedasticidad.}
     \label{fig:homocedasticidad_ols}
 \end{figure}
 
 \subsection{Gráfica Final del Modelo Ajustado}
 
 Después de definir el modelo y revisar sus supuestos, se presenta la recta de regresión
-junto con las observaciones. Cada punto representa un despacho del dataset filtrado. La
+junto con las observaciones. Cada punto representa un despacho del dataset analizado. La
 línea muestra el tiempo promedio estimado por OLS para cada cantidad inicial de alumnos;
 la distancia vertical entre un punto y la línea corresponde a su residuo.
 
@@ -160,18 +188,18 @@ El eje horizontal representa la cantidad de alumnos que ya estaban esperando cua
 llegó la combi ($X=\texttt{alumnos\_esperando}$). El eje vertical muestra los minutos
 transcurridos desde el inicio de la espera hasta el despacho
 ($Y=\texttt{minutos\_para\_llenar}$). Cada punto verde corresponde a un despacho del
-dataset, mientras que la línea morada es la estimación promedio producida por OLS:
+dataset, mientras que la línea verde punteada es la estimación promedio producida por OLS:
 \begin{equation}
-    \widehat{Y}=14.1068-2.5395X.
+    \widehat{Y}=14.4168-2.6306X.
 \end{equation}
 
-El intercepto $14.1068$ indica que, cuando la combi llega sin alumnos en la cola inicial
-($X=0$), el modelo estima aproximadamente $14.11$ minutos hasta el despacho. La
-pendiente $-2.5395$ indica que cada alumno adicional presente al llegar la unidad se
-asocia, en promedio, con una reducción de $2.54$ minutos. Por ejemplo, para dos alumnos
+El intercepto $14.4168$ indica que, cuando la combi llega sin alumnos en la cola inicial
+($X=0$), el modelo estima aproximadamente $14.42$ minutos hasta el despacho. La
+pendiente $-2.6306$ indica que cada alumno adicional presente al llegar la unidad se
+asocia, en promedio, con una reducción de $2.63$ minutos. Por ejemplo, para dos alumnos
 esperando:
 \begin{equation}
-    \widehat{Y}=14.1068-2.5395(2)\approx9.03\text{ minutos}.
+    \widehat{Y}=14.4168-2.6306(2)\approx9.16\text{ minutos}.
 \end{equation}
 
 Los puntos forman columnas verticales porque el número de alumnos es una variable
@@ -180,8 +208,8 @@ columna muestra que dos despachos con igual cantidad inicial de alumnos pueden p
 tiempos diferentes. Esta variación puede relacionarse con la ruta, la hora, la demanda
 del momento y la velocidad con que llegan nuevos pasajeros.
 
-El coeficiente $R^2=0.1210$ indica que la cantidad inicial de alumnos explica alrededor
-del $12.1\%$ de la variación observada en los minutos de espera. El porcentaje restante
+El coeficiente $R^2=0.1452$ indica que la cantidad inicial de alumnos explica alrededor
+del $14.52\%$ de la variación observada en los minutos de espera. El porcentaje restante
 se relaciona con variables no incluidas y con variación aleatoria. Por ello, la gráfica
 sí respalda una tendencia negativa ---más alumnos esperando se asocian con menos tiempo
 para llenar la unidad---, pero el modelo simple no ofrece por sí solo una predicción de

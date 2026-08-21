@@ -10,16 +10,16 @@ El presente trabajo integra un marco metodológico riguroso que combina \textbf{
 \begin{summarybox}{Respuestas a Preguntas Fundamentales de Negocio y Operación}
 	\begin{enumerate}
 		\item \textbf{¿Conviene seguir esperando a que la combi se llene con 18 pasajeros?}
-		\textbf{No en la ruta Puente de Tuzos.} Mantener la regla rígida de $18$ pasajeros en horarios de baja afluencia provoca tiempos de espera que exceden los 60 minutos por unidad, colapsando la satisfacción estudiantil y generando cuellos de botella ineficientes.
+		\textbf{Conviene considerar una política flexible.} La política tradicional presentó esperas máximas de hasta $97.0$ minutos. En la evaluación realizada, UCB1 permitió más despachos con una ocupación prácticamente completa, aunque no redujo el promedio ni el máximo de espera acumulada.
 
 		\item \textbf{¿Cuál es el número mínimo razonable de pasajeros para salir?}
-		En horas valle, establecer un umbral flexible de \textbf{12 a 14 pasajeros} tras 15--25 minutos de espera reduce el tiempo total acumulado en más de un \textbf{40\%}, manteniendo una ocupación vehicular superior al \textbf{66\%} ($\ge 12/18$).
+		El brazo con mejor recompensa fue $a_1$: salir con al menos \textbf{14 pasajeros} después de \textbf{15 minutos}, con $\bar{Q}=0.853$. Este resultado identifica el mejor balance entre las políticas evaluadas, sin afirmar una reducción del tiempo promedio.
 
 		\item \textbf{¿En qué horas conviene ser más flexible?}
 		Durante las franjas de hora valle (10:00--12:00 y 16:00--18:00), donde la tasa de llegada según la simulación Poisson cae a 1 alumno cada 7--10 minutos. En horas pico (06:00--09:00 y 13:00--15:00), el llenado ocurre en menos de 5 minutos, por lo que prevalece la política de cupo lleno.
 
 		\item \textbf{¿Cuánto tiempo de espera se reduce saliendo con 12 o 14 personas?}
-		Se ahorran en promedio entre \textbf{25 y 35 minutos de espera acumulada} por alumno en comparación con la política tradicional rígida $a_0$.
+		La comparación agregada no mostró una reducción: la espera acumulada promedio fue de \textbf{10.6 minutos} con la política tradicional y de \textbf{10.7 minutos} con UCB1.
 	\end{enumerate}
 \end{summarybox}
 
@@ -28,14 +28,14 @@ El presente trabajo integra un marco metodológico riguroso que combina \textbf{
 
 \begin{enumerate}
 	\item \textbf{Aportación del Modelo Predictivo (Regresión Lineal OLS):}
-	La regresión lineal simple confirmó una relación inversamente proporcional estadísticamente significativa ($p < 0.001$, $F = 201.8$) entre el número de alumnos en espera ($X$) y el tiempo necesario para completar el cupo ($Y = 14.11 - 2.54 X$). Aunque el coeficiente de determinación ($R^2 = 0.121$) refleja variabilidad por factores estocásticos, el estadístico de Durbin-Watson ($DW = 1.60$) validó la independencia de los residuos.
+	La regresión lineal simple identificó una relación lineal negativa estadísticamente significativa ($p < 0.001$, $F = 325.8952$) entre el número de alumnos en espera ($X$) y el tiempo necesario para completar el cupo ($\widehat{Y} = 14.4168 - 2.6306X$). El coeficiente de determinación ($R^2 = 0.1452$) indica que esta variable explica el $14.52\%$ de la variación observada en el tiempo; el resto se asocia con factores no incluidos en el modelo y con variación aleatoria. Asimismo, el estadístico de Durbin--Watson ($DW = 1.6160$) no mostró evidencia importante de autocorrelación de primer orden en los residuos, aunque no demuestra por sí solo su independencia completa.
 
 	\item \textbf{Desempeño del Agente UCB1 (Multi-Armed Bandit):}
-	El algoritmo UCB1 demostró una convergencia estable hacia el brazo óptimo \textbf{$a_1$ (\texttt{Flex\_14p\_15m})}, logrando la recompensa media ponderada más alta ($\bar{Q} = 0.692$). En comparación con la política tradicional ($a_0$), UCB1 logró:
+	El brazo con mayor recompensa fue \textbf{$a_1$}, con $\bar{Q}=0.853$. En comparación con la política tradicional ($a_0$), se obtuvo:
 	\begin{itemize}
-		\item Reducción del tiempo promedio de espera de \textbf{38.4 min a 16.2 min} (mejora del \textbf{57.8\%}).
-		\item Reducción del tiempo máximo de espera de \textbf{84.5 min a 28.1 min} (mejora del \textbf{66.7\%}).
-		\item Mantención de un factor de ocupación promedio superior al \textbf{77.7\%} por unidad despachada.
+		\item Tiempo promedio de espera acumulada de \textbf{10.6 min} con la política tradicional y \textbf{10.7 min} con UCB1.
+		\item Tiempo máximo de espera acumulada de \textbf{97.0 min} con ambas estrategias.
+		\item Ocupación promedio aproximada de \textbf{17.9 de 18 pasajeros} en los despachos activados por UCB1.
 	\end{itemize}
 \end{enumerate}
 

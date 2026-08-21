@@ -23,10 +23,10 @@ El sistema selecciona en cada decisión entre 5 brazos o políticas candidatas (
 		\textbf{Brazo} & \textbf{Identificador} & \textbf{Regla de Despacho} \\
 		\midrule
 		$a_0$ & \texttt{FullOnly} & Salir únicamente al alcanzar $18$ pasajeros (Política Tradicional). \\
-		$a_1$ & \texttt{Flex\_14p\_15m} & Salir con $\ge 14$ personas O tras 15 minutos de espera. \\
-		$a_2$ & \texttt{Flex\_12p\_25m} & Salir con $\ge 12$ personas O tras 25 minutos de espera. \\
-		$a_3$ & \texttt{Flex\_10p\_35m} & Salir con $\ge 10$ personas O tras 35 minutos de espera. \\
-		$a_4$ & \texttt{Flex\_8p\_45m} & Salir con $\ge 8$ personas O tras 45 minutos de espera. \\
+		$a_1$ & \texttt{Flex\_14p\_15m} & Salir con $\ge 14$ personas y al menos 15 minutos de espera. \\
+		$a_2$ & \texttt{Flex\_12p\_25m} & Salir con $\ge 12$ personas y al menos 25 minutos de espera. \\
+		$a_3$ & \texttt{Flex\_10p\_35m} & Salir con $\ge 10$ personas y al menos 35 minutos de espera. \\
+		$a_4$ & \texttt{Flex\_8p\_45m} & Salir con $\ge 8$ personas y al menos 45 minutos de espera. \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
@@ -47,25 +47,25 @@ La recompensa inmediata $R_t \in [0, 1]$ se obtiene mediante min-max scaling inv
 \newpage
 \subsection{Resultados y Comparativa de Desempeño}
 
-La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró que el brazo preferido por el agente es \textbf{$a_1$ (Flex $\ge 14$ pax tras 15 min)}, obteniendo el promedio de recompensa más elevado ($\bar{Q} = 0.692$).
+La simulación del algoritmo UCB1 durante las 3 semanas de operación demostró que el brazo preferido por el agente es \textbf{$a_1$ (Flex $\ge 14$ pax tras 15 min)}, obteniendo el promedio de recompensa más elevado ($\bar{Q} = 0.853$).
 
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
+	\begin{subfigure}[b]{0.82\textwidth}
 		\centering
 		\IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
-			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig2_ucb_recompensa.png}
+			\includegraphics[width=\textwidth]{../outputs/plots/fig2_ucb_recompensa.png}
 		}{
 			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
 		}
 		\caption{Evolución Recompensa UCB1}
 		\label{fig:ucb_recompensa}
 	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
+	\par\medskip
+	\begin{subfigure}[b]{0.92\textwidth}
 		\centering
 		\IfFileExists{../outputs/plots/fig3_comparativa.png}{
-			\includegraphics[height=2.8cm,width=\textwidth,keepaspectratio]{../outputs/plots/fig3_comparativa.png}
+			\includegraphics[width=\textwidth]{../outputs/plots/fig3_comparativa.png}
 		}{
 			\fbox{\rule{0pt}{1.0in} \rule{0.8\textwidth}{0pt}}
 		}

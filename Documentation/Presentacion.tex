@@ -388,12 +388,13 @@
     \begin{darkcard}[title=\color{cyanAccent}{Ecuación Estimada del Tiempo de Espera}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{equation*}
-            \displaystyle \widehat{Y} = 14.1068 - 2.5395 \cdot X
+            \displaystyle \widehat{Y} = 14.4168 - 2.6306 \cdot X
         \end{equation*}
         \begin{itemize}
-            \item \textbf{Intercepto ($a = 14.11$ min):} Espera estimada sin cola inicial ($X=0$).
-            \item \textbf{Pendiente ($b = -2.54$ min/pax):} Cada alumno presente al llegar reduce la espera en $2.54$ minutos.
-            \item \textbf{Significancia Estadística:} $p = 5.83 \times 10^{-43} < 0.001$, $F = 201.8$.
+            \item \textbf{Intercepto ($a = 14.42$ min):} Espera estimada sin cola inicial ($X=0$).
+            \item \textbf{Pendiente ($b = -2.63$ min/pax):} Cada alumno presente al llegar reduce la espera en $2.63$ minutos.
+            \item \textbf{Varianza Explicada ($R^2 = 0.1452$):} Explica el $14.52\%$ de la variabilidad del tiempo.
+            \item \textbf{Significancia Estadística:} $p = 2.07 \times 10^{-67} < 0.001$ ($n = 1,921$).
         \end{itemize}
     \end{darkcard}
     \vfill
@@ -422,13 +423,13 @@
         \begin{column}{0.5\textwidth}
             \begin{accentcard}{1. Independencia (Durbin-Watson)}
                 \fontsize{10.5pt}{14pt}\selectfont \color{textWhite}
-                \textbf{$DW = 1.6002$:} Dentro del rango aceptable $[1.5, 2.5]$, confirmando independencia entre despachos consecutivos.
+                \textbf{$DW = 1.6160$:} Dentro del rango aceptable $[1.5, 2.5]$, confirmando independencia entre despachos consecutivos.
             \end{accentcard}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{purplecard}{2. Linealidad}
+            \begin{purplecard}{2. Linealidad (Test F Cuadrático)}
                 \fontsize{10.5pt}{14pt}\selectfont \color{textWhite}
-                Test F cuadrático $p < 0.001$. Se observa ligera curvatura en valle por el límite rígido de 18 asientos.
+                Test F cuadrático $F = 36.53, p < 0.001$. Se observa ligera curvatura en valle por el límite rígido de 18 asientos.
             \end{purplecard}
         \end{column}
     \end{columns}
@@ -438,13 +439,13 @@
 % ---------------------------------------------------------
 % DIAPOSITIVA 14: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 2)
 % ---------------------------------------------------------
-\begin{frame}{Diagnóstico de Supuestos OLS: Homocedasticidad}
+\begin{frame}{Diagnóstico de Supuestos OLS: Homocedasticidad y Normalidad}
     \vfill
-    \begin{yellowcard}{3. Prueba de Breusch-Pagan}
-        \fontsize{11pt}{15pt}\selectfont \color{textWhite}
+    \begin{yellowcard}{3. Pruebas de Breusch-Pagan y Shapiro-Wilk}
+        \fontsize{10.5pt}{14.5pt}\selectfont \color{textWhite}
         \begin{itemize}
-            \item \textbf{Resultado del Test:} $LM = 25.79, p < 0.001$.
-            \item \textbf{Diagnóstico:} Existe heterocedasticidad (varianza de residuos no constante) debido a la volatilidad entre franjas pico y valle.
+            \item \textbf{Breusch-Pagan ($LM = 12.53, p < 0.001$):} Detecta heterocedasticidad por volatilidad entre horas pico y valle.
+            \item \textbf{Shapiro-Wilk ($W = 0.6803, p < 0.05$):} Residuos no normales por la naturaleza truncada del tiempo.
             \item \textbf{Implicación Práctica:} El modelo OLS sigue siendo un estimador insesgado de la tendencia central para el agente UCB1.
         \end{itemize}
     \end{yellowcard}
