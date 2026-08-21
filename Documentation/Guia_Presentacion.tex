@@ -197,7 +197,7 @@ Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada
 % ---------------------------------------------------------
 \begin{emmanuelbox}{13: Resultados de la Regresión Lineal OLS}
 \textbf{Qué decir en voz alta:}
-``Gracias Ximena. La ecuación estimada obtenida fue $\widehat{Y} = 14.1068 - 2.5395 \cdot X$. Esto significa que si no hay nadie en cola al llegar ($X=0$), la espera esperada es de 14.11 minutos. Además, por cada alumno ya formado en cola, el tiempo de espera para completar el despacho disminuye en 2.54 minutos. El p-valor extremadamente pequeño ($5.83 \times 10^{-43}$) confirma una alta significancia estadística.''
+``Gracias Ximena. La ecuación estimada obtenida fue $\widehat{Y} = 14.4168 - 2.6306 \cdot X$, con un coeficiente de determinación $R^2 = 0.1452$ (14.52\% variancia explicada). Esto significa que si no hay nadie en cola al llegar ($X=0$), la espera esperada es de 14.42 minutos. Además, por cada alumno ya formado en cola, el tiempo de espera disminuye en 2.63 minutos. El p-valor extremadamente pequeño ($2.07 \times 10^{-67}$) confirma una alta significancia estadística.''
 
 \begin{defensebox}
 \textbf{Posible Pregunta:} ¿Por qué el signo de la pendiente $b$ es negativo?\\
@@ -208,23 +208,23 @@ Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada
 % ---------------------------------------------------------
 \begin{emmanuelbox}{14: Gráfica del Modelo OLS Ajustado}
 \textbf{Qué decir en voz alta:}
-``En esta gráfica observamos los datos dispersos de los despachos y la línea de regresión roja ajustada. Se aprecia claramente la tendencia decreciente de la espera conforme aumenta la cola inicial de estudiantes.''
+``En esta gráfica observamos los datos dispersos de los despachos y la línea de regresión punteada ajustada. Se aprecia claramente la tendencia decreciente de la espera conforme aumenta la cola inicial de estudiantes.''
 \end{emmanuelbox}
 
 % ---------------------------------------------------------
 \begin{emmanuelbox}{15: Diagnóstico de Supuestos OLS: Independencia y Linealidad}
 \textbf{Qué decir en voz alta:}
-``Evaluamos los supuestos de Gauss-Markov. Para independencia probamos el estadístico de Durbin-Watson obteniendo $DW = 1.6002$, ubicándose en el rango aceptable $[1.5, 2.5]$, descartando autocorrelación serial. Para linealidad, la prueba F del término cuadrático confirmó la validez de la relación lineal.''
+``Evaluamos los supuestos de Gauss-Markov. Para independencia probamos el estadístico de Durbin-Watson obteniendo $DW = 1.6160$, ubicándose en el rango aceptable $[1.5, 2.5]$, descartando autocorrelación serial. Para linealidad, la prueba F del término cuadrático ($F = 36.53, p < 0.001$) confirmó la validez de la relación lineal.''
 \end{emmanuelbox}
 
 % ---------------------------------------------------------
-\begin{ximenabox}{16: Diagnóstico de Supuestos OLS: Homocedasticidad}
+\begin{ximenabox}{16: Diagnóstico de Supuestos OLS: Homocedasticidad y Normalidad}
 \textbf{Qué decir en voz alta:}
-``Gracias Emmanuel. Aplicamos la prueba de Breusch-Pagan obteniendo $LM = 25.79$ ($p < 0.001$), detectando cierta heterocedasticidad. Esto es natural en sistemas de transporte debido a la alta variabilidad entre horas pico y valle. Sin embargo, bajo el teorema de Gauss-Markov, los coeficientes OLS siguen siendo estimadores insesgados de la tendencia central.''
+``Gracias Emmanuel. Aplicamos la prueba de Breusch-Pagan obteniendo $LM = 12.53$ ($p < 0.001$), detectando cierta heterocedasticidad. Asimismo, la prueba de Shapiro-Wilk ($W = 0.6803, p < 0.05$) refleja la no normalidad de los residuos. Esto es natural en sistemas de transporte por los límites de tiempo. Sin embargo, bajo el teorema de Gauss-Markov en muestras grandes ($n = 1,921$), los coeficientes OLS siguen siendo estimadores insesgados de la tendencia central.''
 
 \begin{defensebox}
-\textbf{Posible Pregunta:} Si hay heterocedasticidad, ¿se invalida el modelo OLS?\\
-\textbf{Respuesta:} No invalida los coeficientes estimados (siguen siendo insesgados), solo afecta el cálculo de los errores estándar. Para propósitos de estimación de tendencia para el agente de RL, el modelo es completamente válido.
+\textbf{Posible Pregunta:} Si hay heterocedasticidad y falta de normalidad, ¿se invalida el modelo OLS?\\
+\textbf{Respuesta:} No invalida los coeficientes estimados (siguen siendo insesgados), solo aconseja prudencia en inferencias de muestras pequeñas. Para propósitos de estimación de tendencia para el agente de RL, el modelo es completamente válido.
 \end{defensebox}
 \end{ximenabox}
 
