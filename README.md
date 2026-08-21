@@ -57,6 +57,12 @@ upp-route-rl/
 
 ## Execution Workflow
 
+### Quick Start (Run All Modules & Display Master Console Dashboard)
+```bash
+python main.py
+```
+
+### Modular Step-by-Step Execution
 1. **Dataset Generation:**
    ```bash
    python 01_generate_dataset.py
