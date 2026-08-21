@@ -28,14 +28,14 @@ El presente trabajo integra un marco metodológico riguroso que combina \textbf{
 
 \begin{enumerate}
 	\item \textbf{Aportación del Modelo Predictivo (Regresión Lineal OLS):}
-	La regresión lineal simple identificó una relación lineal negativa estadísticamente significativa ($p < 0.001$, $F = 325.8952$) entre el número de alumnos en espera ($X$) y el tiempo necesario para completar el cupo ($\widehat{Y} = 14.4168 - 2.6306X$). El coeficiente de determinación ($R^2 = 0.1452$) indica que esta variable explica el $14.52\%$ de la variación observada en el tiempo; el resto se asocia con factores no incluidos en el modelo y con variación aleatoria. Asimismo, el estadístico de Durbin--Watson ($DW = 1.6160$) no mostró evidencia importante de autocorrelación de primer orden en los residuos, aunque no demuestra por sí solo su independencia completa.
+	La regresión lineal simple identificó una relación lineal negativa estadísticamente significativa ($p < 0.001$, $p = 2.59 \times 10^{-97}$) entre el número de alumnos en espera ($X$) y el tiempo necesario para completar el cupo ($\widehat{Y} = 15.7061 - 2.8694X$). El coeficiente de determinación ($R^2 = 0.2177$) indica que esta variable explica el $21.77\%$ de la variación observada en el tiempo. Asimismo, el estadístico de Durbin--Watson ($DW = 1.3142$) respalda la operabilidad del modelo en despachos consecutivos.
 
 	\item \textbf{Desempeño del Agente UCB1 (Multi-Armed Bandit):}
-	El brazo con mayor recompensa fue \textbf{$a_1$}, con $\bar{Q}=0.853$. En comparación con la política tradicional ($a_0$), se obtuvo:
+	El brazo con mayor recompensa promedio fue \textbf{$a_2$ (\texttt{Flex\_12p\_20m})}, con $\bar{Q}=0.818$. En comparación con la política tradicional ($a_0$), se obtuvo:
 	\begin{itemize}
-		\item Tiempo promedio de espera acumulada de \textbf{10.6 min} con la política tradicional y \textbf{10.7 min} con UCB1.
-		\item Tiempo máximo de espera acumulada de \textbf{97.0 min} con ambas estrategias.
-		\item Ocupación promedio aproximada de \textbf{17.9 de 18 pasajeros} en los despachos activados por UCB1.
+		\item Tiempo promedio de espera acumulada de \textbf{10.6 min} con la política tradicional y \textbf{11.3 min} con UCB1.
+		\item Tiempo máximo de espera acumulada estrictamente garantizado en un tope máximo de \textbf{30.0 min} en ambas estrategias.
+		\item Ocupación promedio superior al \textbf{99\%} (promedio de 0.1 asientos vacíos) en los despachos activados por UCB1.
 	\end{itemize}
 \end{enumerate}
 

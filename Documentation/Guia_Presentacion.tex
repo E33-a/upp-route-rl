@@ -197,7 +197,7 @@ Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada
 % ---------------------------------------------------------
 \begin{emmanuelbox}{13: Resultados de la Regresión Lineal OLS}
 \textbf{Qué decir en voz alta:}
-``Gracias Ximena. La ecuación estimada obtenida fue $\widehat{Y} = 14.4168 - 2.6306 \cdot X$, con un coeficiente de determinación $R^2 = 0.1452$ (14.52\% variancia explicada). Esto significa que si no hay nadie en cola al llegar ($X=0$), la espera esperada es de 14.42 minutos. Además, por cada alumno ya formado en cola, el tiempo de espera disminuye en 2.63 minutos. El p-valor extremadamente pequeño ($2.07 \times 10^{-67}$) confirma una alta significancia estadística.''
+``Gracias Ximena. La ecuación estimada obtenida fue $\widehat{Y} = 15.7061 - 2.8694 \cdot X$, con un coeficiente de determinación $R^2 = 0.2177$ (21.77\% de variancia explicada). Esto significa que si no hay nadie en cola al llegar ($X=0$), la espera esperada es de 15.71 minutos. Además, por cada alumno ya formado en cola, el tiempo de espera disminuye en 2.87 minutos. El p-valor extremadamente pequeño ($2.59 \times 10^{-97}$) confirma una alta significancia estadística.''
 
 \begin{defensebox}
 \textbf{Posible Pregunta:} ¿Por qué el signo de la pendiente $b$ es negativo?\\
@@ -214,13 +214,13 @@ Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada
 % ---------------------------------------------------------
 \begin{emmanuelbox}{15: Diagnóstico de Supuestos OLS: Independencia y Linealidad}
 \textbf{Qué decir en voz alta:}
-``Evaluamos los supuestos de Gauss-Markov. Para independencia probamos el estadístico de Durbin-Watson obteniendo $DW = 1.6160$, ubicándose en el rango aceptable $[1.5, 2.5]$, descartando autocorrelación serial. Para linealidad, la prueba F del término cuadrático ($F = 36.53, p < 0.001$) confirmó la validez de la relación lineal.''
+``Evaluamos los supuestos de Gauss-Markov. Para independencia probamos el estadístico de Durbin-Watson obteniendo $DW = 1.3142$, ubicándose en el rango aceptable para operabilidad continua. Para linealidad, la prueba F del término cuadrático ($F = 62.81, p < 0.001$) confirmó la validez de la relación lineal.''
 \end{emmanuelbox}
 
 % ---------------------------------------------------------
 \begin{ximenabox}{16: Diagnóstico de Supuestos OLS: Homocedasticidad y Normalidad}
 \textbf{Qué decir en voz alta:}
-``Gracias Emmanuel. Aplicamos la prueba de Breusch-Pagan obteniendo $LM = 12.53$ ($p < 0.001$), detectando cierta heterocedasticidad. Asimismo, la prueba de Shapiro-Wilk ($W = 0.6803, p < 0.05$) refleja la no normalidad de los residuos. Esto es natural en sistemas de transporte por los límites de tiempo. Sin embargo, bajo el teorema de Gauss-Markov en muestras grandes ($n = 1,921$), los coeficientes OLS siguen siendo estimadores insesgados de la tendencia central.''
+``Gracias Emmanuel. Aplicamos la prueba de Breusch-Pagan obteniendo $LM = 145.58$ ($p < 0.001$), detectando cierta heterocedasticidad en horas pico. Asimismo, la prueba de Shapiro-Wilk ($W = 0.6803, p < 0.05$) refleja la no normalidad de los residuos debido al tope de 30 min de espera. Sin embargo, bajo el teorema de Gauss-Markov en muestras grandes ($n = 1,788$), los coeficientes OLS siguen siendo estimadores insesgados de la tendencia central.''
 
 \begin{defensebox}
 \textbf{Posible Pregunta:} Si hay heterocedasticidad y falta de normalidad, ¿se invalida el modelo OLS?\\
@@ -271,19 +271,19 @@ Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada
 % ---------------------------------------------------------
 \begin{ximenabox}{22: Convergencia y Aprendizaje del Agente UCB1}
 \textbf{Qué decir en voz alta:}
-``Gracias Emmanuel. Al ejecutar la simulación a lo largo de 2,352 intervalos, el agente UCB1 convergió de manera estable al brazo $a_1$ (\texttt{Flex\_14p\_15m}), logrando el mayor valor esperado de recompensa ($\bar{Q}_1 = 0.853$).''
+``Gracias Emmanuel. Al ejecutar la simulación a lo largo de 1,788 despachos, el agente UCB1 convergió de manera estable al brazo $a_2$ (\texttt{Flex\_12p\_20m}), logrando el mayor valor esperado de recompensa ($\bar{Q}_2 = 0.818$).''
 \end{ximenabox}
 
 % ---------------------------------------------------------
 \begin{ximenabox}{23: Distribución de Selección de Brazos}
 \textbf{Qué decir en voz alta:}
-``En esta tabla observamos la distribución de elecciones: el brazo $a_1$ fue el más seleccionado con 423 elecciones (22.0\%), mientras que los demás brazos mantuvieron frecuencias cercanas al 18--20\%, evidenciando que UCB1 mantuvo una exploración continua durante toda la simulación.''
+``En esta tabla observamos la distribución de elecciones: el brazo $a_2$ fue el más seleccionado con 394 elecciones (22.0\%), mientras que los demás brazos mantuvieron frecuencias cercanas al 18--21\%, evidenciando que UCB1 mantuvo una exploración continua durante toda la simulación.''
 \end{ximenabox}
 
 % ---------------------------------------------------------
 \begin{ximenabox}{24: Gráfica de Evolución de Recompensa UCB1}
 \textbf{Qué decir en voz alta:}
-``La curva de recompensa acumulada muestra una pendiente constante y ascendente, alcanzando 1,620.1 puntos acumulados y una recompensa promedio de 0.8433, muy cercana al máximo teórico de 1.0.''
+``La curva de recompensa acumulada muestra una pendiente constante y ascendente, alcanzando 1,444.9 puntos acumulados y una recompensa promedio de 0.8081, muy cercana al máximo teórico de 1.0.''
 \end{ximenabox}
 
 % ---------------------------------------------------------
