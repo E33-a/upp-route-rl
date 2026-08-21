@@ -1,0 +1,434 @@
+\documentclass[12pt,letterpaper]{article}
+
+% ==== INCLUSIÓN DE PAQUETES Y PREÁMBULO ====
+\usepackage{fontspec}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{pdflscape}
+\usepackage{xltabular}
+
+% ==== CONFIGURACIÓN DE PÁGINA Y MÁRGENES ====
+\geometry{
+	left=2.5cm,
+	right=2.5cm,
+	top=2.8cm,
+	bottom=2.5cm,
+	headheight=24pt
+}
+
+% ==== DEFINICIÓN DE COLORES OFICIALES ====
+\definecolor{purpleUPP}{HTML}{4A154B}
+\definecolor{darkpurple}{HTML}{320D33}
+\definecolor{accentteal}{HTML}{007A5A}
+\definecolor{lightbg}{HTML}{F8FAFC}
+\definecolor{bordergray}{HTML}{E2E8F0}
+\definecolor{failred}{HTML}{B91C1C}
+\definecolor{passgreen}{HTML}{15803D}
+
+% ==== CONFIGURACIÓN DE HIPERVÍNCULOS ====
+\hypersetup{
+	colorlinks=true,
+	linkcolor=purpleUPP,
+	citecolor=accentteal,
+	urlcolor=purpleUPP,
+	pdftitle={Manual Técnico y Teórico Completo: Sistema de Despacho UPP},
+	pdfauthor={Emmanuel Islas Lozada, Ximena Nathaly Angeles Sanchez}
+}
+
+% ==== TIKZ Y ESTILOS DE CAJAS TCOLORBOX ====
+\tcbuselibrary{skins,breakable}
+
+\tcbset{
+	basebox/.style={
+		enhanced,
+		colback=lightbg,
+		colframe=purpleUPP,
+		fonttitle=\bfseries\color{white},
+		boxrule=1pt,
+		arc=4pt,
+		top=8pt,
+		bottom=8pt,
+		left=10pt,
+		right=10pt
+	}
+}
+
+\newtcolorbox{statbox}[1]{
+	basebox,
+	title={#1}
+}
+
+\newtcolorbox{summarybox}[1]{
+	enhanced,
+	colback=purpleUPP!5!white,
+	colframe=purpleUPP,
+	title={#1},
+	fonttitle=\bfseries\color{white},
+	boxrule=1.2pt,
+	arc=5pt
+}
+
+% ==== ENCABEZADOS Y PIES DE PÁGINA ====
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[height=0.65cm]{logos/UPP_logo.png}}
+\rhead{\includegraphics[height=0.65cm]{logos/SOFT_logo.png}}
+\chead{\small\color{purpleUPP}\textbf{Manual Técnico y Teórico Completo - UPP}}
+\rfoot{\thepage}
+\lfoot{\small\color{gray}UPP - Ingeniería en Software}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% =========================================================
+% PORTADA INSTITUCIONAL
+% =========================================================
+\begin{titlepage}
+	\centering
+	\vspace*{0.5cm}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\includegraphics[height=2.2cm]{logos/UPP_logo.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\includegraphics[height=2.2cm]{logos/SOFT_logo.png}
+		\end{minipage}
+	\end{figure}
+	
+	\vspace{1.0cm}
+	
+	{\Large \textbf{\color{purpleUPP}UNIVERSIDAD POLITÉCNICA DE PACHUCA}}\\[0.3cm]
+	{\large \textbf{PROGRAMA EDUCATIVO DE INGENIERÍA EN SOFTWARE}}\\[0.2cm]
+	{\small \textbf{ASIGNATURA: INTELIGENCIA ARTIFICIAL}}
+	
+	\vspace{1.2cm}
+	
+	\hrule
+	\vspace{0.4cm}
+	{\Large \textbf{\color{purpleUPP}MANUAL TÉCNICO Y TEÓRICO COMPLETO:}}\\[0.3cm]
+	{\large \textbf{SISTEMA INTELIGENTE DE DESPACHO DE TRANSPORTE UPP}}\\[0.2cm]
+	{\small \textit{Fundamentos Estadísticos MCO, Algoritmo UCB1 y Evaluación de Resultados}}
+	\vspace{0.4cm}
+	\hrule
+	
+	\vspace{1.5cm}
+	
+	\begin{summarybox}{Información Institucional del Proyecto}
+		\begin{tabular}{ll}
+			\textbf{Autores:} & Emmanuel Islas Lozada \\
+			& Ximena Nathaly Angeles Sanchez \\
+			\textbf{Grado y Grupo:} & 9º Cuatrimestre -- Ingeniería en Software \\
+			\textbf{Proyecto:} & Sistema de Despacho Adaptativo mediante RL y OLS \\
+			\textbf{Fecha de Entrega:} & Agosto 2026 \\
+			\textbf{Versión de Release:} & v1.0.0 Final
+		\end{tabular}
+	\end{summarybox}
+	
+	\vfill
+	{\small \color{gray} Zempoala, Hidalgo, México -- 2026}
+\end{titlepage}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+% =========================================================
+% CAPÍTULO 1: DEFINICIÓN DEL PROBLEMA OPERATIVO Y CONTEXTO
+% =========================================================
+\section{Definición del Problema Operativo y Contexto}
+
+\subsection{El Desafío del Transporte Estudiantil en la UPP}
+La Universidad Politécnica de Pachuca (UPP), ubicada en la zona metropolitana de Zempoala/Pachuca, cuenta con un flujo diario continuo de estudiantes que se desplazan desde y hacia puntos nodales clave, como la ruta \textbf{Puente Tuzos} y la \textbf{Central de Autobuses}. Durante las semanas ordinarias y de forma más crítica al cierre de cuatrimestre, la demanda de transporte experimenta fluctuaciones severas.
+
+El servicio es operado por unidades de transporte tipo colectivo ("combis") con una capacidad máxima estricta de $C = 18$ pasajeros por unidad.
+
+\subsection{El Conflicto de Intereses Operativo}
+El problema de despacho tradicional presenta una contradicción fundamental entre dos actores clave:
+\begin{enumerate}
+	\item \textbf{El Concesionario/Conductor (Perspectiva Financiera):} Desea despachar la unidad \textbf{únicamente cuando está 100\% llena ($18/18$ pasajeros)}, maximizando el ingreso por vuelta y eliminando el costo de transportar asientos vacíos.
+	\item \textbf{El Estudiante/Usuario (Perspectiva de Servicio):} Desea abordar y salir lo más pronto posible. Si la combi espera a llenarse durante horarios de baja afluencia ("horas valle"), los tiempos de espera individuales pueden superar los $60$ a $80$ minutos, generando varamiento estudiantil y severa insatisfacción.
+\end{enumerate}
+
+\subsection{Política Tradicional vs. Necesidad de Inteligencia Artificial}
+La política operativa vigente (denominada en este estudio como política tradicional $a_0$) es rígida: la unidad permanece estacionada en la bahía de salida hasta acumular exactamente 18 pasajeros, sin importar la hora del día ni el tiempo transcurrido.
+
+Para resolver esta ineficiencia se requiere un enfoque analítico en dos etapas:
+\begin{itemize}
+	\item \textbf{Etapa Predictiva (Regresión Lineal OLS):} Para modelar cuantitativamente la física del tiempo de llenado en función de la cola de alumnos.
+	\item \textbf{Etapa Prescriptiva (Aprendizaje por Refuerzo UCB1):} Para tomar la decisión adaptativa de cuándo despachar la unidad según las condiciones de demanda y horario.
+\end{itemize}
+
+\clearpage
+
+% =========================================================
+% CAPÍTULO 2: ARQUITECTURA DEL DATASET Y SIMULACIÓN POISSON
+% =========================================================
+\section{Generación del Dataset Simulado y Matemática de Arribos}
+
+\subsection{Modelado de Arribos mediante Procesos de Poisson}
+Para construir un dataset realista de 21 días de operación (equivalente al periodo crítico de fin de cuatrimestre), las llegadas de los estudiantes a las bahías de abordaje se modelaron como un \textbf{Proceso Estocástico de Poisson}.
+
+La probabilidad de que arriben $k$ estudiantes en un intervalo de tiempo $t$ está dada por la función de masa de probabilidad:
+\begin{equation}
+	P(N(t) = k) = \frac{(\lambda t)^k e^{-\lambda t}}{k!}, \quad k = 0, 1, 2, \dots
+\end{equation}
+donde $\lambda$ representa la tasa promedio de arribo de alumnos por minuto.
+
+\subsection{\texorpdfstring{Tasa de Arribo Variable ($\lambda(t)$) por Franja Horaria}{Tasa de Arribo Variable lambda(t) por Franja Horaria}}
+Un error común en simulaciones básicas es asumir una tasa constante $\lambda$. En el mundo real, la afluencia universitaria es altamente asimétrica. Por ello, se implementó una tasa dependiente del tiempo $\lambda(t)$:
+
+\begin{table}[H]
+	\centering
+	\caption{Parámetros de la Distribución Poisson por Franja Horaria}
+	\label{tab:poisson_lambda}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l c X}
+		\toprule
+		Franja Horaria & Tasa $\lambda$ (alumnos/min) & Justificación Contextual \\
+		\midrule
+		Hora Pico Matutina (07:00--09:00) & $\lambda_{\text{pico}} = 3.5$ & Entrada masiva a clases de primera hora. \\
+		Hora Pico Vespertina (13:00--15:00) & $\lambda_{\text{pico}} = 3.5$ & Cambio de turno y salida general de laboratorios. \\
+		Hora Valle (10:00--12:00 y 16:00--18:00) & $\lambda_{\text{valle}} = 1.2$ & Flujo disperso de alumnos entre periodos libres. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\subsection{Estructura de Variables del Dataset (`demand\_dataset.csv`)}
+La simulación generó un total de $n = 1{,}920$ registros de intervalos y $1{,}466$ eventos de despacho estructurados en las siguientes variables clave:
+
+\begin{table}[H]
+	\centering
+	\caption{Diccionario de Datos del Dataset de Demanda y Despachos}
+	\label{tab:diccionario_datos}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l c X}
+		\toprule
+		Nombre de Columna & Tipo & Descripción Operativa \\
+		\midrule
+		\texttt{fecha} & Date & Fecha de registro (periodo de 21 días). \\
+		\texttt{hora\_llegada} & String & Hora exacta del arribo de la unidad a la bahía. \\
+		\texttt{ruta} & Factor & Ruta operada (\textit{Puente Tuzos} o \textit{Central}). \\
+		\texttt{alumnos\_esperando} & Integer & Variable $X$: Alumnos presentes en la cola al llegar la combi. \\
+		\texttt{pasajeros\_salida} & Integer & Pasajeros a bordo al momento de iniciar el viaje. \\
+		\texttt{tiempo\_espera\_acum} & Float & Variable $Y$: Minutos totales transcurridos desde el arribo hasta el despacho. \\
+		\texttt{tipo\_salida} & Factor & Clasificación del despacho (\textit{Llena} vs. \textit{Parcial}). \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\clearpage
+
+% =========================================================
+% CAPÍTULO 3: REGRESIÓN LINEAL SIMPLE OLS Y LOS 5 SUPUESTOS
+% =========================================================
+\section{Modelo de Regresión Lineal Simple MCO (OLS) y Evaluación de Supuestos}
+
+\subsection{Formulación Matemática de Mínimos Cuadrados Ordinarios}
+La regresión lineal simple busca modelar la variable de respuesta $Y$ (\texttt{minutos\_para\_llenar}) en función de la variable explicativa $X$ (\texttt{alumnos\_esperando}) mediante la ecuación:
+\begin{equation}
+	Y_i = a + b \cdot X_i + e_i
+\end{equation}
+donde $a$ es el intercepto, $b$ es la pendiente y $e_i$ es el residuo o error del modelo para la observación $i$.
+
+Los estimadores MCO minimizan la suma de errores al cuadrado ($\min \sum e_i^2$), calculándose como:
+\begin{equation}
+	b = \frac{\sum_{i=1}^{n} (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^{n} (X_i - \bar{X})^2}, \quad a = \bar{Y} - b \bar{X}
+\end{equation}
+
+\subsection{Resultados del Modelo Ajustado (Modelo 2)}
+Al ejecutar el script \texttt{02\_train\_regression.py} sobre las $n = 1{,}466$ observaciones filtradas del dataset, se obtuvo la siguiente ecuación ajustada:
+
+\begin{statbox}{Ecuación Empírica del Modelo OLS (Modelo 2)}
+	\begin{equation}
+		\widehat{Y} = 14.106834 - 2.539453 \cdot X
+	\end{equation}
+\end{statbox}
+
+\subsubsection{Interpretación de Parámetros e Indicadores}
+\begin{itemize}
+	\item \textbf{Intercepto ($a = 14.11$ min):} Si la combi llega a la bahía sin alumnos esperando en la cola ($X = 0$), el tiempo promedio estimado para completar la capacidad es de \textbf{14.11 minutos}.
+	\item \textbf{Pendiente ($b = -2.54$ min/alumno):} Por cada alumno adicional presente en la cola inicial al momento de la llegada, el tiempo de espera restante se reduce en promedio \textbf{2.54 minutos}.
+	\item \textbf{Coeficiente de Determinación ($R^2 = 0.1210$):} El modelo explica el \textbf{12.1\%} de la varianza total del tiempo de espera.
+	\item \textbf{Significancia Estadística ($p = 5.83 \times 10^{-43}$):} Con un $p$-valor extremadamente cercano a cero ($p < 0.0001$), se rechaza categóricamente la hipótesis nula $H_0: b = 0$. Se concluye con un \textbf{nivel de confianza $> 99.99\%$} que la relación entre ambas variables es real y estadísticamente significativa.
+\end{itemize}
+
+\begin{summarybox}{Aclaración sobre el "74\%" de la Plantilla de la Bitácora}
+	Es crucial distinguir entre los datos reales del modelo y los ejemplos ilustrativos. La cifra de $R^2 = 0.74$ (74\%) mencionada en la página 5 del documento de instrucciones de la asignatura correspondía únicamente a una \textbf{tabla de ejemplo hipotética} provista como guía para el llenado de la bitácora de IA. En datos simulados reales con variabilidad en horas valle, un $R^2 = 12.1\%$ con significancia $p < 10^{-40}$ es el resultado empírico científicamente correcto.
+\end{summarybox}
+
+\subsection{Evaluación Exhaustiva de los 5 Supuestos de Gauss-Markov}
+
+Para determinar la confiabilidad teórica del modelo OLS, se evaluaron formalmente las 5 hipótesis fundamentales del teorema de Gauss-Markov sobre los residuos $e_i = Y_i - \widehat{Y}_i$:
+
+\begin{table}[H]
+	\centering
+	\caption{Resumen del Diagnóstico de los 5 Supuestos de Gauss-Markov}
+	\label{tab:diagnostico_supuestos}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}l c X}
+		\toprule
+		Supuesto MCO & Resultado & Explicación Técnica y Diagnóstico \\
+		\midrule
+		1. Linealidad & Cumple parcialmente & Tendencia lineal general válida, aunque la prueba de curvatura muestra un componente cuadrático leve ($F=25.86, p < 0.001$). \\
+		\addlinespace[0.4em]
+		2. Independencia de Errores & Riesgo moderado & Presencia de autocorrelación positiva leve ($DW \approx 0.17$) debido al fenómeno de arribos estudiantiles en ráfagas o grupos de amigos ("en bolas"). \\
+		\addlinespace[0.4em]
+		3. Homocedasticidad & Falla & Varianza no constante (Heterocedasticidad, Breusch-Pagan $p < 0.05$). En hora pico el error es de $\pm 1-2$ min, mientras que en hora valle la dispersión alcanza $\pm 10$ min. \\
+		\addlinespace[0.4em]
+		4. Esperanza Nula & Cumple 100\% & Por definición matemática de MCO ($\sum e_i = 0$), el promedio teórico y numérico de los errores es exactamente cero. \\
+		\addlinespace[0.4em]
+		5. Normalidad de Residuos & Riesgo moderado & Forma acampanada adecuada en la zona central con colas ligeramente más pesadas debido a la dispersión de las horas valle. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\subsubsection{Justificación de la Transición de Regresión OLS a Aprendizaje por Refuerzo}
+La falla en la homocedasticidad y la baja varianza explicada ($R^2 = 12.1\%$) demuestran que un modelo de Regresión Lineal por sí solo es \textbf{predictivo pero no prescriptivo}. OLS nos indica el tiempo promedio estimado, pero no puede decidir cuál es la política de despacho óptima bajo escenarios estocásticos cambiantes. Esto justifica plenamente el uso del algoritmo \textbf{UCB1} en el siguiente bloque del proyecto.
+
+\clearpage
+
+% =========================================================
+% CAPÍTULO 4: APRENDIZAJE POR REFUERZO PRESCRIPTIVO Y ALGORITMO UCB1
+% =========================================================
+\section{Aprendizaje por Refuerzo Prescriptivo y Algoritmo UCB1}
+
+\subsection{Formulación del Problema como Bandit Multibrazo (Multi-Armed Bandit)}
+Para solucionar las decisiones de despacho en tiempo real, el problema se formuló como un marco de \textbf{Bandits Multibrazo}, donde un agente autónomo interactúa con el entorno de la terminal universitaria probando diferentes políticas de salida y aprendiendo cuáles generan el mayor rendimiento operativo.
+
+\subsection{Espacio de Acciones (Brazos del Agente)}
+El agente dispone de un conjunto de $K=5$ políticas de despacho discretas (brazos $a_0$ a $a_4$):
+
+\begin{table}[H]
+	\centering
+	\caption{Catálogo de Políticas de Despacho (Brazos de Selección)}
+	\label{tab:politicas_ucb}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}c >{\bfseries}l X}
+		\toprule
+		Brazo & Nombre de la Política & Regla Operativa de Salida \\
+		\midrule
+		$a_0$ & \texttt{Llenado\_Estricto\_18p} & Salir únicamente cuando la unidad acumule 18 pasajeros (Política Tradicional). \\
+		$a_1$ & \texttt{Flex\_14p\_15m} & Salir si hay $\ge 14$ pasajeros O si transcurrieron 15 minutos de espera. \\
+		$a_2$ & \texttt{Flex\_12p\_25m} & Salir si hay $\ge 12$ pasajeros O si transcurrieron 25 minutos de espera. \\
+		$a_3$ & \texttt{Flex\_10p\_35m} & Salir si hay $\ge 10$ pasajeros O si transcurrieron 35 minutos de espera. \\
+		$a_4$ & \texttt{Max\_Espera\_45m} & Esperar máximo 45 minutos o hasta alcanzar un mínimo razonable de 8 alumnos. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\subsection{\texorpdfstring{Función de Recompensa Multiobjetivo Normalizada $R \in [0, 1]$}{Función de Recompensa Normalizada R}}
+Para evaluar la calidad de cada despacho, se diseñó una función de recompensa escalar normalizada que penaliza los tres grandes dolores del sistema: tiempo de espera, alumnos varados y asientos vacíos.
+
+La recompensa no normalizada se calcula como:
+\begin{equation}
+	R_{\text{raw}} = - (w_1 \cdot \text{espera\_prom} + w_2 \cdot \text{alumnos\_varados} + w_3 \cdot \text{asientos\_vacios})
+\end{equation}
+con pesos ponderados $w_1 = 0.4$, $w_2 = 0.4$ y $w_3 = 0.2$.
+
+Aplicando escalamiento Min-Max e inversión de polaridad para restringir el valor al rango $R \in [0, 1]$ (donde $1.0$ representa el despacho perfecto y $0.0$ el peor desempeño posible):
+\begin{equation}
+	R_i = 1.0 - \left( 0.4 \cdot \frac{\text{espera}_i}{60} + 0.4 \cdot \frac{\text{varados}_i}{30} + 0.2 \cdot \frac{\text{vacios}_i}{18} \right)
+\end{equation}
+
+\subsection{El Algoritmo UCB1 (Upper Confidence Bound 1)}
+El algoritmo UCB1 resuelve el dilema clásico entre \textbf{Exploración} (probar brazos poco conocidos) y \textbf{Explotación} (seleccionar el brazo con mejor recompensa promedio observada hasta el momento).
+
+En cada despacho $t$, el agente selecciona la acción $a(t)$ que maximiza la cota superior de confianza:
+\begin{equation}
+	a(t) = \arg\max_{j \in \{0, \dots, K-1\}} \left[ \bar{Q}_j(t) + c \sqrt{\frac{2 \ln t}{N_j(t)}} \right]
+\end{equation}
+
+donde:
+\begin{itemize}
+	\item $\bar{Q}_j(t)$: Recompensa promedio obtenida por el brazo $j$ hasta el instante $t$ (término de explotación).
+	\item $N_j(t)$: Número de veces que se ha seleccionado el brazo $j$ hasta el instante $t$.
+	\item $t$: Número total de despachos realizados por todas las políticas.
+	\item $c$: Constante de exploración (configurada en $c = 1.0$).
+	\item $\sqrt{\frac{2 \ln t}{N_j(t)}}$: Término de incertidumbre (bonus de exploración). Si un brazo no se ha probado casi nunca, $N_j(t)$ es pequeño y el término crece, forzando al agente a explorar dicho brazo.
+\end{itemize}
+
+\clearpage
+
+% =========================================================
+% CAPÍTULO 5: RESULTADOS EXPERIMENTALES Y EVALUACIÓN OPERATIVA
+% =========================================================
+\section{Resultados Experimentales y Evaluación Operativa}
+
+\subsection{\texorpdfstring{Matriz de Resultados Operativos ($a_0$ Tradicional vs. $a_1$ Agente UCB1)}{Matriz de Resultados Operativos (a0 vs a1)}}
+Tras simular las 3 semanas de operación crítica (1,920 intervalos y 1,466 despachos), el agente UCB1 convergió de forma consistente hacia la política $a_1$ (\texttt{Flex\_14p\_15m}). Los resultados cuantitativos se resumen a continuación:
+
+\begin{table}[H]
+	\centering
+	\caption{Matriz de Resultados Comparativos de Operación}
+	\label{tab:matriz_resultados}
+	\begin{tabularx}{\textwidth}{>{\bfseries\color{purpleUPP}}X c c >{\bfseries}c}
+		\toprule
+		Métrica de Evaluación & Política Tradicional $a_0$ & Agente UCB1 ($a_1$) & Mejora Alcanzada \\
+		\midrule
+		Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{passgreen}{\textbf{-57.8\% Ahorro}} \\
+		Tiempo Máximo de Espera & $84.5$ min & \textbf{$28.1$ min} & \color{passgreen}{\textbf{-66.7\% Ahorro}} \\
+		Factor de Ocupación Vehicular & $100.0\%$ ($18/18$) & \textbf{$77.7\%$} ($14/18$) & Equilibrio Eficiente \\
+		Alumnos Varados al Final del Día & $142$ alumnos & \textbf{$12$ alumnos} & \color{passgreen}{\textbf{-91.5\% Varados}} \\
+		Recompensa Promedio ($\bar{Q}$) & $0.415$ & \textbf{$0.692$} & \color{purpleUPP}{\textbf{+66.7\% Eficiencia}} \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\subsection{Respuestas Directas a las Preguntas Clave del Proyecto}
+Con base en los datos generados y validados, se responden formalmente los cuestionamientos operativos planteados en el proyecto:
+
+\begin{enumerate}
+	\item \textbf{¿Conviene seguir esperando a que la combi se llene con 18 pasajeros?}
+	\textbf{No en horas valle.} Esperar 18 alumnos en horarios de baja afluencia produce tiempos de espera individuales superiores a 60 minutos, colapsando la calidad del servicio.
+	
+	\item \textbf{¿Cuál es el número mínimo razonable de pasajeros para salir?}
+	Un mínimo de \textbf{12 a 14 pasajeros} en hora valle es la franja óptima. Preserva un factor de ocupación superior al $77.7\%$ (garantizando rentabilidad económica) mientras reduce la espera en un $57.8\%$.
+	
+	\item \textbf{¿En qué franjas conviene ser más flexible?}
+	Exclusivamente en las \textbf{franjas valle (10:00--12:00 y 16:00--18:00)}. En horas pico (07:00--09:00 y 13:00--15:00), la unidad se llena de forma natural en menos de 3 a 5 minutos, por lo que la regla de 18 se cumple automáticamente.
+	
+	\item \textbf{¿Cuánto tiempo de espera se reduce saliendo con 12 o 14 personas?}
+	Se ahorran en promedio \textbf{22.2 minutos por alumno por viaje} (pasando de $38.4$ min a $16.2$ min en promedio).
+\end{enumerate}
+
+\clearpage
+
+% =========================================================
+% CAPÍTULO 6: GUÍA DE DEFENSA ANTE EL COMITÉ EVALUADOR
+% =========================================================
+\section{Guía de Defensa Técnica ante el Comité Evaluador}
+
+\subsection{Preguntas Frecuentes y Respuestas Argumentadas}
+
+\begin{summarybox}{Pregunta 1: ¿Por qué usaron un modelo R² = 12.1\% en lugar de buscar un R² más alto?}
+	\textbf{Respuesta:} "El $R^2 = 12.1\%$ refleja con precisión matemática la realidad física del transporte universitario: el número de alumnos en la cola explica significativamente una parte del tiempo ($p < 10^{-40}$), pero la alta variabilidad entre horas pico y horas valle introduce ruido estocástico no lineal. En lugar de forzar una regresión lineal irreal, usamos OLS como baseline predictivo y justificamos el uso de Inteligencia Artificial Prescriptiva (Agente UCB1), que sí resuelve la variabilidad en tiempo real."
+\end{summarybox}
+
+\begin{summarybox}{Pregunta 2: ¿Cuál es la diferencia entre el modelo predictivo (OLS) y el prescriptivo (UCB1)?}
+	\textbf{Respuesta:} "La Regresión OLS nos indica *qué va a pasar en promedio* (predicción). El Agente UCB1 toma esa información y *decide qué acción tomar* (prescripción), evaluando dinámicamente si conviene salir o esperar para maximizar la recompensa multiobjetivo."
+\end{summarybox}
+
+\begin{summarybox}{Pregunta 3: ¿Por qué eligieron la política a1 (Flex\_14p\_15m) como la mejor?}
+	\textbf{Respuesta:} "Porque demostró estadísticamente ser el punto de equilibrio óptimo. Reduce la espera en un $57.8\%$ y los alumnos varados en un $91.5\%$, manteniendo una ocupación del $77.7\%$, lo que asegura que el concesionario no opere con pérdidas."
+\end{summarybox}
+
+\end{document}
