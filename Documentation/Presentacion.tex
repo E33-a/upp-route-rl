@@ -219,6 +219,37 @@
 \end{frame}
 
 % ---------------------------------------------------------
+% DIAPOSITIVA 4B: ARQUITECTURA GENERAL DEL SISTEMA
+% ---------------------------------------------------------
+\begin{frame}{Arquitectura General del Sistema UPP Route RL}
+    \vfill
+    \centering
+    \scalebox{0.82}{
+        \begin{tikzpicture}[
+            node distance=1.0cm and 0.8cm,
+            block/.style={rectangle, draw=cyanAccent, fill=cardNavy, text=textWhite, rounded corners=6pt, line width=1.5pt, minimum height=1.1cm, minimum width=2.7cm, align=center, font=\small\bfseries},
+            accent/.style={rectangle, draw=yellowAccent, fill=cardNavy, text=textWhite, rounded corners=6pt, line width=1.5pt, minimum height=1.1cm, minimum width=2.7cm, align=center, font=\small\bfseries},
+            purpleb/.style={rectangle, draw=purpleAccent, fill=cardNavy, text=textWhite, rounded corners=6pt, line width=1.5pt, minimum height=1.1cm, minimum width=2.7cm, align=center, font=\small\bfseries},
+            line/.style={draw=cyanAccent, ->, >=Stealth, line width=1.8pt}
+        ]
+            \node[block] (poisson) {Simulador Poisson\\$(\lambda_{\text{pico}}=3.5, \lambda_{\text{valle}}=1.2)$};
+            \node[accent, right=of poisson] (dataset) {Dataset Series\\(21 Días / 1,921 Despachos)};
+            \node[purpleb, right=of dataset] (ols) {Modelo OLS\\$(\widehat{Y} = 14.11 - 2.54X)$};
+            \node[accent, below=1.2cm of ols] (ucb) {Agente UCB1\\(Multi-Armed Bandit)};
+            \node[block, left=of ucb] (reward) {Recompensa $R_t \in [0, 1]$\\Min-Max Normalizada};
+            \node[purpleb, left=of reward] (policy) {Política Óptima $a_1$\\Flex (14 pax / 15 min)};
+
+            \draw[line] (poisson) -- (dataset);
+            \draw[line] (dataset) -- (ols);
+            \draw[line] (ols) -- (ucb);
+            \draw[line] (ucb) -- (reward);
+            \draw[line] (reward) -- (policy);
+        \end{tikzpicture}
+    }
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
 % DIAPOSITIVA 5: CONTEXTO OPERATIVO UPP
 % ---------------------------------------------------------
 \begin{frame}{Contexto Operativo del Transporte UPP}
@@ -529,9 +560,34 @@
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{itemize}
             \item El agente UCB1 convergió consistentemente al brazo \textbf{$a_1$ (\texttt{Flex\_14p\_15m})}.
-            \item Alcanzó la máxima recompensa promedio esperada (\textbf{$\bar{Q} = 0.692$}).
+            \item Alcanzó la máxima recompensa promedio esperada (\textbf{$\bar{Q} = 0.853$}).
             \item Mantiene llenado rápido en pico y limita la espera a máximo 15 min en valle.
         \end{itemize}
+    \end{darkcard}
+    \vfill
+\end{frame}
+
+% ---------------------------------------------------------
+% DIAPOSITIVA 19B: FRECUENCIA DE SELECCION DE BRAZOS UCB1
+% ---------------------------------------------------------
+\begin{frame}{Distribucion de Seleccion de Brazos}
+    \vfill
+    \begin{darkcard}[title=\color{cyanAccent}{Desglose de Decisiones del Agente durante 2,352 Intervalos}]
+        \centering
+        \fontsize{9pt}{12pt}\selectfont \color{textWhite}
+        \arrayrulecolor{cardBorder}
+        \begin{tabularx}{\textwidth}{c l c c X}
+            \toprule
+            \rowcolor{cardNavy!90!purpleUPP}
+            \color{yellowAccent}{Brazo} & \color{cyanAccent}{Regla Operativa} & \color{cyanAccent}{Elecciones} & \color{yellowAccent}{Porcentaje} & \color{cyanAccent}{Estimacion} \\
+            \midrule
+            $a_0$ & Tradicional (18 pax) & 400 & 20.8\% & $\bar{Q}_0 = 0.847$ \\
+            $a_1$ & \textbf{Flex ($\ge 14$ pax / 15 min)} & \textbf{423} & \textbf{22.0\%} & $\mathbf{\bar{Q}_1 = 0.853 \ \text{(Optimo)}}$ \\
+            $a_2$ & Flex ($\ge 12$ pax / 25 min) & 378 & 19.7\% & $\bar{Q}_2 = 0.842$ \\
+            $a_3$ & Flex ($\ge 10$ pax / 35 min) & 366 & 19.1\% & $\bar{Q}_3 = 0.838$ \\
+            $a_4$ & Salida Maxima ($<10$ pax / 45 min) & 354 & 18.4\% & $\bar{Q}_4 = 0.835$ \\
+            \bottomrule
+        \end{tabularx}
     \end{darkcard}
     \vfill
 \end{frame}
