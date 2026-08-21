@@ -96,57 +96,76 @@ def run_ucb_simulation():
         pct = (agent.counts[a] / agent.total_steps) * 100
         print(f"  * {agent.arm_names[a]}: {agent.counts[a]} choices ({pct:.1f}%) | Q_bar = {agent.means[a]:.3f}")
 
-    # Plot styling
-    plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
+    # FIGURE 2: Cumulative Reward and Action Selection History (Dark Theme)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 7.5), sharex=True)
+    fig.patch.set_facecolor("#1C2541")
+    ax1.set_facecolor("#0B132B")
+    ax2.set_facecolor("#0B132B")
 
-    # FIGURE 2: Cumulative Reward and Action Selection History
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
-    
     cum_rewards_series = np.cumsum(history_rewards)
-    ax1.plot(cum_rewards_series, color='#577A2D', linewidth=2.4, label='UCB1 Cumulative Reward')
-    ax1.set_ylabel('Cumulative Reward', fontsize=12, fontweight='bold')
-    ax1.set_title('UCB1 Agent Learning Curve (21 Operational Days)', fontsize=14, fontweight='bold', pad=15)
-    ax1.legend(loc='upper left', frameon=True)
+    ax1.plot(cum_rewards_series, color='#38BDF8', linewidth=2.5, label='UCB1 Recompensa Acumulada')
+    ax1.set_ylabel('Recompensa Acumulada', fontsize=11, fontweight='bold', color='#38BDF8')
+    ax1.set_title('Evolución de Aprendizaje del Agente UCB1 (21 Días Operativos)', fontsize=13, fontweight='bold', color='#FFFFFF', pad=12)
+    ax1.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax1.spines.values():
+        spine.set_color("#3A506B")
+    ax1.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7)
+    ax1.legend(facecolor="#1C2541", edgecolor="#38BDF8", labelcolor="#FFFFFF", loc="upper left", fontsize=10)
 
-    ax2.plot(history_actions, color='#96BE50', alpha=0.72, marker='o', linestyle='none', markersize=2.2)
+    ax2.plot(history_actions, color='#4ADE80', alpha=0.75, marker='o', linestyle='none', markersize=3.0)
     ax2.set_yticks(range(5))
-    ax2.set_yticklabels(['a0 (18pax)', 'a1 (14pax/15m)', 'a2 (12pax/25m)', 'a3 (10pax/35m)', 'a4 (8pax/45m)'])
-    ax2.set_xlabel('Dispatch Events Evaluated', fontsize=12, fontweight='bold')
-    ax2.set_ylabel('Selected Policy Arm', fontsize=12, fontweight='bold')
-    
+    ax2.set_yticklabels(['a0 (18pax)', 'a1 (14p/15m)', 'a2 (12p/20m)', 'a3 (10p/25m)', 'a4 (8p/30m)'])
+    ax2.set_xlabel('Eventos de Despacho Evaluados', fontsize=11, fontweight='bold', color='#4ADE80')
+    ax2.set_ylabel('Política Elegida', fontsize=11, fontweight='bold', color='#4ADE80')
+    ax2.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax2.spines.values():
+        spine.set_color("#3A506B")
+    ax2.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7)
+
     plt.tight_layout()
     fig2_path = PLOTS_DIR / 'fig2_ucb_recompensa.png'
-    plt.savefig(fig2_path, dpi=300)
+    plt.savefig(fig2_path, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor(), edgecolor='none')
     plt.close()
     print(f"Figure 2 saved at: {fig2_path}")
 
-    # FIGURE 3: Quantitative Comparison (Traditional vs UCB1)
-    fig, (ax3, ax4) = plt.subplots(1, 2, figsize=(12, 5))
+    # FIGURE 3: Quantitative Comparison (Traditional vs UCB1 - Dark Theme)
+    fig, (ax3, ax4) = plt.subplots(1, 2, figsize=(11, 4.8))
+    fig.patch.set_facecolor("#1C2541")
+    ax3.set_facecolor("#0B132B")
+    ax4.set_facecolor("#0B132B")
 
     metrics_df = pd.DataFrame({
-        'Policy': ['Traditional (18 pax)', 'UCB1 Algorithm'],
+        'Policy': ['Tradicional (a0)', 'Agente UCB1'],
         'Average Dispatch Wait (min)': [avg_wait_trad, avg_wait_ucb],
         'Maximum Dispatch Wait (min)': [max_wait_trad, max_wait_ucb]
     })
 
-    ax3.bar(metrics_df['Policy'], metrics_df['Average Dispatch Wait (min)'], color=['#C4D992', '#96BE50'])
-    ax3.set_title('Average Accumulated Wait at Dispatch', fontsize=12, fontweight='bold')
-    ax3.set_ylabel('Accumulated Wait (Minutes)', fontsize=11)
-    for i, p in enumerate(ax3.patches):
+    ax3.bar(metrics_df['Policy'], metrics_df['Average Dispatch Wait (min)'], color=['#38BDF8', '#4ADE80'], width=0.55)
+    ax3.set_title('Tiempo de Espera Promedio en Despacho', fontsize=12, fontweight='bold', color='#FFFFFF', pad=10)
+    ax3.set_ylabel('Espera Promedio (Minutos)', fontsize=11, color='#FFFFFF')
+    ax3.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax3.spines.values():
+        spine.set_color("#3A506B")
+    ax3.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7, axis='y')
+    for p in ax3.patches:
         ax3.annotate(f"{p.get_height():.1f} min", (p.get_x() + p.get_width() / 2., p.get_height() / 2),
-                     ha='center', va='center', color='#595959' if i == 0 else 'white', fontweight='bold', fontsize=12)
+                     ha='center', va='center', color='#0B132B', fontweight='bold', fontsize=11)
 
-    ax4.bar(metrics_df['Policy'], metrics_df['Maximum Dispatch Wait (min)'], color=['#C4D992', '#96BE50'])
-    ax4.set_title('Maximum Accumulated Wait at Dispatch', fontsize=12, fontweight='bold')
-    ax4.set_ylabel('Maximum Accumulated Wait (Minutes)', fontsize=11)
-    for i, p in enumerate(ax4.patches):
+    ax4.bar(metrics_df['Policy'], metrics_df['Maximum Dispatch Wait (min)'], color=['#38BDF8', '#4ADE80'], width=0.55)
+    ax4.set_title('Tiempo de Espera Máximo en Despacho', fontsize=12, fontweight='bold', color='#FFFFFF', pad=10)
+    ax4.set_ylabel('Espera Máxima (Minutos)', fontsize=11, color='#FFFFFF')
+    ax4.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax4.spines.values():
+        spine.set_color("#3A506B")
+    ax4.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7, axis='y')
+    for p in ax4.patches:
         ax4.annotate(f"{p.get_height():.1f} min", (p.get_x() + p.get_width() / 2., p.get_height() / 2),
-                     ha='center', va='center', color='#595959' if i == 0 else 'white', fontweight='bold', fontsize=12)
+                     ha='center', va='center', color='#0B132B', fontweight='bold', fontsize=11)
 
-    fig.suptitle('Performance Benchmark: Traditional Baseline vs UCB1 Agent', fontsize=14, fontweight='bold', y=0.98)
+    fig.suptitle('Benchmark de Desempeño: Política Tradicional vs Agente UCB1', fontsize=13, fontweight='bold', color='#FDE047', y=0.98)
     fig.tight_layout(rect=[0, 0, 1, 0.93])
     fig3_path = PLOTS_DIR / 'fig3_comparativa.png'
-    plt.savefig(fig3_path, dpi=300, bbox_inches='tight', pad_inches=0.12)
+    plt.savefig(fig3_path, dpi=300, bbox_inches='tight', pad_inches=0.12, facecolor=fig.get_facecolor(), edgecolor='none')
     plt.close()
     print(f"Figure 3 saved at: {fig3_path}")
 

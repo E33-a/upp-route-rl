@@ -159,78 +159,105 @@ def calculate_diagnostics(df: pd.DataFrame, result: OLSResult) -> OLSDiagnostics
 
 
 def save_regression_plot(df: pd.DataFrame, result: OLSResult, output_path: Path) -> None:
-    """Guarda la dispersión observada y la recta OLS ajustada."""
+    """Guarda la dispersión observada y la recta OLS ajustada en estilo Dark Theme."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     x = df[X_COLUMN].to_numpy(dtype=float)
     y = df[Y_MODEL_NAME].to_numpy(dtype=float)
     x_line = np.linspace(x.min(), x.max(), 200)
     y_line = result.intercept + result.slope * x_line
 
-    fig, ax = plt.subplots(figsize=(9, 5.5))
-    ax.scatter(x, y, alpha=0.95, s=42, color="#95B84F", edgecolors="none")
-    ax.plot(x_line, y_line, color="#95B84F", linewidth=2.2, linestyle=":")
+    fig, ax = plt.subplots(figsize=(9, 5.2))
+    
+    # Dark Theme configuration matching Beamer cardNavy (#1C2541)
+    fig.patch.set_facecolor("#1C2541")
+    ax.set_facecolor("#0B132B")
+
+    ax.scatter(x, y, alpha=0.85, s=46, color="#38BDF8", edgecolors="#1C2541", linewidth=0.5, label="Datos de Despacho (Obs)")
+    ax.plot(x_line, y_line, color="#FDE047", linewidth=2.5, linestyle="--", label="Modelo OLS Ajustado")
+
     ax.set_title(
-        "Tiempo en llenar la combi vs alumnos esperando",
-        fontsize=15,
+        "Tiempo en llenar la combi vs Alumnos esperando (OLS)",
+        fontsize=14,
         fontweight="bold",
-        color="#555555",
+        color="#FFFFFF",
+        pad=12,
     )
-    ax.set_xlabel("Alumnos al esperar la combi (X)", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Alumnos al esperar la combi (X)", fontsize=11, fontweight="bold", color="#38BDF8")
     ax.set_ylabel(
-        "Minutos para llenar / tiempo de espera\nacumulado (Y)",
-        fontsize=12,
+        "Minutos para llenar / tiempo de espera (Y)",
+        fontsize=11,
         fontweight="bold",
+        color="#38BDF8",
     )
-    ax.set_xlim(0, 10)
-    ax.set_ylim(-20, 120)
+    
+    # Fit y-limits strictly to 30 min maximum wait context
+    ax.set_xlim(-0.2, 10.2)
+    ax.set_ylim(-2, 35)
     ax.set_xticks(np.arange(0, 11, 1))
-    ax.set_yticks(np.arange(-20, 121, 20))
+    ax.set_yticks(np.arange(0, 36, 5))
+
+    ax.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax.spines.values():
+        spine.set_color("#3A506B")
+        spine.set_linewidth(1.2)
+
     ax.text(
-        0.98,
-        0.98,
-        f"y = {result.slope:.4f}x + {result.intercept:.4f}\n"
-        f"R² = {result.r_squared:.4f}",
+        0.97,
+        0.95,
+        f"$\\widehat{{Y}} = {result.intercept:.4f} {result.slope:+.4f} X$\n"
+        f"$R^2 = {result.r_squared:.4f}$  |  $p < 0.001$",
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=10,
+        fontsize=11,
         fontweight="bold",
-        color="#555555",
-        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8, "pad": 2},
+        color="#FFFFFF",
+        bbox={"facecolor": "#1C2541", "edgecolor": "#38BDF8", "alpha": 0.95, "pad": 6, "boxstyle": "round,pad=0.5"},
     )
-    ax.grid(color="#D0D0D0", linewidth=1.0)
+    ax.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7)
     ax.set_axisbelow(True)
+    ax.legend(facecolor="#1C2541", edgecolor="#38BDF8", labelcolor="#FFFFFF", loc="lower left", fontsize=10)
+
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    fig.savefig(output_path, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor(), edgecolor="none")
     plt.close(fig)
 
 
 def save_homoscedasticity_plot(
     df: pd.DataFrame, result: OLSResult, diagnostics: OLSDiagnostics, output_path: Path
 ) -> None:
-    """Grafica los valores predichos contra los residuos del modelo OLS."""
+    """Grafica los valores predichos contra los residuos del modelo OLS en estilo Dark Theme."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     x = df[X_COLUMN].to_numpy(dtype=float)
     y = df[Y_MODEL_NAME].to_numpy(dtype=float)
     fitted = result.intercept + result.slope * x
     residuals = y - fitted
 
-    fig, ax = plt.subplots(figsize=(8, 5.2))
-    ax.scatter(fitted, residuals, alpha=0.95, s=48, color="#95B84F", edgecolors="none")
-    ax.set_title("Homocedasticidad", fontsize=18, color="#555555", pad=18)
-    ax.set_xlim(-15, 20)
-    ax.set_ylim(-20, 100)
-    ax.set_xticks(np.arange(-15, 21, 5))
-    ax.set_yticks(np.arange(-20, 101, 20))
-    ax.grid(color="#D0D0D0", linewidth=1.1)
-    ax.spines["left"].set_position(("data", 0))
-    ax.spines["bottom"].set_position(("data", 0))
-    ax.spines["left"].set_color("#AFAFAF")
-    ax.spines["bottom"].set_color("#AFAFAF")
-    ax.spines["top"].set_color("#D0D0D0")
-    ax.spines["right"].set_color("#D0D0D0")
-    ax.tick_params(colors="#555555", labelsize=11)
+    fig, ax = plt.subplots(figsize=(8.5, 5.0))
+    fig.patch.set_facecolor("#1C2541")
+    ax.set_facecolor("#0B132B")
+
+    ax.scatter(fitted, residuals, alpha=0.85, s=46, color="#C084FC", edgecolors="#1C2541", linewidth=0.5)
+    ax.axhline(0, color="#FDE047", linestyle="--", linewidth=1.8, label="Residuo Cero")
+
+    ax.set_title("Diagnóstico de Homocedasticidad (Residuos vs Ajustados)", fontsize=14, fontweight="bold", color="#FFFFFF", pad=12)
+    ax.set_xlabel("Valores Ajustados (Minutos Predichos)", fontsize=11, fontweight="bold", color="#C084FC")
+    ax.set_ylabel("Residuos ($Y - \\widehat{Y}$)", fontsize=11, fontweight="bold", color="#C084FC")
+
+    ax.set_xlim(-5, 20)
+    ax.set_ylim(-20, 25)
+    ax.set_xticks(np.arange(-5, 21, 5))
+    ax.set_yticks(np.arange(-20, 26, 5))
+
+    ax.tick_params(colors="#FFFFFF", labelsize=10)
+    for spine in ax.spines.values():
+        spine.set_color("#3A506B")
+        spine.set_linewidth(1.2)
+
+    ax.grid(color="#3A506B", linestyle=":", linewidth=0.8, alpha=0.7)
     ax.set_axisbelow(True)
+    ax.legend(facecolor="#1C2541", edgecolor="#C084FC", labelcolor="#FFFFFF", loc="upper right", fontsize=10)
+
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    fig.savefig(output_path, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor(), edgecolor="none")
     plt.close(fig)

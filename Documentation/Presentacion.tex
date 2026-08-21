@@ -114,41 +114,22 @@
 
 % =========================================================
 % INDICADORES VISUALES DE EXPOSITOR (ESQUINA INFERIOR DERECHA)
-% Emmanuel = Cuadrado semi-transparente (Cian)
-% Ximena = Círculo semi-transparente (Púrpura)
+% Emmanuel = Cuadrado Cian simple con alta transparencia (opacity=0.35)
+% Ximena = Círculo Púrpura simple con alta transparencia (opacity=0.35)
 % =========================================================
 \newcommand{\speakerEmmanuel}{%
     \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
-            \begin{tikzpicture}
-                \draw[fill=cyanAccent!85!white, draw=cyanAccent, opacity=0.70, rounded corners=1.5pt] (0,0) rectangle (0.38,0.38);
-                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{E}};
-            \end{tikzpicture}%
-        };
+        \node[anchor=south east, xshift=-0.20cm, yshift=0.20cm,
+              fill=cyanAccent, opacity=0.35,
+              minimum size=0.35cm, inner sep=0pt] at (current page.south east) {};
     \end{tikzpicture}%
 }
 
 \newcommand{\speakerXimena}{%
     \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
-            \begin{tikzpicture}
-                \filldraw[fill=purpleAccent!85!white, draw=purpleAccent, opacity=0.70] (0.19,0.19) circle (0.19);
-                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{X}};
-            \end{tikzpicture}%
-        };
-    \end{tikzpicture}%
-}
-
-\newcommand{\speakerBoth}{%
-    \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
-            \begin{tikzpicture}
-                \draw[fill=cyanAccent!85!white, draw=cyanAccent, opacity=0.70, rounded corners=1.5pt] (0,0) rectangle (0.38,0.38);
-                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{E}};
-                \filldraw[fill=purpleAccent!85!white, draw=purpleAccent, opacity=0.70] (0.58,0.19) circle (0.19);
-                \node at (0.58,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{X}};
-            \end{tikzpicture}%
-        };
+        \node[anchor=south east, xshift=-0.20cm, yshift=0.20cm,
+              fill=purpleAccent, opacity=0.35, circle,
+              minimum size=0.35cm, inner sep=0pt] at (current page.south east) {};
     \end{tikzpicture}%
 }
 
@@ -166,10 +147,10 @@
 \begin{document}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 1: PORTADA DESTACADA DE ALTO IMPACTO
+% DIAPOSITIVA 1: PORTADA DESTACADA DE ALTO IMPACTO (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}[plain]
-    \speakerBoth
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[colframe=purpleUPP, boxrule=2pt]
         \begin{columns}[c]
@@ -202,17 +183,17 @@
         \centering
         \fontsize{10pt}{13pt}\selectfont
         \textbf{\color{cyanAccent}{Integrantes del Equipo:}}\\[3pt]
-        \color{textWhite}{\textbf{Angeles Sanchez Ximena Nathaly (Círculo \textbf{X})}} \quad \textbf{\color{cyanAccent}{|}} \quad \color{textWhite}{\textbf{Islas Lozada Emmanuel (Cuadrado \textbf{E})}}\\[2pt]
+        \color{textWhite}{\textbf{Angeles Sanchez Ximena Nathaly (Círculo)}} \quad \textbf{\color{cyanAccent}{|}} \quad \color{textWhite}{\textbf{Islas Lozada Emmanuel (Cuadrado)}}\\[2pt]
         \fontsize{8.5pt}{10.5pt}\selectfont \color{textLight}{Asignatura: Inteligencia Artificial \ -- \ Periodo Mayo--Agosto 2026}
     \end{darkcard}
     \vfill
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 2: FRASE INICIAL DE AUTOR RECONOCIDO
+% DIAPOSITIVA 2: FRASE INICIAL DE AUTOR RECONOCIDO (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}[plain]
-    \speakerBoth
+    \speakerEmmanuel
     \vfill
     \begin{quotecard}
         \centering
@@ -227,7 +208,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 3: AGENDA - PARTE I
+% DIAPOSITIVA 3: AGENDA - PARTE I (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Agenda General: Parte I}
     \speakerEmmanuel
@@ -245,10 +226,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 4: AGENDA - PARTE II
+% DIAPOSITIVA 4: AGENDA - PARTE II (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Agenda General: Parte II}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{purplecard}{Prescripción, Algoritmo UCB1 y Resultados}
         \fontsize{11.5pt}{16.5pt}\selectfont \color{textWhite}
@@ -263,10 +244,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 4B: ARQUITECTURA GENERAL DEL SISTEMA
+% DIAPOSITIVA 5: ARQUITECTURA GENERAL DEL SISTEMA (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Arquitectura General del Sistema UPP Route RL}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \centering
     \scalebox{0.82}{
@@ -282,7 +263,7 @@
             \node[purpleb, right=of dataset] (ols) {Modelo OLS\\$(\widehat{Y} = 15.71 - 2.87X)$};
             \node[accent, below=1.2cm of ols] (ucb) {Agente UCB1\\(Multi-Armed Bandit)};
             \node[block, left=of ucb] (reward) {Recompensa $R_t \in [0, 1]$\\Min-Max Normalizada};
-            \node[purpleb, left=of reward] (policy) {Política Óptima $a_1$\\Flex (14 pax / 15 min)};
+            \node[purpleb, left=of reward] (policy) {Política Óptima $a_2$\\Flex (12 pax / 20 min)};
 
             \draw[line] (poisson) -- (dataset);
             \draw[line] (dataset) -- (ols);
@@ -295,15 +276,15 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 5: CONTEXTO OPERATIVO UPP
+% DIAPOSITIVA 6: CONTEXTO OPERATIVO UPP (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Contexto Operativo del Transporte UPP}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{La Dinámica del Servicio}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{itemize}
-            \item \textbf{Rutas Clave Monitoreadas:} \textit{Puente de Tuzos} y \textit{San Agustín}.
+            \item \textbf{Rutas Clave Monitoreadas:} \textit{Las Vías} y \textit{Puente de Tuzos}.
             \item \textbf{Capacidad del Vehículo:} Combis urbanas con capacidad de \textbf{18 pasajeros}.
             \item \textbf{Regla Tradicional de Despacho ($a_0$):} Salir \textbf{únicamente cuando el vehículo está al 100\% de capacidad (18 alumnos)}.
         \end{itemize}
@@ -312,10 +293,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 6: EL CUELLO DE BOTELLA EN HORAS VALLE
+% DIAPOSITIVA 7: EL CUELLO DE BOTELLA EN HORAS VALLE (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{El Cuello de Botella en Horas Valle}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \begin{yellowcard}{Ineficiencia Severa de la Regla Rígida $a_0$}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -329,10 +310,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 7: LA PREGUNTA CENTRAL DE NEGOCIO
+% DIAPOSITIVA 8: LA PREGUNTA CENTRAL DE NEGOCIO (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{La Pregunta Central de Negocio}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \begin{accentcard}{Reto de Optimización Multiobjetivo}
         \centering
@@ -344,10 +325,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 8: DATASET SIMULADO POISSON
+% DIAPOSITIVA 9: DATASET SIMULADO POISSON (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Dataset Simulado: Proceso Estocástico Poisson}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Modelado de Llegadas de Estudiantes}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -365,10 +346,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 9A: ESTRUCTURA DEL DATASET - PARTE I
+% DIAPOSITIVA 10: ESTRUCTURA DEL DATASET - PARTE I (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Estructura del Dataset: Variables de Entrada}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Variables Predictoras y de Contexto Simulado}]
         \centering
@@ -389,10 +370,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 9B: ESTRUCTURA DEL DATASET - PARTE II
+% DIAPOSITIVA 11: ESTRUCTURA DEL DATASET - PARTE II (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Estructura del Dataset: Variables de Respuesta}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Variables de Salida y Tiempos de Servicio}]
         \centering
@@ -413,7 +394,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 10: MODELO PREDICTIVO OLS (TEORÍA)
+% DIAPOSITIVA 12: MODELO PREDICTIVO OLS (TEORÍA) (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Modelo Predictivo OLS (Regresión Lineal Simple)}
     \speakerXimena
@@ -433,7 +414,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 11: RESULTADOS DEL AJUSTE OLS
+% DIAPOSITIVA 13: RESULTADOS DEL AJUSTE OLS (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Resultados de la Regresión Lineal OLS}
     \speakerEmmanuel
@@ -454,7 +435,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 12: GRÁFICA DEL MODELO OLS AJUSTADO
+% DIAPOSITIVA 14: GRÁFICA DEL MODELO OLS AJUSTADO (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Gráfica del Modelo OLS Ajustado}
     \speakerEmmanuel
@@ -469,7 +450,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 13: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 1)
+% DIAPOSITIVA 15: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 1) (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Diagnóstico de Supuestos OLS: Independencia y Linealidad}
     \speakerEmmanuel
@@ -492,7 +473,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 14: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 2)
+% DIAPOSITIVA 16: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 2) (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Diagnóstico de Supuestos OLS: Homocedasticidad y Normalidad}
     \speakerXimena
@@ -509,7 +490,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 15: GRÁFICA DE HOMOCEDASTICIDAD
+% DIAPOSITIVA 17: GRÁFICA DE HOMOCEDASTICIDAD (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Evaluación de Heterocedasticidad en Residuos}
     \speakerXimena
@@ -524,7 +505,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 16: ALGORITMO UCB1 (TEORÍA)
+% DIAPOSITIVA 18: ALGORITMO UCB1 (TEORÍA) (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Aprendizaje por Refuerzo: Algoritmo UCB1}
     \speakerXimena
@@ -544,7 +525,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 17A: CATÁLOGO DE BRAZOS UCB - PARTE I
+% DIAPOSITIVA 19: CATÁLOGO DE BRAZOS UCB - PARTE I (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Catálogo de Políticas: Brazos Dinámicos ($a_0, a_1, a_2$)}
     \speakerEmmanuel
@@ -568,7 +549,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 17B: CATÁLOGO DE BRAZOS UCB - PARTE II
+% DIAPOSITIVA 20: CATÁLOGO DE BRAZOS UCB - PARTE II (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Catálogo de Políticas: Brazos Conservadores ($a_3, a_4$)}
     \speakerEmmanuel
@@ -591,7 +572,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 18: FUNCIÓN DE RECOMPENSA NORMALIZADA
+% DIAPOSITIVA 21: FUNCIÓN DE RECOMPENSA NORMALIZADA (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Función de Recompensa Normalizada}
     \speakerEmmanuel
@@ -614,7 +595,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 19: CONVERGENCIA DEL AGENTE UCB1
+% DIAPOSITIVA 22: CONVERGENCIA DEL AGENTE UCB1 (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Convergencia y Aprendizaje del Agente UCB1}
     \speakerXimena
@@ -631,7 +612,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 19B: FRECUENCIA DE SELECCION DE BRAZOS UCB1
+% DIAPOSITIVA 23: FRECUENCIA DE SELECCIÓN DE BRAZOS UCB1 (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Distribucion de Seleccion de Brazos}
     \speakerXimena
@@ -657,7 +638,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 20: GRÁFICA DE EVOLUCIÓN UCB1
+% DIAPOSITIVA 24: GRÁFICA DE EVOLUCIÓN UCB1 (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Evolución de Recompensa del Agente UCB1}
     \speakerXimena
@@ -672,10 +653,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 21: COMPARATIVA EXPERIMENTAL (a0 vs UCB1)
+% DIAPOSITIVA 25: COMPARATIVA EXPERIMENTAL (a0 vs UCB1) (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Comparativa Experimental: Política Tradicional vs UCB1}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \centering
     \IfFileExists{../outputs/plots/fig3_comparativa.png}{
@@ -687,7 +668,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 22A: MATRIZ DE RESULTADOS OPERATIVOS - PARTE I
+% DIAPOSITIVA 26: MATRIZ DE RESULTADOS OPERATIVOS - PARTE I (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Tiempos de Espera}
     \speakerEmmanuel
@@ -710,7 +691,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 22B: MATRIZ DE RESULTADOS OPERATIVOS - PARTE II
+% DIAPOSITIVA 27: MATRIZ DE RESULTADOS OPERATIVOS - PARTE II (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Ocupación y Eficiencia Global}
     \speakerEmmanuel
@@ -734,10 +715,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 23: RESPUESTAS CLAVE (PARTE 1)
+% DIAPOSITIVA 28: RESPUESTAS CLAVE (PARTE 1) (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Respuestas Operativas Clave: Ocupación y Umbral}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{accentcard}{1. ¿Conviene esperar cupo de 18 pasajeros?}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -752,10 +733,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 24: RESPUESTAS CLAVE (PARTE 2)
+% DIAPOSITIVA 29: RESPUESTAS CLAVE (PARTE 2) (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Respuestas Operativas Clave: Flexibilidad y Ahorro}
-    \speakerEmmanuel
+    \speakerXimena
     \vfill
     \begin{purplecard}{3. ¿En qué franjas ser más flexible?}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -770,10 +751,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 25A: BITÁCORA DE IA GENERATIVA - PARTE I
+% DIAPOSITIVA 30: BITÁCORA DE IA GENERATIVA - PARTE I (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Evidencia de Bitácora IA: ChatGPT y GitHub Copilot}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}]
         \centering
@@ -793,10 +774,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 25B: BITÁCORA DE IA GENERATIVA - PARTE II
+% DIAPOSITIVA 31: BITÁCORA DE IA GENERATIVA - PARTE II (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}{Evidencia de Bitácora IA: Google Gemini y OpenAI Codex}
-    \speakerXimena
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}]
         \centering
@@ -816,7 +797,7 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 25: CONCLUSIONES Y TRABAJO FUTURO
+% DIAPOSITIVA 32: CONCLUSIONES Y TRABAJO FUTURO (Ximena)
 % ---------------------------------------------------------
 \begin{frame}{Conclusiones y Trabajo Futuro}
     \speakerXimena
@@ -845,10 +826,10 @@
 \end{frame}
 
 % ---------------------------------------------------------
-% DIAPOSITIVA 26: FRASE FINAL Y CIERRE
+% DIAPOSITIVA 33: FRASE FINAL Y CIERRE (Emmanuel)
 % ---------------------------------------------------------
 \begin{frame}[plain]
-    \speakerBoth
+    \speakerEmmanuel
     \vfill
     \begin{quotecard}
         \centering
@@ -863,7 +844,7 @@
         \centering
         \fontsize{17pt}{21pt}\selectfont \textbf{\color{textWhite}{¡Muchas Gracias por su Atención!}}\\[6pt]
         \fontsize{12pt}{15pt}\selectfont \color{cyanAccent}{¿Preguntas o Comentarios?}\\[4pt]
-        \fontsize{10pt}{12pt}\selectfont \color{textLight}{Angeles Sanchez Ximena Nathaly (Círculo \textbf{X}) \ \& \ Islas Lozada Emmanuel (Cuadrado \textbf{E})}
+        \fontsize{10pt}{12pt}\selectfont \color{textLight}{Angeles Sanchez Ximena Nathaly (Círculo Púrpura) \ \& \ Islas Lozada Emmanuel (Cuadrado Cian)}
     \end{darkcard}
     \vfill
 \end{frame}
