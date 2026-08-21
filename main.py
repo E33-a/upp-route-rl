@@ -124,9 +124,9 @@ def main():
     arm_names = [
         "a0: Tradicional (18 pax estrictos)",
         "a1: Flex (>=14 pax tras 15 min)",
-        "a2: Flex (>=12 pax tras 25 min)",
-        "a3: Flex (>=10 pax tras 35 min)",
-        "a4: Salida Máxima (<10 pax tras 45 min)"
+        "a2: Flex (>=12 pax tras 20 min)",
+        "a3: Flex (>=10 pax tras 25 min)",
+        "a4: Salida Máxima (<10 pax tras 30 min)"
     ]
     for a in range(len(arm_names)):
         count = results_ucb['counts'][a]

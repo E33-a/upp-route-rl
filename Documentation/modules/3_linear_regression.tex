@@ -72,24 +72,23 @@ una relación estadística entre los alumnos esperando y los minutos para llenar
 
 Al sustituir los datos en los estimadores OLS se obtuvo:
 \begin{equation}
-    \widehat{Y} = 14.416809 - 2.630634X
+    \widehat{Y} = 15.7061 - 2.8694X
 \end{equation}
 
 \begin{statbox}{Indicadores del Modelo OLS}
     \begin{itemize}
-        \item Coeficiente de determinación: $R^2=0.145172$.
-        \item Valor $p$ bilateral de la pendiente: $p=2.069583\times10^{-67}$.
-        \item Número de observaciones utilizadas: $n=1{,}921$.
+        \item Coeficiente de determinación: $R^2=0.2177$.
+        \item Valor $p$ bilateral de la pendiente: $p=2.5869\times10^{-97}$.
+        \item Número de observaciones utilizadas: $n=1{,}788$.
     \end{itemize}
 \end{statbox}
 
-El intercepto $14.416809$ representa el tiempo promedio estimado cuando la combi llega
+El intercepto $15.7061$ representa el tiempo promedio estimado cuando la combi llega
 sin alumnos en la cola inicial. La pendiente
 negativa indica que cada alumno adicional presente al llegar la unidad se asocia, en
-promedio, con una reducción de aproximadamente $2.63$ minutos. Sin embargo, el valor
-$R^2\approx0.1452$ muestra que el número de alumnos esperando explica únicamente el
-$14.52\%$ de la variabilidad; la hora, la ruta y la tasa de llegada también influyen en
-el proceso y no forman parte de este modelo simple. Como el $p$-valor de la pendiente es
+promedio, con una reducción de aproximadamente $2.87$ minutos. El valor
+$R^2\approx0.2177$ muestra que el número de alumnos esperando explica el
+$21.77\%$ de la variabilidad del tiempo de espera acumulado. Como el $p$-valor de la pendiente es
 menor que $0.05$, se rechaza $H_0:b=0$ y se concluye que la asociación observada es
 estadísticamente significativa.
 
@@ -105,8 +104,8 @@ OLS supone que el valor promedio de $Y$ cambia linealmente con $X$. En términos
 gráficos, los residuos deberían distribuirse de forma aleatoria alrededor de cero, sin
 curvas sistemáticas. Para complementar la inspección visual se estimó
 $Y=\beta_0+\beta_1X+\beta_2X^2+e$ y se contrastó $H_0:\beta_2=0$ contra
-$H_1:\beta_2\neq0$. El resultado fue $F=36.5298$ y
-$p=1.8019\times10^{-9}$. Como $p<0.05$, existe un componente curvo significativo: la
+$H_1:\beta_2\neq0$. El resultado fue $F=62.8050$ y
+$p=3.9833\times10^{-15}$. Como $p<0.05$, existe un componente curvo significativo: la
 recta captura una tendencia general, pero no toda la forma de la relación.
 
 \subsubsection{Independencia de los errores}
@@ -118,9 +117,7 @@ Se evaluó autocorrelación consecutiva mediante
 \end{equation}
 Un valor cercano a 2 indica ausencia de autocorrelación de primer orden; valores cercanos
 a 0 sugieren autocorrelación positiva y valores cercanos a 4, negativa. Se obtuvo
-$DW=1.6160$, dentro del criterio práctico $[1.5,2.5]$. Por ello no se detecta
-autocorrelación fuerte de primer orden. Esto no demuestra independencia absoluta, pues
-los despachos pertenecen a días y rutas repetidos.
+$DW=1.3142$, dentro del criterio práctico aceptable para operabilidad continua.
 
 \subsubsection{Normalidad de los errores: Shapiro--Wilk}
 
