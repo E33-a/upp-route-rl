@@ -55,7 +55,9 @@ def load_and_filter_data(csv_path: Path) -> pd.DataFrame:
 
     numeric_columns = [X_COLUMN, Y_SOURCE_COLUMN]
     df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors="coerce")
-    relevant = df["tipo_salida"].eq("Llena") | df[X_COLUMN].gt(0)
+    # El dataset registra los dos estados operativos solicitados: salida con
+    # combi llena o salida parcial después de permanecer en espera máxima.
+    relevant = df["tipo_salida"].isin(["Llena", "Parcial"])
     filtered = df.loc[relevant].dropna(subset=numeric_columns).copy()
     filtered[Y_MODEL_NAME] = filtered[Y_SOURCE_COLUMN]
 
@@ -165,23 +167,39 @@ def save_regression_plot(df: pd.DataFrame, result: OLSResult, output_path: Path)
     y_line = result.intercept + result.slope * x_line
 
     fig, ax = plt.subplots(figsize=(9, 5.5))
-    ax.scatter(x, y, alpha=0.28, s=24, color="#007A5A", label="Despachos observados")
-    ax.plot(x_line, y_line, color="#4A154B", linewidth=2.5, label="Recta OLS")
-    ax.set_title("Tiempo para llenar la combi vs. alumnos esperando")
-    ax.set_xlabel("Alumnos esperando al llegar la combi (X)")
-    ax.set_ylabel("Minutos para llenar / tiempo de espera acumulado (Y)")
+    ax.scatter(x, y, alpha=0.95, s=42, color="#95B84F", edgecolors="none")
+    ax.plot(x_line, y_line, color="#95B84F", linewidth=2.2, linestyle=":")
+    ax.set_title(
+        "Tiempo en llenar la combi vs alumnos esperando",
+        fontsize=15,
+        fontweight="bold",
+        color="#555555",
+    )
+    ax.set_xlabel("Alumnos al esperar la combi (X)", fontsize=12, fontweight="bold")
+    ax.set_ylabel(
+        "Minutos para llenar / tiempo de espera\nacumulado (Y)",
+        fontsize=12,
+        fontweight="bold",
+    )
+    ax.set_xlim(0, 10)
+    ax.set_ylim(-20, 120)
+    ax.set_xticks(np.arange(0, 11, 1))
+    ax.set_yticks(np.arange(-20, 121, 20))
     ax.text(
         0.98,
-        0.95,
-        f"Y = {result.intercept:.4f} {result.slope:+.4f}X\n"
-        f"R² = {result.r_squared:.4f}\np = {result.p_value:.3e}",
+        0.98,
+        f"y = {result.slope:.4f}x + {result.intercept:.4f}\n"
+        f"R² = {result.r_squared:.4f}",
         transform=ax.transAxes,
         ha="right",
         va="top",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.9},
+        fontsize=10,
+        fontweight="bold",
+        color="#555555",
+        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8, "pad": 2},
     )
-    ax.grid(alpha=0.2)
-    ax.legend()
+    ax.grid(color="#D0D0D0", linewidth=1.0)
+    ax.set_axisbelow(True)
     fig.tight_layout()
     fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -190,22 +208,29 @@ def save_regression_plot(df: pd.DataFrame, result: OLSResult, output_path: Path)
 def save_homoscedasticity_plot(
     df: pd.DataFrame, result: OLSResult, diagnostics: OLSDiagnostics, output_path: Path
 ) -> None:
-    """Grafica la variable predictora contra los residuos del modelo OLS."""
+    """Grafica los valores predichos contra los residuos del modelo OLS."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     x = df[X_COLUMN].to_numpy(dtype=float)
     y = df[Y_MODEL_NAME].to_numpy(dtype=float)
     fitted = result.intercept + result.slope * x
     residuals = y - fitted
 
-    fig, ax = plt.subplots(figsize=(8, 4.8))
-    ax.scatter(x, residuals, alpha=0.3, s=18, color="#007A5A")
-    ax.axhline(0, color="#4A154B", linewidth=1.8)
-    ax.set_title(
-        f"Homocedasticidad (Breusch-Pagan p={diagnostics.breusch_pagan_p_value:.3e})"
-    )
-    ax.set_xlabel("Alumnos esperando (variable predictora X)")
-    ax.set_ylabel("Residuo (observado - estimado)")
-    ax.grid(alpha=0.18)
+    fig, ax = plt.subplots(figsize=(8, 5.2))
+    ax.scatter(fitted, residuals, alpha=0.95, s=48, color="#95B84F", edgecolors="none")
+    ax.set_title("Homocedasticidad", fontsize=18, color="#555555", pad=18)
+    ax.set_xlim(-15, 20)
+    ax.set_ylim(-20, 100)
+    ax.set_xticks(np.arange(-15, 21, 5))
+    ax.set_yticks(np.arange(-20, 101, 20))
+    ax.grid(color="#D0D0D0", linewidth=1.1)
+    ax.spines["left"].set_position(("data", 0))
+    ax.spines["bottom"].set_position(("data", 0))
+    ax.spines["left"].set_color("#AFAFAF")
+    ax.spines["bottom"].set_color("#AFAFAF")
+    ax.spines["top"].set_color("#D0D0D0")
+    ax.spines["right"].set_color("#D0D0D0")
+    ax.tick_params(colors="#555555", labelsize=11)
+    ax.set_axisbelow(True)
     fig.tight_layout()
     fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
