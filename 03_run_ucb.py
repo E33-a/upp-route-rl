@@ -11,7 +11,7 @@ def run_ucb_simulation():
     Executes the 21-day UCB1 Multi-Armed Bandit simulation, compares policy performance
     against the traditional baseline (18 pax full dispatch), and exports analytical plots.
     """
-    print("🤖 Starting UCB1 Multi-Armed Bandit Simulation...")
+    print("Starting UCB1 Multi-Armed Bandit Simulation...")
     
     csv_path = DATA_DIR / 'demand_dataset.csv'
     if not csv_path.exists():
@@ -83,24 +83,24 @@ def run_ucb_simulation():
     avg_empty_ucb = float(np.mean(history_empty_seats_ucb)) if history_empty_seats_ucb else 0.0
     avg_empty_trad = float(np.mean(history_empty_seats_trad)) if history_empty_seats_trad else 0.0
 
-    print("\n--- 🏆 COMPARATIVE RESULTS: TRADITIONAL POLICY VS UCB1 AGENT ---")
-    print(f"🔹 Average Cumulative Reward UCB1: {avg_reward:.4f} (Theoretical max 1.0)")
-    print(f"🔹 Total Cumulative Reward UCB1:   {cum_reward:.1f} pts")
-    print("\n📊 Key Performance Metrics:")
-    print(f"  • Average Waiting Time:  Traditional = {avg_wait_trad:.1f} min  |  UCB1 = {avg_wait_ucb:.1f} min")
-    print(f"  • Maximum Waiting Time:  Traditional = {max_wait_trad:.1f} min  |  UCB1 = {max_wait_ucb:.1f} min")
-    print(f"  • Total Dispatches:      Traditional = {total_dispatches_trad} trips |  UCB1 = {total_dispatches_ucb} trips")
-    print(f"  • Average Empty Seats:   Traditional = {avg_empty_trad:.1f} pax  |  UCB1 = {avg_empty_ucb:.1f} pax")
+    print("\n--- COMPARATIVE RESULTS: TRADITIONAL POLICY VS UCB1 AGENT ---")
+    print(f"Average Cumulative Reward UCB1: {avg_reward:.4f} (Theoretical max 1.0)")
+    print(f"Total Cumulative Reward UCB1:   {cum_reward:.1f} pts")
+    print("\nKey Performance Metrics:")
+    print(f"  * Average Waiting Time:  Traditional = {avg_wait_trad:.1f} min  |  UCB1 = {avg_wait_ucb:.1f} min")
+    print(f"  * Maximum Waiting Time:  Traditional = {max_wait_trad:.1f} min  |  UCB1 = {max_wait_ucb:.1f} min")
+    print(f"  * Total Dispatches:      Traditional = {total_dispatches_trad} trips |  UCB1 = {total_dispatches_ucb} trips")
+    print(f"  * Average Empty Seats:   Traditional = {avg_empty_trad:.1f} pax  |  UCB1 = {avg_empty_ucb:.1f} pax")
     
-    print("\n🎯 Arm Selection Frequency (Policies Chosen by UCB1):")
+    print("\nArm Selection Frequency (Policies Chosen by UCB1):")
     for a in range(agent.n_arms):
         pct = (agent.counts[a] / agent.total_steps) * 100
-        print(f"  • {agent.arm_names[a]}: {agent.counts[a]} choices ({pct:.1f}%) | Q_bar = {agent.means[a]:.3f}")
+        print(f"  * {agent.arm_names[a]}: {agent.counts[a]} choices ({pct:.1f}%) | Q_bar = {agent.means[a]:.3f}")
 
     # Plot styling
     plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 
-    # 📈 FIGURE 2: Cumulative Reward and Action Selection History
+    # FIGURE 2: Cumulative Reward and Action Selection History
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
     
     cum_rewards_series = np.cumsum(history_rewards)
@@ -119,9 +119,9 @@ def run_ucb_simulation():
     fig2_path = PLOTS_DIR / 'fig2_ucb_recompensa.png'
     plt.savefig(fig2_path, dpi=300)
     plt.close()
-    print(f"\n✅ Figure 2 saved at: {fig2_path}")
+    print(f"Figure 2 saved at: {fig2_path}")
 
-    # 📈 FIGURE 3: Quantitative Comparison (Traditional vs UCB1)
+    # FIGURE 3: Quantitative Comparison (Traditional vs UCB1)
     fig, (ax3, ax4) = plt.subplots(1, 2, figsize=(12, 5))
 
     metrics_df = pd.DataFrame({
@@ -149,7 +149,23 @@ def run_ucb_simulation():
     fig3_path = PLOTS_DIR / 'fig3_comparativa.png'
     plt.savefig(fig3_path, dpi=300)
     plt.close()
-    print(f"✅ Figure 3 saved at: {fig3_path}")
+    print(f"Figure 3 saved at: {fig3_path}")
+
+    return {
+        'avg_reward': avg_reward,
+        'cum_reward': cum_reward,
+        'avg_wait_ucb': avg_wait_ucb,
+        'avg_wait_trad': avg_wait_trad,
+        'max_wait_ucb': max_wait_ucb,
+        'max_wait_trad': max_wait_trad,
+        'total_dispatches_ucb': total_dispatches_ucb,
+        'total_dispatches_trad': total_dispatches_trad,
+        'avg_empty_ucb': avg_empty_ucb,
+        'avg_empty_trad': avg_empty_trad,
+        'counts': agent.counts,
+        'means': agent.means,
+        'total_steps': agent.total_steps
+    }
 
 if __name__ == '__main__':
     run_ucb_simulation()
