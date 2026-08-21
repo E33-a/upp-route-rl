@@ -1,0 +1,347 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{utf8}
+\usepackage[spanish]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Paleta de Colores
+\definecolor{primaryNavy}{HTML}{0B132B}
+\definecolor{secondaryNavy}{HTML}{1C2541}
+\definecolor{accentCyan}{HTML}{0284C7}
+\definecolor{accentPurple}{HTML}{7E22CE}
+\definecolor{accentYellow}{HTML}{D97706}
+\definecolor{bgGray}{HTML}{F8FAFC}
+
+\tcbset{
+    boxrule=1pt,
+    arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{emmanuelbox}[1]{
+    colback=bgGray,
+    colframe=accentCyan,
+    title={\textbf{Diapositiva #1 --- Emmanuel (Islas Lozada Emmanuel)}},
+    coltitle=white,
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{ximenabox}[1]{
+    colback=bgGray,
+    colframe=accentPurple,
+    title={\textbf{Diapositiva #1 --- Ximena (Angeles Sanchez Ximena Nathaly)}},
+    coltitle=white,
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{defensebox}[1][Preguntas del Comité]{
+    colback=white,
+    colframe=accentYellow,
+    title={\textbf{#1}},
+    coltitle=white,
+    fonttitle=\bfseries\small
+}
+
+\title{\textbf{\LARGE Guía de Exposición y Guión Técnico de Defensa}\\[6pt]
+\Large Optimización Inteligente de Rutas de Transporte UPP via UCB1 Multi-Armed Bandit}
+\author{\textbf{Emmanuel Islas Lozada} \ \& \ \textbf{Ximena Nathaly Angeles Sanchez}\\[4pt]
+Universidad Politécnica de Pachuca -- Ingeniería en Software}
+\date{Agosto de 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent Este documento constituye la guía oficial de exposición verbal y defensa técnica para la presentación del proyecto final de Inteligencia Artificial. Contiene el guión detallado diapositiva por diapositiva (1 a 33), asignando intervenciones equilibradas entre los integrantes, definiendo el discurso explicativo y proporcionando las respuestas fundamentadas a posibles preguntas del jurado evaluador.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% =========================================================
+\section{Estructura de Repartición y Dinámica de Exposición}
+% =========================================================
+
+Para dar cumplimiento estricto al criterio de \textbf{Participación Equilibrada del Equipo (Rúbrica: 3 pts)}, la presentación de 33 diapositivas se dividió en \textbf{12 bloques temáticos} de 2 a 3 diapositivas cada uno:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{c c c X}
+\toprule
+\textbf{Bloque} & \textbf{Diapositivas} & \textbf{Expositor} & \textbf{Eje Temático Principal} \\
+\midrule
+1 & 1 -- 3 & Emmanuel & Portada, Cita de Sutton y Agenda Parte I \\
+2 & 4 -- 6 & Ximena & Agenda Parte II, Arquitectura del Sistema y Contexto UPP \\
+3 & 7 -- 9 & Emmanuel & Cuello de Botella en Valle, Pregunta de Negocio y Proceso Poisson \\
+4 & 10 -- 12 & Ximena & Estructura del Dataset y Formulación Matemática OLS \\
+5 & 13 -- 15 & Emmanuel & Resultados OLS, Gráfica de Regresión y Supuestos DW/Linealidad \\
+6 & 16 -- 18 & Ximena & Test Breusch-Pagan, Heterocedasticidad y Algoritmo UCB1 \\
+7 & 19 -- 21 & Emmanuel & Catálogo de Brazos $a_0 \dots a_4$ y Recompensa Normalizada $R_t$ \\
+8 & 22 -- 24 & Ximena & Convergencia UCB1, Elección de Brazos y Evolución de $R_t$ \\
+9 & 25 -- 27 & Emmanuel & Comparativa Experimental $a_0$ vs UCB1 y Matrices de Resultados \\
+10 & 28 -- 29 & Ximena & Respuestas Clave de Negocio (Ocupación, Umbral y Ahorros) \\
+11 & 30 -- 31 & Emmanuel & Evidencia de Bitácora de IA Generativa (ChatGPT, Copilot, Gemini, Codex) \\
+12 & 32 -- 33 & Ximena \& Emmanuel & Conclusiones, Cierre con Cita de Simon y Preguntas del Jurado \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+
+% =========================================================
+\section{Guión Detallado por Diapositiva (1 a 33)}
+% =========================================================
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{1: Portada Institucional}
+\textbf{Qué decir en voz alta:}
+``Buenos días profesores y miembros del jurado evaluador. Presentamos el proyecto titulado \textit{Optimización Inteligente de Rutas de Transporte UPP mediante Aprendizaje por Refuerzo con el algoritmo UCB1 y Regresión OLS}. El equipo está integrado por Ximena Nathaly Angeles Sanchez y su servidor Emmanuel Islas Lozada.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué abordar el problema de transporte con Inteligencia Artificial?\\
+\textbf{Respuesta:} Porque la demanda estudiantil presenta un comportamiento estocástico con picos y valles. Las reglas fijas tradicionales son ineficientes; la IA permite aprender dinámicamente el balance entre tiempo de espera y ocupación vehicular.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{2: Frase Inicial de Richard S. Sutton}
+\textbf{Qué decir en voz alta:}
+``Iniciamos con una frase de Richard Sutton, considerado el padre del Aprendizaje por Refuerzo: \textit{'Aprender directamente de la interacción con el entorno es el principio fundamental del comportamiento inteligente.'} Este concepto es la piedra angular de nuestro agente UCB1, el cual aprende la política óptima de despacho interactuando con la simulación.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{3: Agenda General Parte I}
+\textbf{Qué decir en voz alta:}
+``Nuestra presentación está estructurada en dos grandes fases. En la Parte I abordaremos el diagnóstico del problema, el modelado del dataset con procesos Poisson y el ajuste del modelo predictivo de regresión lineal OLS junto con la validación de sus supuestos de Gauss-Markov. Cedo la palabra a Ximena para continuar con la agenda y la arquitectura.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{4: Agenda General Parte II}
+\textbf{Qué decir en voz alta:}
+``Gracias Emmanuel. En la Parte II explicaremos la prescripción mediante el algoritmo UCB1 de Multi-Armed Bandits, la evaluación experimental comparativa contra la política tradicional, las respuestas concretas a las preguntas del negocio y la bitácora del uso crítico de IA generativa.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{5: Arquitectura General del Sistema}
+\textbf{Qué decir en voz alta:}
+``En esta diapositiva observamos el flujo técnico de nuestro sistema modular: iniciamos con el simulador estocástico Poisson que genera el dataset histórico; este alimenta al modelo predictivo OLS para estimar tiempos de espera, el cual a su vez nutre la función de recompensa normalizada del agente UCB1 para seleccionar dinámicamente la política óptima de despacho.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Los módulos se comunican en tiempo real o en etapas?\\
+\textbf{Respuesta:} El sistema está integrado secuencialmente en \texttt{main.py}. El modelo OLS establece la línea base descriptiva/predictiva, mientras que el motor UCB1 ejecuta la optimización prescriptiva sobre el dataset simulado.
+\end{defensebox}
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{6: Contexto Operativo del Transporte UPP}
+\textbf{Qué decir en voz alta:}
+``El servicio de transporte de la UPP atiende principalmente la ruta del \textit{Puente de Tuzos}. Operativamente se utilizan unidades tipo combi con capacidad de 18 pasajeros. La regla actual del concesionario, denotada como $a_0$, es rígida: la unidad no sale hasta que se hayan llenado los 18 asientos.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{7: El Cuello de Botella en Horas Valle}
+\textbf{Qué decir en voz alta:}
+``Gracias Ximena. El gran problema de la regla rígida $a_0$ ocurre durante las horas valle (como de 10 a 12 o de 16 a 18 horas). Al caer el flujo de alumnos, una combi puede tardar de 60 a 84 minutos en juntar 18 pasajeros, generando una molestia severa y pérdida de tiempo para los alumnos a bordo.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué el concesionario no quiere salir con menos de 18 pasajeros?\\
+\textbf{Respuesta:} Por un enfoque exclusivo en maximizar el ingreso por viaje, ignorando el costo de oportunidad y el impacto del tiempo de espera en el usuario.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{8: La Pregunta Central de Negocio}
+\textbf{Qué decir en voz alta:}
+``Frente a este escenario, planteamos la pregunta central de nuestro proyecto: \textit{¿Es posible definir una política de despacho flexible que reduzca el tiempo de espera estudiantil en más del 50\% sin mermar la rentabilidad económica del transporte?}''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{9: Dataset Simulado: Proceso Estocástico Poisson}
+\textbf{Qué decir en voz alta:}
+``Para responderla, modelamos la llegada de alumnos mediante un Proceso de Poisson no homogéneo, donde la probabilidad de que lleguen $k$ alumnos depende de una tasa $\lambda$ variable: en hora pico $\lambda_{\text{pico}} = 3.5$ alumnos/15 min y en hora valle $\lambda_{\text{valle}} = 1.2$. Generamos un dataset de 21 días con 1,466 despachos reales. Le paso la palabra a Ximena.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué usaron una distribución Poisson para los arribos?\\
+\textbf{Respuesta:} La distribución Poisson es el estándar estocástico para modelar eventos independientes que ocurren a una tasa promedio constante en un intervalo de tiempo continuo, ajustándose perfectamente a la llegada aleatoria de pasajeros a una terminal.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{10: Estructura del Dataset: Variables de Entrada}
+\textbf{Qué decir en voz alta:}
+``Gracias Emmanuel. Las variables predictoras registradas en cada intervalo son: fecha y hora de registro, identificador de ruta y \texttt{alumnos\_esperando} ($X$), que representa la longitud de la cola al momento en que la unidad llega a la terminal.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{11: Estructura del Dataset: Variables de Salida}
+\textbf{Qué decir en voz alta:}
+``Por su parte, las variables de respuesta incluyen \texttt{pasajeros\_al\_salir}, el tiempo acumulado de espera en minutos ($Y$) y el \texttt{tipo\_salida} que clasifica si el despacho fue con unidad llena (18 pax) o parcial ($<18$ pax).''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{12: Modelo Predictivo OLS (Formulación Matemática)}
+\textbf{Qué decir en voz alta:}
+``Para analizar la relación entre la cola inicial $X$ y el tiempo de espera $Y$, ajustamos un modelo de Regresión Lineal por Mínimos Cuadrados Ordinarios (MCO/OLS): $Y_i = a + b X_i + e_i$, donde minimizamos la suma de residuos al cuadrado para estimar la pendiente $b$ y el intercepto $a$.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{13: Resultados de la Regresión Lineal OLS}
+\textbf{Qué decir en voz alta:}
+``Gracias Ximena. La ecuación estimada obtenida fue $\widehat{Y} = 14.1068 - 2.5395 \cdot X$. Esto significa que si no hay nadie en cola al llegar ($X=0$), la espera esperada es de 14.11 minutos. Además, por cada alumno ya formado en cola, el tiempo de espera para completar el despacho disminuye en 2.54 minutos. El p-valor extremadamente pequeño ($5.83 \times 10^{-43}$) confirma una alta significancia estadística.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué el signo de la pendiente $b$ es negativo?\\
+\textbf{Respuesta:} Porque a mayor cantidad de alumnos esperando al llegar la unidad a la terminal, menos tiempo transcurre para alcanzar el umbral de salida deseado.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{14: Gráfica del Modelo OLS Ajustado}
+\textbf{Qué decir en voz alta:}
+``En esta gráfica observamos los datos dispersos de los despachos y la línea de regresión roja ajustada. Se aprecia claramente la tendencia decreciente de la espera conforme aumenta la cola inicial de estudiantes.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{15: Diagnóstico de Supuestos OLS: Independencia y Linealidad}
+\textbf{Qué decir en voz alta:}
+``Evaluamos los supuestos de Gauss-Markov. Para independencia probamos el estadístico de Durbin-Watson obteniendo $DW = 1.6002$, ubicándose en el rango aceptable $[1.5, 2.5]$, descartando autocorrelación serial. Para linealidad, la prueba F del término cuadrático confirmó la validez de la relación lineal.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{16: Diagnóstico de Supuestos OLS: Homocedasticidad}
+\textbf{Qué decir en voz alta:}
+``Gracias Emmanuel. Aplicamos la prueba de Breusch-Pagan obteniendo $LM = 25.79$ ($p < 0.001$), detectando cierta heterocedasticidad. Esto es natural en sistemas de transporte debido a la alta variabilidad entre horas pico y valle. Sin embargo, bajo el teorema de Gauss-Markov, los coeficientes OLS siguen siendo estimadores insesgados de la tendencia central.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} Si hay heterocedasticidad, ¿se invalida el modelo OLS?\\
+\textbf{Respuesta:} No invalida los coeficientes estimados (siguen siendo insesgados), solo afecta el cálculo de los errores estándar. Para propósitos de estimación de tendencia para el agente de RL, el modelo es completamente válido.
+\end{defensebox}
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{17: Gráfica de Heterocedasticidad en Residuos}
+\textbf{Qué decir en voz alta:}
+``Esta gráfica representa los residuos frente a los valores predichos, mostrando la mayor dispersión en zonas de baja ocupación (horas valle), corroborando el resultado de la prueba Breusch-Pagan.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{18: Aprendizaje por Refuerzo: Algoritmo UCB1}
+\textbf{Qué decir en voz alta:}
+``Pasando al módulo prescriptivo, implementamos el algoritmo UCB1 (Upper Confidence Bound). El agente selecciona el brazo $A_t$ maximizando el valor esperado $\bar{Q}_t(a)$ más un término de exploración $c \sqrt{\frac{\ln t}{N_t(a)}}$, garantizando un balance óptimo entre explorar nuevas reglas y explotar la mejor regla conocida.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué eligieron UCB1 sobre $\epsilon$-greedy?\\
+\textbf{Respuesta:} Porque $\epsilon$-greedy explora de manera uniforme al azar sin considerar la incertidumbre de cada brazo. UCB1 asigna un margen de confianza explícito derivado de la desigualdad de Hoeffding, explorando agresivamente solo las opciones menos probadas.
+\end{defensebox}
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{19: Catálogo de Políticas: Brazos Dinámicos ($a_0, a_1, a_2$)}
+\textbf{Qué decir en voz alta:}
+``Gracias Ximena. Definimos 5 brazos o políticas de despacho. $a_0$ representa la regla rígida tradicional (esperar 18 pax). $a_1$ es una política flexible que autoriza la salida si hay al menos 14 pasajeros O si ya transcurrieron 15 minutos de espera. $a_2$ relaja el umbral a 12 pax o 25 minutos.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{20: Catálogo de Políticas: Brazos Conservadores ($a_3, a_4$)}
+\textbf{Qué decir en voz alta:}
+``Por su parte, $a_3$ permite salir con 10 pasajeros tras 35 minutos y $a_4$ es la política límite de salida máxima con 8 pasajeros tras 45 minutos. Estas opciones cubren todo el espectro de decisiones posibles para el agente.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{21: Función de Recompensa Normalizada}
+\textbf{Qué decir en voz alta:}
+``La función de recompensa asigna costos con ponderación multiobjetivo: 40\% al tiempo de espera, 40\% a pasajeros dejados en cola y 20\% a asientos vacíos. Luego aplicamos un escalamiento Min-Max invertido para acotar $R_t \in [0, 1]$, donde 1 representa un despacho perfecto.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Por qué dar 40\% a la espera y 20\% a asientos vacíos?\\
+\textbf{Respuesta:} Porque la prioridad social y operativa de la universidad es reducir la demora estudiantil sin descuidar drásticamente la ocupación de la combi.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{22: Convergencia y Aprendizaje del Agente UCB1}
+\textbf{Qué decir en voz alta:}
+``Gracias Emmanuel. Al ejecutar la simulación a lo largo de 2,352 intervalos, el agente UCB1 convergió de manera estable al brazo $a_1$ (\texttt{Flex\_14p\_15m}), logrando el mayor valor esperado de recompensa ($\bar{Q}_1 = 0.853$).''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{23: Distribución de Selección de Brazos}
+\textbf{Qué decir en voz alta:}
+``En esta tabla observamos la distribución de elecciones: el brazo $a_1$ fue el más seleccionado con 423 elecciones (22.0\%), mientras que los demás brazos mantuvieron frecuencias cercanas al 18--20\%, evidenciando que UCB1 mantuvo una exploración continua durante toda la simulación.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{24: Gráfica de Evolución de Recompensa UCB1}
+\textbf{Qué decir en voz alta:}
+``La curva de recompensa acumulada muestra una pendiente constante y ascendente, alcanzando 1,620.1 puntos acumulados y una recompensa promedio de 0.8433, muy cercana al máximo teórico de 1.0.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{25: Comparativa Experimental (a0 vs UCB1)}
+\textbf{Qué decir en voz alta:}
+``Gracias Ximena. Al comparar directamente la regla tradicional $a_0$ frente al agente UCB1, la gráfica muestra una drástica reducción en la curva de tiempos de espera acumulados en franjas valle, manteniendo la misma eficiencia en hora pico.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{26: Matriz de Resultados: Tiempos de Espera}
+\textbf{Qué decir en voz alta:}
+``Los números respaldan el hallazgo: el tiempo de espera promedio se redujo de 38.4 minutos con la regla tradicional a solo 16.2 minutos con el agente UCB1, representando un ahorro del \textbf{57.8\%}. El tiempo máximo de espera cayó de 84.5 a 28.1 minutos, logrando una mejora del \textbf{66.7\%}.''
+
+\begin{defensebox}
+\textbf{Posible Pregunta:} ¿Se cumplió el objetivo de reducir el tiempo en más del 50\%?\\
+\textbf{Respuesta:} Sí, se superó la meta al alcanzar un 57.8\% de ahorro promedio.
+\end{defensebox}
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{27: Matriz de Resultados: Ocupación y Eficiencia Global}
+\textbf{Qué decir en voz alta:}
+``En términos de ocupación, la política $a_1$ logró un factor promedio del 77.7\% (14 de 18 asientos), reduciendo los alumnos varados en terminal de 142 a solo 12. La recompensa global del sistema se incrementó en un +66.7\%.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{28: Respuestas Operativas Clave: Ocupación y Umbral}
+\textbf{Qué decir en voz alta:}
+``Gracias Emmanuel. Respondiendo formalmente al negocio: 1) ¿Conviene esperar 18 pasajeros? No en hora valle, pues genera retrasos inaceptables. 2) El mínimo razonable para salir en valle es de 12 a 14 pasajeros, garantizando rentabilidad y fluidez.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{29: Respuestas Operativas Clave: Flexibilidad y Ahorro}
+\textbf{Qué decir en voz alta:}
+``3) La flexibilidad debe aplicarse únicamente en franjas valle (10 a 12 y 16 a 18 hrs). 4) El ahorro neto por alumno es de 22.2 minutos por viaje, transformando la experiencia del servicio estudiantil.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{30: Bitácora IA: ChatGPT y GitHub Copilot}
+\textbf{Qué decir en voz alta:}
+``Gracias Ximena. Cumpliendo con la rúbrica de uso responsable de IA generativa: utilizamos ChatGPT para estructurar las tasas Poisson y GitHub Copilot para optimizar las matrices de scikit-learn, verificando manualmente cada línea de código.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{31: Bitácora IA: Google Gemini y OpenAI Codex}
+\textbf{Qué decir en voz alta:}
+``Asimismo, consultamos con Gemini la interpretación de los supuestos de heterocedasticidad MCO y empleamos Codex para afinar la normalización Min-Max de la función de recompensa en UCB1.''
+\end{emmanuelbox}
+
+% ---------------------------------------------------------
+\begin{ximenabox}{32: Conclusiones y Trabajo Futuro}
+\textbf{Qué decir en voz alta:}
+``En conclusión, la combinación de modelos predictivos OLS y prescriptivos UCB1 resuelve eficazmente el dilema de transporte en la UPP. Como trabajo futuro, contemplamos evolucionar hacia \textit{Contextual Bandits} (LinUCB) para incorporar datos meteorológicos y eventos en tiempo real.''
+\end{ximenabox}
+
+% ---------------------------------------------------------
+\begin{emmanuelbox}{33: Frase Final y Cierre}
+\textbf{Qué decir en voz alta:}
+``Cerramos con la frase del Premio Nobel Herbert Simon: \textit{'La toma de decisiones inteligente consiste en encontrar alternativas satisfactorias en un entorno complejo e incierto.'} Agradecemos profundamente su atención y quedamos a su entera disposición para responder sus preguntas.''
+\end{emmanuelbox}
+
+\end{document}
