@@ -672,22 +672,21 @@
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Tiempos de Espera}
     \speakerEmmanuel
-    \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Control y Limitación de Tiempos de Espera Estudiantil}, top=4pt, bottom=4pt]
+    \vspace{-2pt}
+    \begin{darkcard}[title=\color{cyanAccent}{Control y Limitación de Tiempos de Espera Estudiantil}, top=2pt, bottom=2pt, middle=2pt]
         \centering
-        \fontsize{9.5pt}{13pt}\selectfont \color{textWhite}
+        \fontsize{9pt}{12.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1} & \color{emeraldAccent}{Diagnóstico Operativo} \\
             \midrule
-            Tiempo Promedio de Espera & $10.6$ min & \textbf{$11.3$ min} & \color{cyanAccent}{Fluidez Promedio} \\[3pt]
+            Tiempo Promedio de Espera & $10.6$ min & \textbf{$11.3$ min} & \color{cyanAccent}{Fluidez Promedio} \\[2pt]
             Tiempo Máximo de Espera & $30.0$ min & \textbf{$30.0$ min} & \color{emeraldAccent}{\textbf{Tope Estricto Garantizado}} \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
-    \vfill
 \end{frame}
 
 % ---------------------------------------------------------
@@ -695,23 +694,22 @@
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Ocupación y Eficiencia Global}
     \speakerEmmanuel
-    \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular y Eficiencia del Agente}, top=4pt, bottom=4pt]
+    \vspace{-6pt}
+    \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular y Eficiencia del Agente}, top=2pt, bottom=2pt, middle=2pt]
         \centering
-        \fontsize{9.5pt}{13pt}\selectfont \color{textWhite}
+        \fontsize{9pt}{12.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1} & \color{emeraldAccent}{Diagnóstico Operativo} \\
             \midrule
-            Despachos Totales & $1,604$ viajes & \textbf{$1,664$ viajes} & \color{emeraldAccent}{\textbf{+60 Salidas Frecuentes}} \\[3pt]
-            Asientos Vacíos Promedio & $0.0$ pax & \textbf{$0.1$ pax} & \color{cyanAccent}{Ocupación >99\%} \\[3pt]
+            Despachos Totales & $1,604$ viajes & \textbf{$1,664$ viajes} & \color{emeraldAccent}{\textbf{+60 Salidas Frecuentes}} \\[1pt]
+            Asientos Vacíos Promedio & $0.0$ pax & \textbf{$0.1$ pax} & \color{cyanAccent}{Ocupación >99\%} \\[1pt]
             Recompensa Promedio ($\bar{Q}$) & N/A & \textbf{$0.8081$} & \color{yellowAccent}{\textbf{Alta Eficiencia}} \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
-    \vfill
 \end{frame}
 
 % ---------------------------------------------------------
@@ -753,47 +751,45 @@
 % ---------------------------------------------------------
 % DIAPOSITIVA 30: BITÁCORA DE IA GENERATIVA - PARTE I (Emmanuel)
 % ---------------------------------------------------------
-\begin{frame}{Evidencia de Bitácora IA: ChatGPT y GitHub Copilot}
+\begin{frame}{Bitácora IA: ChatGPT y GitHub Copilot}
     \speakerEmmanuel
-    \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}]
+    \vspace{-2pt}
+    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}, top=2pt, bottom=2pt, middle=2pt]
         \centering
-        \fontsize{9.5pt}{13.5pt}\selectfont \color{textWhite}
+        \fontsize{8.5pt}{11.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{cyanAccent}}l >{\raggedright\arraybackslash\color{textWhite}}X >{\raggedright\arraybackslash\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
             \midrule
-            ChatGPT & Simulación & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\[4pt]
+            ChatGPT & Simulación & Llegadas por intervalo en Python. & Ajusté $\lambda$ variable por franja (Pico=3.5, Valle=1.2). \\[3pt]
             Copilot & Regresión & Código de ajuste OLS. & Corregí formato 2D exigido por scikit-learn. \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
-    \vfill
 \end{frame}
 
 % ---------------------------------------------------------
 % DIAPOSITIVA 31: BITÁCORA DE IA GENERATIVA - PARTE II (Emmanuel)
 % ---------------------------------------------------------
-\begin{frame}{Evidencia de Bitácora IA: Google Gemini y OpenAI Codex}
+\begin{frame}{Bitácora IA: Google Gemini y OpenAI Codex}
     \speakerEmmanuel
-    \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}]
+    \vspace{-2pt}
+    \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}, top=2pt, bottom=2pt, middle=2pt]
         \centering
-        \fontsize{9.5pt}{13.5pt}\selectfont \color{textWhite}
+        \fontsize{8.5pt}{11.5pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\bfseries\color{yellowAccent}}l >{\color{cyanAccent}}l >{\raggedright\arraybackslash\color{textWhite}}X >{\raggedright\arraybackslash\color{textWhite}}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Herramienta} & \color{cyanAccent}{Tema Evaluado} & \color{cyanAccent}{Solicitud / Pregunta} & \color{cyanAccent}{Verificación y Aprendizaje} \\
             \midrule
-            Gemini & Supuestos MCO & Pruebas Breusch-Pagan y DW. & Validé que la heterocedasticidad no sesga coeficientes. \\[4pt]
+            Gemini & Supuestos MCO & Pruebas Breusch-Pagan y DW. & Validé que la heterocedasticidad no sesga coeficientes. \\[3pt]
             Codex & Algoritmo UCB1 & Recompensa multiobjetivo. & Implementé min-max scaling invertido $[0, 1]$. \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
-    \vfill
 \end{frame}
 
 % ---------------------------------------------------------
