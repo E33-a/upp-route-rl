@@ -107,11 +107,13 @@
 	arc=5pt
 }
 
-% ==== ESTILOS DE BLOQUES DE DIAGRAMAS TIKZ ====
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, align=center, text centered, draw=purpleUPP, fill=purpleUPP!15, drop shadow, font=\bfseries\small]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, align=center, text centered, draw=accentteal, fill=accentteal!10, drop shadow, font=\small]
-\tikzstyle{decision} = [diamond, aspect=2, minimum width=2.5cm, minimum height=1cm, align=center, text centered, draw=failred, fill=failred!10, drop shadow, font=\small]
-\tikzstyle{arrow} = [thick,-{Stealth}]
+% ==== ESTILOS DE BLOQUES DE DIAGRAMAS TIKZ ESPACIOSOS ====
+\tikzset{
+	startstop/.style={rectangle, rounded corners, minimum width=3.2cm, minimum height=1.1cm, text width=3.0cm, align=center, draw=purpleUPP, fill=purpleUPP!15, drop shadow, font=\bfseries\small},
+	process/.style={rectangle, rounded corners, minimum width=3.2cm, minimum height=1.1cm, text width=3.0cm, align=center, draw=accentteal, fill=accentteal!10, drop shadow, font=\small},
+	decision/.style={diamond, aspect=2.2, minimum width=4.0cm, minimum height=1.6cm, text width=3.2cm, align=center, draw=failred, fill=failred!10, drop shadow, font=\small},
+	arrow/.style={thick,-{Stealth[length=3mm, width=2mm]}}
+}
 
 % ==== ENCABEZADOS Y PIES DE PÁGINA ====
 \pagestyle{fancy}
@@ -204,28 +206,32 @@ El siguiente diagrama vectorial (Figura~\ref{fig:esquema_general}) ilustra la di
 
 \begin{figure}[H]
 	\centering
-	\begin{tikzpicture}[node distance=1.5cm, auto]
-		% Nodos Tradicional
+	\scalebox{0.88}{
+	\begin{tikzpicture}[node distance=2.2cm and 2.5cm, auto]
+		% Nodos Principales
 		\node (start) [startstop] {Inicio: Combi en Bahía};
-		\node (arrive) [process, below of=start] {Alumnos llegan (Poisson $\lambda(t)$)};
-		\node (dec1) [decision, below of=arrive, yshift=-0.5cm] {¿Combi 100\% Llena? \\ ($P = 18$)};
-		\node (wait1) [process, right of=dec1, xshift=2.5cm] {Esperar en Bahía \\ (Hasta $>60$ min en hora valle)};
-		\node (exit1) [startstop, below of=dec1, yshift=-0.8cm, fill=failred!20, draw=failred] {Despacho Tradicional $a_0$ \\ (Lleno pero Ineficiente)};
+		\node (arrive) [process, below=1.2cm of start] {Alumnos llegan (Poisson $\lambda(t)$)};
 		
-		% Flechas Tradicional
+		% Decisión Tradicional
+		\node (dec1) [decision, below=1.5cm of arrive] {¿Combi 100\% Llena?\\($P = 18$)};
+		\node (wait1) [process, right=2.2cm of dec1] {Esperar en Bahía\\(Hasta $>60$ min en hora valle)};
+		\node (exit1) [startstop, below=1.8cm of dec1, fill=failred!20, draw=failred] {Despacho Tradicional $a_0$\\(Lleno pero Ineficiente)};
+		
+		% Agente UCB1
+		\node (agent) [process, left=2.2cm of dec1, fill=purpleUPP!20, draw=purpleUPP] {Agente UCB1 Evaluando:\\Tiempo $t$ + Pasajeros $P$};
+		\node (exit2) [startstop, below=1.8cm of agent, fill=passgreen!20, draw=passgreen] {Despacho Adaptativo $a_1$\\(14 pax / 15 min - 57.8\% Ahorro)};
+		
+		% Conexiones
 		\draw [arrow] (start) -- (arrive);
 		\draw [arrow] (arrive) -- (dec1);
 		\draw [arrow] (dec1) -- node [above] {No} (wait1);
 		\draw [arrow] (wait1) |- (arrive);
 		\draw [arrow] (dec1) -- node [right] {Sí} (exit1);
 		
-		% Bloque UCB1
-		\node (agent) [process, left of=dec1, xshift=-3.5cm, fill=purpleUPP!20, draw=purpleUPP] {Agente UCB1 Evaluando: \\ Tiempo $t$ + Pasajeros $P$};
-		\node (exit2) [startstop, below of=agent, yshift=-0.8cm, fill=passgreen!20, draw=passgreen] {Despacho Adaptativo $a_1$ \\ (14 pax / 15 min - 57.8\% Ahorro)};
-		
 		\draw [arrow] (arrive) -| (agent);
-		\draw [arrow] (agent) -- node [left] {Política Óptima} (exit2);
+		\draw [arrow] (agent) -- node [left, align=right] {Política\\Óptima} (exit2);
 	\end{tikzpicture}
+	}
 	\caption{Esquema Comparativo: Flujo Rígido Tradicional vs. Flujo Inteligente UCB1.}
 	\label{fig:esquema_general}
 \end{figure}
@@ -269,22 +275,27 @@ La relación entre las variables principales se puede visualizar en la Figura~\r
 
 \begin{figure}[H]
 	\centering
-	\begin{tikzpicture}[node distance=2.0cm]
-		\node (poisson) [process] {Hora del Día ($t$) \\ Franja Horaria};
-		\node (rate) [process, right of=poisson, xshift=2.0cm] {Tasa de Arribo $\lambda(t)$ \\ Poisson};
-		\node (arr) [process, right of=rate, xshift=2.0cm] {Llegadas $N(t)$ \\ (\texttt{llegadas\_intervalo})};
+	\scalebox{0.85}{
+	\begin{tikzpicture}[node distance=1.8cm and 2.2cm, auto]
+		% Fila Superior: Generación Poisson
+		\node (poisson) [process, minimum width=3.6cm, text width=3.4cm] {Hora del Día ($t$)\\Franja Horaria};
+		\node (rate) [process, right=2.0cm of poisson, minimum width=3.6cm, text width=3.4cm] {Tasa de Arribo $\lambda(t)$\\Poisson};
+		\node (arr) [process, right=2.0cm of rate, minimum width=3.6cm, text width=3.4cm] {Llegadas $N(t)$\\(\texttt{llegadas\_intervalo})};
 		
-		\node (cola) [startstop, below of=rate, yshift=-0.5cm] {Alumnos en Cola $X$ \\ (\texttt{alumnos\_esperando})};
-		\node (ols) [process, left of=cola, xshift=-2.0cm, fill=accentteal!20] {Modelo OLS \\ $\widehat{Y} = 14.11 - 2.54 X$};
-		\node (wait) [startstop, right of=cola, xshift=2.0cm, fill=purpleUPP!20] {Tiempo de Espera $Y$ \\ (\texttt{tiempo\_espera\_acum})};
+		% Fila Inferior: Modelo OLS y Salida
+		\node (cola) [startstop, below=2.2cm of poisson, minimum width=3.6cm, text width=3.4cm] {Alumnos en Cola $X$\\(\texttt{alumnos\_esperando})};
+		\node (ols) [process, right=2.0cm of cola, fill=accentteal!20, minimum width=3.6cm, text width=3.4cm] {Modelo OLS\\$\widehat{Y} = 14.11 - 2.54 X$};
+		\node (wait) [startstop, right=2.0cm of ols, fill=purpleUPP!20, minimum width=3.6cm, text width=3.4cm] {Tiempo de Espera $Y$\\(\texttt{tiempo\_espera\_acum})};
 		
+		% Conexiones Perimetrales Limpias Sin Cruces
 		\draw [arrow] (poisson) -- (rate);
 		\draw [arrow] (rate) -- (arr);
-		\draw [arrow] (arr) |- (cola);
+		\draw [arrow] (poisson) -- (cola);
 		\draw [arrow] (cola) -- (ols);
 		\draw [arrow] (ols) -- (wait);
-		\draw [arrow] (cola) -- (wait);
+		\draw [arrow] (arr) -- (wait);
 	\end{tikzpicture}
+	}
 	\caption{Diagrama de Causalidad y Relación entre las Variables del Dataset.}
 	\label{fig:esquema_variables}
 \end{figure}
@@ -316,26 +327,28 @@ El esquema de la Figura~\ref{fig:curva_poisson} ilustra el comportamiento de la 
 
 \begin{figure}[H]
 	\centering
-	\begin{tikzpicture}[scale=0.95]
+	\scalebox{0.9}{
+	\begin{tikzpicture}
 		% Ejes
-		\draw [thick,-{Stealth}] (0,0) -- (12,0) node [right] {Hora del Día (HH:MM)};
-		\draw [thick,-{Stealth}] (0,0) -- (0,5) node [above] {Tasa Arribo $\lambda(t)$ (alumnos/min)};
+		\draw [thick,-{Stealth}] (0,0) -- (10.5,0) node [right] {Hora (HH:MM)};
+		\draw [thick,-{Stealth}] (0,0) -- (0,4.8) node [above] {Tasa $\lambda(t)$ (alumnos/min)};
 		
-		% Marcas Eje X
-		\draw (1,0.1) -- (1,-0.1) node [below] {06:00};
-		\draw (3,0.1) -- (3,-0.1) node [below] {08:00 (Pico)};
-		\draw (5,0.1) -- (5,-0.1) node [below] {11:00 (Valle)};
-		\draw (7,0.1) -- (7,-0.1) node [below] {14:00 (Pico)};
-		\draw (9,0.1) -- (9,-0.1) node [below] {17:00 (Valle)};
-		\draw (11,0.1) -- (11,-0.1) node [below] {20:00};
+		% Marcas Eje X rotadas para evitar solapamiento
+		\draw (0.8,0.1) -- (0.8,-0.1) node [below, rotate=30, anchor=north east, font=\small] {06:00};
+		\draw (2.5,0.1) -- (2.5,-0.1) node [below, rotate=30, anchor=north east, font=\small] {08:00 (Pico)};
+		\draw (4.2,0.1) -- (4.2,-0.1) node [below, rotate=30, anchor=north east, font=\small] {11:00 (Valle)};
+		\draw (5.9,0.1) -- (5.9,-0.1) node [below, rotate=30, anchor=north east, font=\small] {14:00 (Pico)};
+		\draw (7.6,0.1) -- (7.6,-0.1) node [below, rotate=30, anchor=north east, font=\small] {17:00 (Valle)};
+		\draw (9.3,0.1) -- (9.3,-0.1) node [below, rotate=30, anchor=north east, font=\small] {20:00};
 		
 		% Líneas de Tasa
-		\draw [dashed, gray] (0,3.5) -- (12,3.5) node [right] {$\lambda_{\text{pico}} = 3.5$};
-		\draw [dashed, gray] (0,1.2) -- (12,1.2) node [right] {$\lambda_{\text{valle}} = 1.2$};
+		\draw [dashed, gray!70] (0,3.5) -- (10,3.5) node [right, font=\small] {$\lambda_{\text{pico}} = 3.5$};
+		\draw [dashed, gray!70] (0,1.2) -- (10,1.2) node [right, font=\small] {$\lambda_{\text{valle}} = 1.2$};
 		
 		% Curva de Demanda
-		\draw [ultra thick, purpleUPP] (0.5,0.5) -- (2,3.5) -- (3.5,3.5) -- (4.5,1.2) -- (6,1.2) -- (7,3.5) -- (8.5,3.5) -- (9.5,1.2) -- (11,0.5);
+		\draw [ultra thick, purpleUPP] (0.8,0.5) -- (2.0,3.5) -- (3.0,3.5) -- (4.2,1.2) -- (5.0,1.2) -- (5.9,3.5) -- (6.9,3.5) -- (7.6,1.2) -- (9.3,0.5);
 	\end{tikzpicture}
+	}
 	\caption{Curva Adaptativa de Tasa de Arribo $\lambda(t)$ por Horario Universitario.}
 	\label{fig:curva_poisson}
 \end{figure}
@@ -442,13 +455,18 @@ La interacción dinámica entre el agente prescriptivo y el sistema de combis UP
 
 \begin{figure}[H]
 	\centering
-	\begin{tikzpicture}[node distance=2.5cm, auto]
-		\node (agent) [startstop, fill=purpleUPP!25] {Agente UCB1 \\ (Selección de Acción $a_t$)};
-		\node (env) [process, right of=agent, xshift=3.0cm, fill=accentteal!20] {Entorno de Despacho UPP \\ (Simulación 21 Días)};
+	\scalebox{0.88}{
+	\begin{tikzpicture}[node distance=5.2cm, auto]
+		\node (agent) [startstop, fill=purpleUPP!25, minimum width=4.2cm, text width=4.0cm] {Agente UCB1\\(Selección de Acción $a_t$)};
+		\node (env) [process, right=5.0cm of agent, fill=accentteal!20, minimum width=4.2cm, text width=4.0cm] {Entorno de Despacho UPP\\(Simulación 21 Días)};
 		
-		\draw [arrow] (agent) -- node [above] {Acción $a_t \in \{a_0, \dots, a_4\}$} (env);
-		\draw [arrow] (env) -- ++(0,-1.5) -| node [below] {Recompensa $R_t \in [0,1]$ + Estado (Pasajeros, Espera)} (agent);
+		% Flecha Superior (Acción)
+		\draw [arrow] (agent) -- node [above=4pt, font=\bfseries\small, align=center] {Acción $a_t \in \{a_0, \dots, a_4\}$} (env);
+		
+		% Flecha Inferior Espaciosa (Recompensa y Estado)
+		\draw [arrow] (env) -- ++(0,-2.0cm) -| node [below=4pt, font=\small, align=center, pos=0.25] {Recompensa $R_t \in [0,1]$ + Estado (Pasajeros $P$, Espera $Y$)} (agent);
 	\end{tikzpicture}
+	}
 	\caption{Ciclo de Aprendizaje por Refuerzo entre el Agente UCB1 y el Sistema de Combis.}
 	\label{fig:ciclo_rl}
 \end{figure}
