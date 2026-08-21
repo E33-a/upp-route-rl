@@ -54,4 +54,4 @@ BUS_CAPACITY = 18
 RANDOM_SEED = 42
 PEAK_HOURS = [(6, 9), (11, 13)]  # Hora pico matutina real: 06:00 a 09:00 hrs
 STOP_DELAY_SECONDS = 10.0  # 10 segundos extra por parada intermedia
-AFTERNOON_MAX_WAIT_MINUTES = 15.0  # Después de las 12:00 PM, tiempo máximo de espera de 15 min
+AFTERNOON_MAX_WAIT_MINUTES = 30.0  # Tiempo máximo de espera de 30 minutos en hora valle

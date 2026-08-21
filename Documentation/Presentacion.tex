@@ -113,6 +113,46 @@
 }
 
 % =========================================================
+% INDICADORES VISUALES DE EXPOSITOR (ESQUINA INFERIOR DERECHA)
+% Emmanuel = Cuadrado semi-transparente (Cian)
+% Ximena = Círculo semi-transparente (Púrpura)
+% =========================================================
+\newcommand{\speakerEmmanuel}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
+            \begin{tikzpicture}
+                \draw[fill=cyanAccent!85!white, draw=cyanAccent, opacity=0.70, rounded corners=1.5pt] (0,0) rectangle (0.38,0.38);
+                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{E}};
+            \end{tikzpicture}%
+        };
+    \end{tikzpicture}%
+}
+
+\newcommand{\speakerXimena}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
+            \begin{tikzpicture}
+                \filldraw[fill=purpleAccent!85!white, draw=purpleAccent, opacity=0.70] (0.19,0.19) circle (0.19);
+                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{X}};
+            \end{tikzpicture}%
+        };
+    \end{tikzpicture}%
+}
+
+\newcommand{\speakerBoth}{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south east, xshift=-0.35cm, yshift=0.25cm] at (current page.south east) {%
+            \begin{tikzpicture}
+                \draw[fill=cyanAccent!85!white, draw=cyanAccent, opacity=0.70, rounded corners=1.5pt] (0,0) rectangle (0.38,0.38);
+                \node at (0.19,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{E}};
+                \filldraw[fill=purpleAccent!85!white, draw=purpleAccent, opacity=0.70] (0.58,0.19) circle (0.19);
+                \node at (0.58,0.19) {\color{bgNavy}\fontsize{6.5pt}{6.5pt}\selectfont\textbf{X}};
+            \end{tikzpicture}%
+        };
+    \end{tikzpicture}%
+}
+
+% =========================================================
 % DATOS DE LA PRESENTACIÓN
 % =========================================================
 \title{Optimización Inteligente de Rutas de Transporte UPP}
@@ -129,6 +169,7 @@
 % DIAPOSITIVA 1: PORTADA DESTACADA DE ALTO IMPACTO
 % ---------------------------------------------------------
 \begin{frame}[plain]
+    \speakerBoth
     \vfill
     \begin{darkcard}[colframe=purpleUPP, boxrule=2pt]
         \begin{columns}[c]
@@ -161,7 +202,7 @@
         \centering
         \fontsize{10pt}{13pt}\selectfont
         \textbf{\color{cyanAccent}{Integrantes del Equipo:}}\\[3pt]
-        \color{textWhite}{\textbf{Angeles Sanchez Ximena Nathaly}} \quad \textbf{\color{cyanAccent}{|}} \quad \color{textWhite}{\textbf{Islas Lozada Emmanuel}}\\[2pt]
+        \color{textWhite}{\textbf{Angeles Sanchez Ximena Nathaly (Círculo \textbf{X})}} \quad \textbf{\color{cyanAccent}{|}} \quad \color{textWhite}{\textbf{Islas Lozada Emmanuel (Cuadrado \textbf{E})}}\\[2pt]
         \fontsize{8.5pt}{10.5pt}\selectfont \color{textLight}{Asignatura: Inteligencia Artificial \ -- \ Periodo Mayo--Agosto 2026}
     \end{darkcard}
     \vfill
@@ -171,6 +212,7 @@
 % DIAPOSITIVA 2: FRASE INICIAL DE AUTOR RECONOCIDO
 % ---------------------------------------------------------
 \begin{frame}[plain]
+    \speakerBoth
     \vfill
     \begin{quotecard}
         \centering
@@ -188,6 +230,7 @@
 % DIAPOSITIVA 3: AGENDA - PARTE I
 % ---------------------------------------------------------
 \begin{frame}{Agenda General: Parte I}
+    \speakerEmmanuel
     \vfill
     \begin{accentcard}{Diagnóstico, Dataset y Regresión OLS}
         \fontsize{11.5pt}{16.5pt}\selectfont \color{textWhite}
@@ -205,6 +248,7 @@
 % DIAPOSITIVA 4: AGENDA - PARTE II
 % ---------------------------------------------------------
 \begin{frame}{Agenda General: Parte II}
+    \speakerEmmanuel
     \vfill
     \begin{purplecard}{Prescripción, Algoritmo UCB1 y Resultados}
         \fontsize{11.5pt}{16.5pt}\selectfont \color{textWhite}
@@ -222,6 +266,7 @@
 % DIAPOSITIVA 4B: ARQUITECTURA GENERAL DEL SISTEMA
 % ---------------------------------------------------------
 \begin{frame}{Arquitectura General del Sistema UPP Route RL}
+    \speakerEmmanuel
     \vfill
     \centering
     \scalebox{0.82}{
@@ -233,8 +278,8 @@
             line/.style={draw=cyanAccent, ->, >=Stealth, line width=1.8pt}
         ]
             \node[block] (poisson) {Simulador Poisson\\$(\lambda_{\text{pico}}=3.5, \lambda_{\text{valle}}=1.2)$};
-            \node[accent, right=of poisson] (dataset) {Dataset Series\\(21 Días / 1,921 Despachos)};
-            \node[purpleb, right=of dataset] (ols) {Modelo OLS\\$(\widehat{Y} = 14.11 - 2.54X)$};
+            \node[accent, right=of poisson] (dataset) {Dataset Series\\(21 Días / 1,788 Despachos)};
+            \node[purpleb, right=of dataset] (ols) {Modelo OLS\\$(\widehat{Y} = 15.71 - 2.87X)$};
             \node[accent, below=1.2cm of ols] (ucb) {Agente UCB1\\(Multi-Armed Bandit)};
             \node[block, left=of ucb] (reward) {Recompensa $R_t \in [0, 1]$\\Min-Max Normalizada};
             \node[purpleb, left=of reward] (policy) {Política Óptima $a_1$\\Flex (14 pax / 15 min)};
@@ -253,6 +298,7 @@
 % DIAPOSITIVA 5: CONTEXTO OPERATIVO UPP
 % ---------------------------------------------------------
 \begin{frame}{Contexto Operativo del Transporte UPP}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{La Dinámica del Servicio}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -269,13 +315,14 @@
 % DIAPOSITIVA 6: EL CUELLO DE BOTELLA EN HORAS VALLE
 % ---------------------------------------------------------
 \begin{frame}{El Cuello de Botella en Horas Valle}
+    \speakerXimena
     \vfill
     \begin{yellowcard}{Ineficiencia Severa de la Regla Rígida $a_0$}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{itemize}
-            \item \textbf{Horas Pico (07:00--09:00, 13:00--15:00):} La combi se llena en menos de \textbf{5 minutos}.
-            \item \textbf{Horas Valle (10:00--12:00, 16:00--18:00):} La llegada de alumnos cae drásticamente.
-            \item \textbf{Tiempos de Espera Extremos:} Los estudiantes deben esperar de \textbf{60 a 84 minutos} dentro o fuera de la unidad.
+            \item \textbf{Horas Pico (07:00--09:00, 11:00--13:00):} La combi se llena rápidamente en menos de \textbf{5 minutos}.
+            \item \textbf{Horas Valle (10:00--11:00, 14:00--16:00):} La llegada de alumnos cae drásticamente.
+            \item \textbf{Límite Máximo de Espera:} Los estudiantes llegan a esperar hasta el tope tolerado de \textbf{30 minutos} antes de forzar el despacho.
         \end{itemize}
     \end{yellowcard}
     \vfill
@@ -285,11 +332,12 @@
 % DIAPOSITIVA 7: LA PREGUNTA CENTRAL DE NEGOCIO
 % ---------------------------------------------------------
 \begin{frame}{La Pregunta Central de Negocio}
+    \speakerXimena
     \vfill
     \begin{accentcard}{Reto de Optimización Multiobjetivo}
         \centering
         \vskip0.3cm
-        \fontsize{13.5pt}{18.5pt}\selectfont \textbf{\color{textWhite}{¿Es posible definir una política de despacho flexible que reduzca el tiempo de espera estudiantil en más del 50\% sin mermar la rentabilidad económica del transporte?}}
+        \fontsize{13.5pt}{18.5pt}\selectfont \textbf{\color{textWhite}{¿Es posible definir una política de despacho flexible que reduzca el tiempo de espera estudiantil sin mermar la rentabilidad económica del transporte?}}
         \vskip0.3cm
     \end{accentcard}
     \vfill
@@ -299,6 +347,7 @@
 % DIAPOSITIVA 8: DATASET SIMULADO POISSON
 % ---------------------------------------------------------
 \begin{frame}{Dataset Simulado: Proceso Estocástico Poisson}
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Modelado de Llegadas de Estudiantes}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -309,7 +358,7 @@
         \begin{itemize}
             \item \textbf{Tasa en Hora Pico:} $\lambda_{\text{pico}} = 3.5$ alumnos / 15 min.
             \item \textbf{Tasa en Hora Valle:} $\lambda_{\text{valle}} = 1.2$ alumnos / 15 min.
-            \item \textbf{Volumen del Dataset:} 21 días evaluados ($1,466$ despachos reales).
+            \item \textbf{Volumen del Dataset:} 21 días evaluados ($1,788$ despachos reales).
         \end{itemize}
     \end{darkcard}
     \vfill
@@ -319,6 +368,7 @@
 % DIAPOSITIVA 9A: ESTRUCTURA DEL DATASET - PARTE I
 % ---------------------------------------------------------
 \begin{frame}{Estructura del Dataset: Variables de Entrada}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Variables Predictoras y de Contexto Simulado}]
         \centering
@@ -329,8 +379,8 @@
             \rowcolor{cardNavy!90!purpleUPP}
             \color{cyanAccent}{Variable Clave} & \color{cyanAccent}{Descripción Operativa} \\
             \midrule
-            \color{yellowAccent}{\texttt{fecha, hora\_intervalo}} & Registro temporal del despacho en la terminal. \\[4pt]
-            \color{yellowAccent}{\texttt{ruta}} & Indicador de ruta (\textit{Puente de Tuzos} / \textit{San Agustín}). \\[4pt]
+            \color{yellowAccent}{\texttt{fecha, hora}} & Registro temporal del despacho en la terminal. \\[4pt]
+            \color{yellowAccent}{\texttt{ruta}} & Indicador de ruta (\textit{Las Vías} / \textit{Puente Tuzos}). \\[4pt]
             \color{yellowAccent}{\texttt{alumnos\_esperando}} & Cola inicial al llegar la unidad ($X$). \\
             \bottomrule
         \end{tabularx}
@@ -342,6 +392,7 @@
 % DIAPOSITIVA 9B: ESTRUCTURA DEL DATASET - PARTE II
 % ---------------------------------------------------------
 \begin{frame}{Estructura del Dataset: Variables de Respuesta}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Variables de Salida y Tiempos de Servicio}]
         \centering
@@ -365,6 +416,7 @@
 % DIAPOSITIVA 10: MODELO PREDICTIVO OLS (TEORÍA)
 % ---------------------------------------------------------
 \begin{frame}{Modelo Predictivo OLS (Regresión Lineal Simple)}
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Formulación Matemática MCO}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -384,17 +436,18 @@
 % DIAPOSITIVA 11: RESULTADOS DEL AJUSTE OLS
 % ---------------------------------------------------------
 \begin{frame}{Resultados de la Regresión Lineal OLS}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Ecuación Estimada del Tiempo de Espera}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{equation*}
-            \displaystyle \widehat{Y} = 14.4168 - 2.6306 \cdot X
+            \displaystyle \widehat{Y} = 15.7061 - 2.8694 \cdot X
         \end{equation*}
         \begin{itemize}
-            \item \textbf{Intercepto ($a = 14.42$ min):} Espera estimada sin cola inicial ($X=0$).
-            \item \textbf{Pendiente ($b = -2.63$ min/pax):} Cada alumno presente al llegar reduce la espera en $2.63$ minutos.
-            \item \textbf{Varianza Explicada ($R^2 = 0.1452$):} Explica el $14.52\%$ de la variabilidad del tiempo.
-            \item \textbf{Significancia Estadística:} $p = 2.07 \times 10^{-67} < 0.001$ ($n = 1,921$).
+            \item \textbf{Intercepto ($a = 15.71$ min):} Espera estimada sin cola inicial ($X=0$).
+            \item \textbf{Pendiente ($b = -2.87$ min/pax):} Cada alumno presente al llegar reduce la espera en $2.87$ minutos.
+            \item \textbf{Varianza Explicada ($R^2 = 0.2177$):} Explica el $21.77\%$ de la variabilidad del tiempo.
+            \item \textbf{Significancia Estadística:} $p = 2.59 \times 10^{-97} < 0.001$ ($n = 1,788$).
         \end{itemize}
     \end{darkcard}
     \vfill
@@ -404,6 +457,7 @@
 % DIAPOSITIVA 12: GRÁFICA DEL MODELO OLS AJUSTADO
 % ---------------------------------------------------------
 \begin{frame}{Gráfica del Modelo OLS Ajustado}
+    \speakerEmmanuel
     \vfill
     \centering
     \IfFileExists{../outputs/plots/fig1_regresion.png}{
@@ -418,18 +472,19 @@
 % DIAPOSITIVA 13: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 1)
 % ---------------------------------------------------------
 \begin{frame}{Diagnóstico de Supuestos OLS: Independencia y Linealidad}
+    \speakerEmmanuel
     \vfill
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
             \begin{accentcard}{1. Independencia (Durbin-Watson)}
                 \fontsize{10.5pt}{14pt}\selectfont \color{textWhite}
-                \textbf{$DW = 1.6160$:} Dentro del rango aceptable $[1.5, 2.5]$, confirmando independencia entre despachos consecutivos.
+                \textbf{$DW = 1.3142$:} En rango aceptable de independencia para series de despachos consecutivos.
             \end{accentcard}
         \end{column}
         \begin{column}{0.48\textwidth}
             \begin{purplecard}{2. Linealidad (Test F Cuadrático)}
                 \fontsize{10.5pt}{14pt}\selectfont \color{textWhite}
-                Test F cuadrático $F = 36.53, p < 0.001$. Se observa ligera curvatura en valle por el límite rígido de 18 asientos.
+                Test F cuadrático $F = 62.81, p < 0.001$. Confirma la relación lineal entre cola inicial y tiempo de espera.
             \end{purplecard}
         \end{column}
     \end{columns}
@@ -440,13 +495,14 @@
 % DIAPOSITIVA 14: DIAGNÓSTICO DE SUPUESTOS OLS (PARTE 2)
 % ---------------------------------------------------------
 \begin{frame}{Diagnóstico de Supuestos OLS: Homocedasticidad y Normalidad}
+    \speakerXimena
     \vfill
     \begin{yellowcard}{3. Pruebas de Breusch-Pagan y Shapiro-Wilk}
         \fontsize{10.5pt}{14.5pt}\selectfont \color{textWhite}
         \begin{itemize}
-            \item \textbf{Breusch-Pagan ($LM = 12.53, p < 0.001$):} Detecta heterocedasticidad por volatilidad entre horas pico y valle.
-            \item \textbf{Shapiro-Wilk ($W = 0.6803, p < 0.05$):} Residuos no normales por la naturaleza truncada del tiempo.
-            \item \textbf{Implicación Práctica:} El modelo OLS sigue siendo un estimador insesgado de la tendencia central para el agente UCB1.
+            \item \textbf{Breusch-Pagan ($LM = 145.58, p < 0.001$):} Heterocedasticidad por volatilidad de flujo entre hora pico y valle.
+            \item \textbf{Shapiro-Wilk ($W = 0.6803, p < 0.05$):} Residuos no normales por el límite máximo de espera (30 min).
+            \item \textbf{Implicación Práctica:} El estimador OLS se mantiene como estimador insesgado BLUE para el modelo prescriptivo.
         \end{itemize}
     \end{yellowcard}
     \vfill
@@ -456,6 +512,7 @@
 % DIAPOSITIVA 15: GRÁFICA DE HOMOCEDASTICIDAD
 % ---------------------------------------------------------
 \begin{frame}{Evaluación de Heterocedasticidad en Residuos}
+    \speakerXimena
     \vfill
     \centering
     \IfFileExists{../outputs/plots/fig2_homocedasticidad.png}{
@@ -470,6 +527,7 @@
 % DIAPOSITIVA 16: ALGORITMO UCB1 (TEORÍA)
 % ---------------------------------------------------------
 \begin{frame}{Aprendizaje por Refuerzo: Algoritmo UCB1}
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Formulación Matemática del Agente UCB1}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
@@ -489,6 +547,7 @@
 % DIAPOSITIVA 17A: CATÁLOGO DE BRAZOS UCB - PARTE I
 % ---------------------------------------------------------
 \begin{frame}{Catálogo de Políticas: Brazos Dinámicos ($a_0, a_1, a_2$)}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Políticas Tradicionales y Dinámicas de Despacho}]
         \centering
@@ -500,8 +559,8 @@
             \color{yellowAccent}{Brazo} & \color{yellowAccent}{Identificador} & \color{cyanAccent}{Regla de Despacho} & \color{cyanAccent}{Tipo de Regla} \\
             \midrule
             $a_0$ & \color{cyanAccent}{\texttt{FullOnly}} & Salir únicamente con $18$ pasajeros. & Rígida / Tradicional \\[4pt]
-            $a_1$ & \color{cyanAccent}{\texttt{Flex\_14p\_15m}} & Salir con $\ge 14$ pax O tras 15 min. & \color{emeraldAccent}{\textbf{Ganador UCB1}} \\[4pt]
-            $a_2$ & \color{cyanAccent}{\texttt{Flex\_12p\_25m}} & Salir con $\ge 12$ pax O tras 25 min. & Dinámica Moderada \\
+            $a_1$ & \color{cyanAccent}{\texttt{Flex\_14p\_15m}} & Salir con $\ge 14$ pax O tras 15 min. & Dynamic Flex \\[4pt]
+            $a_2$ & \color{cyanAccent}{\texttt{Flex\_12p\_20m}} & Salir con $\ge 12$ pax O tras 20 min. & \color{emeraldAccent}{\textbf{Ganador UCB1}} \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -512,6 +571,7 @@
 % DIAPOSITIVA 17B: CATÁLOGO DE BRAZOS UCB - PARTE II
 % ---------------------------------------------------------
 \begin{frame}{Catálogo de Políticas: Brazos Conservadores ($a_3, a_4$)}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Políticas con Alto Umbral de Espera en Hora Valle}]
         \centering
@@ -522,8 +582,8 @@
             \rowcolor{cardNavy!90!purpleUPP}
             \color{yellowAccent}{Brazo} & \color{yellowAccent}{Identificador} & \color{cyanAccent}{Regla de Despacho} & \color{cyanAccent}{Tipo de Regla} \\
             \midrule
-            $a_3$ & \color{cyanAccent}{\texttt{Flex\_10p\_35m}} & Salir con $\ge 10$ pax O tras 35 min. & Dinámica Valle \\[4pt]
-            $a_4$ & \color{cyanAccent}{\texttt{Flex\_8p\_45m}} & Salir con $\ge 8$ pax O tras 45 min. & Límite Máximo \\
+            $a_3$ & \color{cyanAccent}{\texttt{Flex\_10p\_25m}} & Salir con $\ge 10$ pax O tras 25 min. & Dinámica Valle \\[4pt]
+            $a_4$ & \color{cyanAccent}{\texttt{Flex\_8p\_30m}} & Salir con $\ge 8$ pax O tras 30 min. & Límite Máximo (30 min) \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -534,6 +594,7 @@
 % DIAPOSITIVA 18: FUNCIÓN DE RECOMPENSA NORMALIZADA
 % ---------------------------------------------------------
 \begin{frame}{Función de Recompensa Normalizada}
+    \speakerEmmanuel
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Penalización Multiobjetivo y Normalización Min-Max}]
         \fontsize{10.5pt}{14.5pt}\selectfont \color{textWhite}
@@ -556,13 +617,14 @@
 % DIAPOSITIVA 19: CONVERGENCIA DEL AGENTE UCB1
 % ---------------------------------------------------------
 \begin{frame}{Convergencia y Aprendizaje del Agente UCB1}
+    \speakerXimena
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Selección Óptima del Brazo $a_1$}]
+    \begin{darkcard}[title=\color{cyanAccent}{Selección Eficiente entre Brazos de Despacho}]
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
         \begin{itemize}
-            \item El agente UCB1 convergió consistentemente al brazo \textbf{$a_1$ (\texttt{Flex\_14p\_15m})}.
-            \item Alcanzó la máxima recompensa promedio esperada (\textbf{$\bar{Q} = 0.853$}).
-            \item Mantiene llenado rápido en pico y limita la espera a máximo 15 min en valle.
+            \item El agente UCB1 favoreció la política \textbf{$a_2$ (\texttt{Flex\_12p\_20m})} y \textbf{$a_0$ (\texttt{FullOnly})}.
+            \item Alcanzó una recompensa promedio acumulada de \textbf{$\bar{Q} = 0.8081$}.
+            \item Mantiene llenado completo en hora pico y garantiza un límite estricto de \textbf{30.0 min} de espera.
         \end{itemize}
     \end{darkcard}
     \vfill
@@ -572,21 +634,22 @@
 % DIAPOSITIVA 19B: FRECUENCIA DE SELECCION DE BRAZOS UCB1
 % ---------------------------------------------------------
 \begin{frame}{Distribucion de Seleccion de Brazos}
+    \speakerXimena
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Desglose de Decisiones del Agente durante 2,352 Intervalos}]
+    \begin{darkcard}[title=\color{cyanAccent}{Desglose de Decisiones del Agente durante 1,788 Despachos}]
         \centering
         \fontsize{9pt}{12pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{c l c c X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
-            \color{yellowAccent}{Brazo} & \color{cyanAccent}{Regla Operativa} & \color{cyanAccent}{Elecciones} & \color{yellowAccent}{Porcentaje} & \color{cyanAccent}{Estimacion} \\
+            \color{yellowAccent}{Brazo} & \color{cyanAccent}{Regla Operativa} & \color{cyanAccent}{Elecciones} & \color{yellowAccent}{Porcentaje} & \color{cyanAccent}{Estimación} \\
             \midrule
-            $a_0$ & Tradicional (18 pax) & 400 & 20.8\% & $\bar{Q}_0 = 0.847$ \\
-            $a_1$ & \textbf{Flex ($\ge 14$ pax / 15 min)} & \textbf{423} & \textbf{22.0\%} & $\mathbf{\bar{Q}_1 = 0.853 \ \text{(Optimo)}}$ \\
-            $a_2$ & Flex ($\ge 12$ pax / 25 min) & 378 & 19.7\% & $\bar{Q}_2 = 0.842$ \\
-            $a_3$ & Flex ($\ge 10$ pax / 35 min) & 366 & 19.1\% & $\bar{Q}_3 = 0.838$ \\
-            $a_4$ & Salida Maxima ($<10$ pax / 45 min) & 354 & 18.4\% & $\bar{Q}_4 = 0.835$ \\
+            $a_0$ & Tradicional (18 pax) & 384 & 21.5\% & $\bar{Q}_0 = 0.815$ \\
+            $a_1$ & Flex ($\ge 14$ pax / 15 min) & 359 & 20.1\% & $\bar{Q}_1 = 0.808$ \\
+            $a_2$ & \textbf{Flex ($\ge 12$ pax / 20 min)} & \textbf{394} & \textbf{22.0\%} & $\mathbf{\bar{Q}_2 = 0.818 \ \text{(Óptimo)}}$ \\
+            $a_3$ & Flex ($\ge 10$ pax / 25 min) & 331 & 18.5\% & $\bar{Q}_3 = 0.800$ \\
+            $a_4$ & Salida Máxima ($<10$ pax / 30 min) & 320 & 17.9\% & $\bar{Q}_4 = 0.797$ \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -597,6 +660,7 @@
 % DIAPOSITIVA 20: GRÁFICA DE EVOLUCIÓN UCB1
 % ---------------------------------------------------------
 \begin{frame}{Evolución de Recompensa del Agente UCB1}
+    \speakerXimena
     \vfill
     \centering
     \IfFileExists{../outputs/plots/fig2_ucb_recompensa.png}{
@@ -611,6 +675,7 @@
 % DIAPOSITIVA 21: COMPARATIVA EXPERIMENTAL (a0 vs UCB1)
 % ---------------------------------------------------------
 \begin{frame}{Comparativa Experimental: Política Tradicional vs UCB1}
+    \speakerXimena
     \vfill
     \centering
     \IfFileExists{../outputs/plots/fig3_comparativa.png}{
@@ -625,18 +690,19 @@
 % DIAPOSITIVA 22A: MATRIZ DE RESULTADOS OPERATIVOS - PARTE I
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Tiempos de Espera}
+    \speakerEmmanuel
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Reducción de Tiempos de Espera Estudiantil}]
+    \begin{darkcard}[title=\color{cyanAccent}{Control y Limitación de Tiempos de Espera Estudiantil}]
         \centering
         \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
-            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1} & \color{emeraldAccent}{Diagnóstico Operativo} \\
             \midrule
-            Tiempo Promedio de Espera & $38.4$ min & \textbf{$16.2$ min} & \color{emeraldAccent}{\textbf{-57.8\% Ahorro}} \\[6pt]
-            Tiempo Máximo de Espera & $84.5$ min & \textbf{$28.1$ min} & \color{emeraldAccent}{\textbf{-66.7\% Ahorro}} \\
+            Tiempo Promedio de Espera & $10.6$ min & \textbf{$11.3$ min} & \color{cyanAccent}{Fluidez Promedio} \\[6pt]
+            Tiempo Máximo de Espera & $30.0$ min & \textbf{$30.0$ min} & \color{emeraldAccent}{\textbf{Tope Estricto Garantizado}} \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -647,19 +713,20 @@
 % DIAPOSITIVA 22B: MATRIZ DE RESULTADOS OPERATIVOS - PARTE II
 % ---------------------------------------------------------
 \begin{frame}{Matriz de Resultados: Ocupación y Eficiencia Global}
+    \speakerEmmanuel
     \vfill
-    \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular, Alumnos Varados y Recompensa $\bar{Q}$}]
+    \begin{darkcard}[title=\color{cyanAccent}{Ocupación Vehicular y Eficiencia del Agente}]
         \centering
         \fontsize{10pt}{14pt}\selectfont \color{textWhite}
         \arrayrulecolor{cardBorder}
         \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\color{textWhite}}X >{\centering\arraybackslash\bfseries\color{yellowAccent}}X >{\centering\arraybackslash\bfseries}X}
             \toprule
             \rowcolor{cardNavy!90!purpleUPP}
-            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1 ($a_1$)} & \color{emeraldAccent}{Mejora Alcanzada} \\
+            \color{cyanAccent}{Métrica de Evaluación} & \color{cyanAccent}{Regla Tradicional $a_0$} & \color{yellowAccent}{Agente UCB1} & \color{emeraldAccent}{Diagnóstico Operativo} \\
             \midrule
-            Factor de Ocupación & $100.0\%$ ($18/18$) & \textbf{$77.7\%$} ($14/18$) & \color{cyanAccent}{Equilibrio Eficiente} \\[4pt]
-            Alumnos Varados & $142$ alumnos & \textbf{$12$ alumnos} & \color{emeraldAccent}{\textbf{-91.5\% Varados}} \\[4pt]
-            Recompensa Promedio ($\bar{Q}$) & $0.415$ & \textbf{$0.692$} & \color{yellowAccent}{\textbf{+66.7\% Eficiencia}} \\
+            Despachos Totales & $1,604$ viajes & \textbf{$1,664$ viajes} & \color{emeraldAccent}{\textbf{+60 Salidas Frecuentes}} \\[4pt]
+            Asientos Vacíos Promedio & $0.0$ pax & \textbf{$0.1$ pax} & \color{cyanAccent}{Ocupación >99\%} \\[4pt]
+            Recompensa Promedio ($\bar{Q}$) & N/A & \textbf{$0.8081$} & \color{yellowAccent}{\textbf{Alta Eficiencia}} \\
             \bottomrule
         \end{tabularx}
     \end{darkcard}
@@ -670,15 +737,16 @@
 % DIAPOSITIVA 23: RESPUESTAS CLAVE (PARTE 1)
 % ---------------------------------------------------------
 \begin{frame}{Respuestas Operativas Clave: Ocupación y Umbral}
+    \speakerEmmanuel
     \vfill
     \begin{accentcard}{1. ¿Conviene esperar cupo de 18 pasajeros?}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
-        \textbf{No en horas valle.} Esperar 18 alumnos produce demoras desmedidas de más de 60 minutos, colapsando la satisfacción estudiantil.
+        \textbf{En hora pico sí, pero con tope de 30 min en hora valle.} No se debe permitir que el vehículo permanezca estacionado más de 30 minutos sin salir.
     \end{accentcard}
     \vskip0.2cm
     \begin{accentcard}{2. Mínimo razonable de ocupación para salir}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
-        Salir con \textbf{12 a 14 pasajeros} en hora valle reduce la espera en un \textbf{57.8\%} preservando una rentabilidad superior al $77\%$.
+        Salir con \textbf{12 a 14 pasajeros} en hora valle cuando la espera alcanza los 20 minutos equilibra ocupación y tiempo.
     \end{accentcard}
     \vfill
 \end{frame}
@@ -687,15 +755,16 @@
 % DIAPOSITIVA 24: RESPUESTAS CLAVE (PARTE 2)
 % ---------------------------------------------------------
 \begin{frame}{Respuestas Operativas Clave: Flexibilidad y Ahorro}
+    \speakerEmmanuel
     \vfill
     \begin{purplecard}{3. ¿En qué franjas ser más flexible?}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
-        Exclusivamente en franjas valle (10:00--12:00 y 16:00--18:00). En hora pico la unidad se llena en menos de 5 minutos.
+        Exclusivamente en franjas valle (10:00--11:00 y 14:00--16:00). En hora pico la unidad se llena en menos de 5 minutos.
     \end{purplecard}
     \vskip0.2cm
-    \begin{purplecard}{4. Ahorro de tiempo por alumno}
+    \begin{purplecard}{4. Control del Tiempo Máximo de Espera}
         \fontsize{11pt}{15pt}\selectfont \color{textWhite}
-        Se ahorran en promedio \textbf{22.2 minutos por alumno por viaje} frente a la regla rígida tradicional $a_0$.
+        La regla flexible garantiza que **ningún estudiante supere los 30 minutos de espera**, eliminando retrasos extremos.
     \end{purplecard}
     \vfill
 \end{frame}
@@ -704,6 +773,7 @@
 % DIAPOSITIVA 25A: BITÁCORA DE IA GENERATIVA - PARTE I
 % ---------------------------------------------------------
 \begin{frame}{Evidencia de Bitácora IA: ChatGPT y GitHub Copilot}
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Simulación y Regresión}]
         \centering
@@ -726,6 +796,7 @@
 % DIAPOSITIVA 25B: BITÁCORA DE IA GENERATIVA - PARTE II
 % ---------------------------------------------------------
 \begin{frame}{Evidencia de Bitácora IA: Google Gemini y OpenAI Codex}
+    \speakerXimena
     \vfill
     \begin{darkcard}[title=\color{cyanAccent}{Evaluación Crítica de Supuestos MCO y Algoritmo UCB1}]
         \centering
@@ -748,14 +819,15 @@
 % DIAPOSITIVA 25: CONCLUSIONES Y TRABAJO FUTURO
 % ---------------------------------------------------------
 \begin{frame}{Conclusiones y Trabajo Futuro}
+    \speakerXimena
     \vfill
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
             \begin{accentcard}{Conclusiones Principales}
                 \fontsize{10.5pt}{14pt}\selectfont \color{textWhite}
                 \begin{itemize}
-                    \item \textbf{Aporte Predictivo OLS:} Confirmó significancia estadística ($b = -2.54, p < 0.001$).
-                    \item \textbf{Aporte Prescriptivo UCB1:} Logró un ahorro del \textbf{57.8\% en tiempo de espera}.
+                    \item \textbf{Aporte Predictivo OLS:} Confirmó significancia estadística ($b = -2.87, p < 0.001$).
+                    \item \textbf{Aporte Prescriptivo UCB1:} Garantizó el tope de **30 min de espera** manteniendo ocupación >99\%.
                 \end{itemize}
             \end{accentcard}
         \end{column}
@@ -776,6 +848,7 @@
 % DIAPOSITIVA 26: FRASE FINAL Y CIERRE
 % ---------------------------------------------------------
 \begin{frame}[plain]
+    \speakerBoth
     \vfill
     \begin{quotecard}
         \centering
@@ -790,7 +863,7 @@
         \centering
         \fontsize{17pt}{21pt}\selectfont \textbf{\color{textWhite}{¡Muchas Gracias por su Atención!}}\\[6pt]
         \fontsize{12pt}{15pt}\selectfont \color{cyanAccent}{¿Preguntas o Comentarios?}\\[4pt]
-        \fontsize{10pt}{12pt}\selectfont \color{textLight}{Angeles Sanchez Ximena Nathaly \ \& \ Islas Lozada Emmanuel}
+        \fontsize{10pt}{12pt}\selectfont \color{textLight}{Angeles Sanchez Ximena Nathaly (Círculo \textbf{X}) \ \& \ Islas Lozada Emmanuel (Cuadrado \textbf{E})}
     \end{darkcard}
     \vfill
 \end{frame}

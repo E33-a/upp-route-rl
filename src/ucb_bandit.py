@@ -20,9 +20,9 @@ class UCB1Agent:
         self.arm_names = [
             "a0: Traditional (18 pax strictly)",
             "a1: Flex (>=14 pax after 15 min)",
-            "a2: Flex (>=12 pax after 25 min)",
-            "a3: Flex (>=10 pax after 35 min)",
-            "a4: Flex (>=8 pax after 45 min)"
+            "a2: Flex (>=12 pax after 20 min)",
+            "a3: Flex (>=10 pax after 25 min)",
+            "a4: Flex (>=8 pax after 30 min)"
         ]
 
     def select_action(self) -> int:
@@ -72,8 +72,8 @@ def evaluate_policy_dispatch(action: int, students_waiting: int, wait_time_min: 
         # a3: >= 10 passengers and wait time >= 35 min (or 18 pax)
         should_dispatch = (students_waiting >= bus_capacity) or (students_waiting >= 10 and wait_time_min >= 35.0)
     elif action == 4:
-        # a4: >= 8 passengers and wait time >= 45 min (or 18 pax)
-        should_dispatch = (students_waiting >= bus_capacity) or (students_waiting >= 8 and wait_time_min >= 45.0)
+        # a4: >= 8 passengers and wait time >= 30 min (or 18 pax)
+        should_dispatch = (students_waiting >= bus_capacity) or (students_waiting >= 8 and wait_time_min >= 30.0)
 
     if should_dispatch and students_waiting > 0:
         passengers = min(students_waiting, bus_capacity)
@@ -90,7 +90,7 @@ def calculate_reward(
     w1: float = 0.4,
     w2: float = 0.4,
     w3: float = 0.2,
-    max_wait_norm: float = 60.0,
+    max_wait_norm: float = 30.0,
     max_leftover_norm: float = 30.0,
     max_empty_norm: float = 18.0
 ) -> float:

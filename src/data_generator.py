@@ -105,16 +105,9 @@ def generate_demand_dataset(seed: int = RANDOM_SEED) -> pd.DataFrame:
                     current_hour_decimal = current_time.hour + (current_time.minute / 60.0)
                     
                     # Dispatch Logic:
-                    # Base Hours (< base_end_hour): Strictly wait for full 18 pax
-                    # Transit Hours (>= base_end_hour): Depart when full (18 pax) OR max 15 min wait
-                    if current_hour_decimal < route.base_end_hour:
-                        if students_waiting >= BUS_CAPACITY:
-                            dispatch_occurred = True
-                    else:
-                        if students_waiting >= BUS_CAPACITY:
-                            dispatch_occurred = True
-                        elif students_waiting > 0 and wait_minutes >= AFTERNOON_MAX_WAIT_MINUTES:
-                            dispatch_occurred = True
+                    # Vehicle departs if full (18 pax) OR if max wait time reached (30 min)
+                    if students_waiting >= BUS_CAPACITY or (students_waiting > 0 and wait_minutes >= AFTERNOON_MAX_WAIT_MINUTES):
+                        dispatch_occurred = True
                     
                     if not dispatch_occurred:
                         current_time += timedelta(minutes=1)
